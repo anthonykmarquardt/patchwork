@@ -4,7 +4,9 @@ Scratch space for prototypes, benchmarks, and throwaway code. Each experiment ge
 
 ## Active experiments
 
-(none yet)
+- [inference-bench](inference-bench/) — reusable throughput/TTFT benchmark for
+  OpenAI-compatible LLM servers (llama-server, mlx_lm, ollama, vLLM). Result
+  #001: MLX decodes Ornith-9B ~12% faster than ollama on the M2.
 
 ## Guidelines
 
