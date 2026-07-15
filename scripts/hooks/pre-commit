@@ -1,0 +1,30 @@
+#!/bin/bash
+# pre-commit — block a commit that drifts patchwork's docs from its code.
+# Only acts when staged changes touch patchwork/; otherwise no-op.
+#
+# Install:
+#     git config core.hooksPath patchwork/scripts/hooks
+# or symlink this into .git/hooks/pre-commit.
+# Bypass with --no-verify.
+
+set -euo pipefail
+
+staged=$(git diff --cached --name-only --diff-filter=ACMR | grep '^patchwork/' || true)
+[ -z "$staged" ] && exit 0
+
+REPO_ROOT=$(git rev-parse --show-toplevel)
+PW="$REPO_ROOT/patchwork"
+PY="$(command -v python3 || command -v python)" || { echo "pre-commit: no python"; exit 1; }
+
+echo "pre-commit: patchwork changes staged — validating…"
+
+fail=0
+"$PY" "$PW/scripts/agent-tools/update-agents.py" --report >/dev/null || {
+    echo "pre-commit: unresolved doc references (run update-agents.py)"; fail=1;
+}
+
+if [ "$fail" -ne 0 ]; then
+    echo "pre-commit: BLOCKED. Fix the drift above, or commit with --no-verify to override."
+    exit 1
+fi
+echo "pre-commit: all references valid."
