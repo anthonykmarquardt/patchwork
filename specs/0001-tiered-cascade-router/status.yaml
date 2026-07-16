@@ -45,7 +45,14 @@ metadata:
     stays "draft" pending EMPIRICAL closure only: validate embedder (V2), tune
     per-class verifier thresholds against the known T0 failure outputs, run the λ
     sweep. Flip to "ready" after that. Paper PDF: references/.
+  results: >
+    Empirical closure run 2026-07-16 (results.md, harness experiments/router/).
+    Verifiers CLOSED (nested-tool check in, step-sprawl out; R1/R2 checks;
+    emotional→D5 floor). λ directional: adopted per-class 0.40/0.35/0.20.
+    Embedder: bge-small kept; V2 is P1-limited (embeddings see class, not
+    difficulty) — predictor posture is the remaining design call before ready.
   references:
+    - "results.md — empirical closure results (2026-07-16); harness experiments/router/closure.py"
     - "decisions.md — design decisions + expected failure modes (read before redesign)"
     - "arXiv:2505.12601 — kNN >= learned routers (PDF in references/)"
     - "arXiv:2506.16655 — Arch-Router; arXiv:2603.04445 — routing/cascade survey"

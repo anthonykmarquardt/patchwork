@@ -1,0 +1,381 @@
+
+================================================================================
+### ra-1.7b | R1-missing-dollar | reasoning | 848 tok / 11.2s
+================================================================================
+PROMPT:
+Three people check into a hotel room. The clerk charges $30, so they each pay $10. Later the clerk realizes the room was only $25 and sends the bellhop to return $5. The bellhop keeps $2 and gives each guest $1 back. Now each guest paid $9, so 3 x $9 = $27, plus the bellhop's $2 = $29. Where did the missing dollar go? Explain precisely what is wrong with this reasoning.
+
+--- ANSWER ---
+Let's carefully analyze the situation step by step to understand where the missing dollar went.
+
+---
+
+### **Initial Setup:**
+- Three people check into a hotel room.
+- The **clerk charges $30**.
+- So, each person pays **$10**.
+- **Total amount paid by guests = 3 × $10 = $30**
+
+---
+
+### **Clerk Realizes the Room Was Only $25:**
+- The clerk **realizes the room was only $25**, not $30.
+- So, the **total amount charged was $25**, not $30.
+- The **guests paid $10 each**, so the **total amount paid by guests = $30**.
+
+---
+
+### **Clerk Sends Bellhop to Return $5:**
+- The clerk sends the **bellhop to return $5**.
+- The bellhop **keeps $2** and gives **$1 back to each guest**.
+
+---
+
+### **Bellhop's Actions:**
+- The bellhop keeps **$2**.
+- The bellhop gives **$1 back to each guest**, so:
+  - Each guest receives **$1**.
+  - Total amount given back to guests = **3 × $1 = $3**.
+- The bellhop keeps **$2**, so the **total amount the bellhop has = $2 + $3 = $5**.
+
+---
+
+### **Final Amount Paid by Guests:**
+- The bellhop gives **$1 back to each guest**, so each guest pays **$10 - $1 = $9**.
+- Total amount paid by guests = **3 × $9 = $27**.
+- The bellhop has **$5** from the $30, and **$2** from the $10, so total amount the bellhop has = **$5 + $2 = $7**.
+
+---
+
+### **Total Amount Paid by Guests and Bellhop:**
+- Guests paid **$27**.
+- Bellhop kept **$2** and gave **$1 back to each guest**, so the bellhop has **$2 + $3 = $5**.
+- Total amount = **$27 + $5 = $32**.
+
+---
+
+### **Where Did the Missing Dollar Go?**
+- The **clerk initially charged $30**, and the **total amount paid by guests was $30**.
+- The **bellhop returned $5**, so the **total amount paid by guests and bellhop = $30 + $5 = $35**.
+- But the **total amount paid by guests and bellhop is $32**, which is **$3 less than $35**.
+- Therefore, the **missing dollar is not in the bellhop or the guests**, but **in the clerk**.
+
+---
+
+### **Correct Reasoning:**
+- The **clerk initially charged $30**, and the **guests paid $10 each**, so **total amount paid by guests = $30**.
+- The **clerk realized the room was only $25**, so the **total amount charged was $25**.
+- The **bellhop returned $5**, so the **total amount paid by guests and bellhop = $30 + $5 = $35**.
+- But the **total amount paid by guests and bellhop is $32**, which is **$3 less than $35**.
+- Therefore, the **missing dollar is in the clerk**.
+
+---
+
+### **Final Answer:**
+The missing dollar went **to the clerk**. The clerk initially charged $30, but the room was only $25, so the clerk should have charged $25. The bellhop returned $5, and the bellhop kept $2, so the total amount paid by guests and bellhop is $32, which is $3 less than the $35 the clerk initially charged. Therefore, the missing dollar is **not in the guests or the bellhop**, but **in the clerk**.
+
+================================================================================
+### ra-1.7b | R2-fruit-algebra | reasoning | 623 tok / 8.5s
+================================================================================
+PROMPT:
+A store sells apples at 3 for $1 and oranges at 2 for $1. I buy 24 pieces of fruit total and spend exactly $9. How many apples and how many oranges did I buy? Show your working and verify the answer.
+
+--- ANSWER ---
+We are given the following information:
+
+- **Apples are sold at 3 for $1**  
+  So, 1 apple = $1/3  
+- **Oranges are sold at 2 for $1**  
+  So, 1 orange = $1/2  
+- **Total number of pieces of fruit = 24**  
+- **Total amount spent = $9**  
+- **We need to find how many apples and oranges I bought.**
+
+---
+
+### Step 1: Define variables
+
+Let:
+- $ a $ = number of apples  
+- $ o $ = number of oranges  
+
+From the problem, we have two equations:
+
+1. $ a + o = 24 $  (Total number of pieces of fruit)  
+2. $ \frac{a}{3} + \frac{o}{2} = 9 $  (Total cost in dollars)
+
+---
+
+### Step 2: Solve the system of equations
+
+We can solve this system using substitution or elimination. Let's use **elimination**.
+
+Multiply the first equation by 6 to eliminate the denominators:
+
+$$
+6a + 6o = 144
+$$
+
+Now multiply the second equation by 6:
+
+$$
+6\left(\frac{a}{3} + \frac{o}{2}\right) = 6 \times 9
+$$  
+$$
+2a + 3o = 54
+$$
+
+Now we have the system:
+
+$$
+\begin{cases}
+6a + 6o = 144 \\
+2a + 3o = 54
+\end{cases}
+$$
+
+Multiply the second equation by 2 to align the coefficients of $ a $:
+
+$$
+4a + 6o = 108
+$$
+
+Now subtract the first equation from this new equation:
+
+$$
+(4a + 6o) - (6a + 6o) = 108 - 144
+$$  
+$$
+-2a = -36
+$$  
+$$
+a = 18
+$$
+
+Now substitute $ a = 18 $ into the first equation:
+
+$$
+6(18) + 6o = 144  
+108 + 6o = 144  
+6o = 36  
+o = 6
+$$
+
+---
+
+### Step 3: Verify the answer
+
+- Number of apples = 18  
+- Number of oranges = 6  
+- Total number of pieces = 18 + 6 = **24** ✅  
+- Total cost = $18 \times \frac{1}{3} + 6 \times \frac{1}{2} = 6 + 3 = $9 ✅
+
+---
+
+### ✅ Final Answer:
+
+- **Apples = 18**  
+- **Oranges = 6**  
+
+You bought **18 apples** and **6 oranges**.
+
+================================================================================
+### ra-1.7b | A1-ops-502-toolplan | agentic | 1200 tok / 17.5s
+================================================================================
+PROMPT:
+You are an ops agent with exactly these tools: run_shell(cmd), read_file(path), http_get(url), send_slack(channel, msg). A production web service behind an nginx load balancer is returning intermittent 502s (roughly 1 in 20 requests). Lay out the concrete ordered sequence of tool calls you would make to diagnose and confirm the root cause. For each call, state the exact command/argument and what signal you are looking for in the output. Do not fix anything yet, just diagnose.
+
+--- ANSWER ---
+To diagnose and confirm the root cause of intermittent 502 Bad Gateway errors in a production web service behind an Nginx load balancer, the following ordered sequence of tool calls would be made. Each call is followed by the exact command/argument and the expected signal (e.g., HTTP status code, error message, or log lines) to look for.
+
+---
+
+### **1. Check Nginx Configuration for Errors**
+**Tool Call:** `read_file(path=/etc/nginx/conf.d/error.log)`  
+**Signal:** Look for lines containing `error` or `502` in the Nginx error log.  
+**Expected Output:**  
+- Lines with `error` or `502` indicating potential misconfigurations or misbehaving upstream servers.  
+- Example: `error: Failed to connect to upstream server: address '127.0.0.1'` or `502 Bad Gateway`.
+
+---
+
+### **2. Check Upstream Server Status**
+**Tool Call:** `http_get(url=http://<upstream-server>:<port>/health)`  
+**Signal:** Look for a response with `200 OK` or `502 Bad Gateway`.  
+**Expected Output:**  
+- If the upstream server is not responding, it will return a `502` or `503` (depending on the server's health).  
+- Example: `HTTP/1.1 502 Bad Gateway` or `HTTP/1.1 503 Service Unavailable`.
+
+---
+
+### **3. Check HTTP Status Code of the Upstream Server**
+**Tool Call:** `run_shell(cmd="cat /var/log/nginx/error.log | grep -i '502')")`  
+**Signal:** Look for lines containing `502` in the Nginx error log.  
+**Expected Output:**  
+- Lines with `502` indicating that the upstream server is returning a 502 status code.  
+- Example: `502 Bad Gateway` or `502: Bad Gateway`.
+
+---
+
+### **4. Check the Upstream Server's Logs**
+**Tool Call:** `run_shell(cmd="cat /var/log/nginx/error.log | grep -i 'upstream'")`  
+**Signal:** Look for lines that mention `upstream` or `proxy_pass` in the Nginx error log.  
+**Expected Output:**  
+- Lines that indicate the upstream server is being accessed via Nginx.  
+- Example: `error: Failed to connect to upstream server: address '127.0.0.1'` or `proxy_pass upstream;`.
+
+---
+
+### **5. Check the Upstream Server's HTTP Status Code**
+**Tool Call:** `run_shell(cmd="http_get(url=http://<upstream-server>:<port>/health")")`  
+**Signal:** Look for a response with `200 OK` or `502 Bad Gateway`.  
+**Expected Output:**  
+- If the upstream server is not responding, it will return a `502` or `503`.  
+- Example: `HTTP/1.1 502 Bad Gateway` or `HTTP/1.1 503 Service Unavailable`.
+
+---
+
+### **6. Check the Load Balancer Logs (Nginx or other backend)**
+**Tool Call:** `run_shell(cmd="cat /var/log/nginx/error.log | grep -i 'proxy_pass'")`  
+**Signal:** Look for lines that mention `proxy_pass` or `upstream` in the Nginx error log.  
+**Expected Output:**  
+- Lines that indicate the load balancer is forwarding requests to the upstream server.  
+- Example: `error: Failed to proxy request to upstream server: address '127.0.0.1'`.
+
+---
+
+### **7. Check the Upstream Server's Connection and Timeout**
+**Tool Call:** `run_shell(cmd="cat /var/log/nginx/error.log | grep -i 'timeout'")`  
+**Signal:** Look for lines with `timeout` or `502` in the Nginx error log.  
+**Expected Output:**  
+- Lines that indicate the upstream server is timing out or returning a `502` due to connection issues.  
+- Example: `error: timeout: 10s` or `502: timeout`.
+
+---
+
+### **8. Check the Upstream Server's IP Address and Port**
+**Tool Call:** `run_shell(cmd="http_get(url=http://<upstream-server>:<port>/health")")`  
+**Signal:** Look for lines that mention the upstream server's IP address or port.  
+**Expected Output:**  
+- Lines that show the upstream server's IP or port in the response.  
+- Example: `error: upstream server at 127.0.0.1:8080` or `proxy_pass http://127.0.0.1:8080`.
+
+---
+
+### **9. Check the Load Balancer's Configuration (Nginx or other backend)**
+**Tool Call:** `run_shell(cmd="cat /etc/nginx/conf.d/load_balancer.conf")`  
+**Signal:** Look for lines that specify the upstream server's IP or port.  
+**Expected Output:**  
+- Lines that define the upstream server's configuration.  
+- Example: `upstream my-upstream-server { server 127.0.0.1:8080; }`.
+
+---
+
+### **10. Check the Upstream Server's Response Time**
+**Tool Call:** `run_shell(cmd="http_get(url=http://<upstream-server>:<port>/health")")`  
+**Signal:** Look for lines that show the upstream server
+
+================================================================================
+### ra-1.7b | A2-nightly-oom | agentic | 1200 tok / 16.9s
+================================================================================
+PROMPT:
+A Python batch script that has run fine for months suddenly started getting OOM-killed at 3am every night, but only in production, never in staging. Give me your diagnostic plan as an ordered checklist, from cheapest / most-likely-to-most-informative first, to most expensive last. For each item say what you'd check and what result would incriminate or clear it.
+
+--- ANSWER ---
+Here's a **diagnostic checklist** for your Python batch script that is **OOM-killed at 3am every night** in **production**, but **not in staging**. This checklist is ordered from **cheapest / most-likely-to-most-informative** to **most expensive**, with each item explaining what to check and what result would **incriminate** or **clear** the issue.
+
+---
+
+### **1. Monitor Memory Usage (Most Likely to Most-Informative)**
+
+- **What to check**:  
+  - Use `psutil` or `memory_profiler` to track memory usage over time.  
+  - Check the script's memory footprint (e.g., `sys.getsizeof()` for objects, `gc` for garbage collection).  
+  - Monitor the script's memory usage during the night (3am) to see if it spikes.
+
+- **What to do**:  
+  - Run the script with memory profiling (e.g., `memory_profiler` or `psutil`).  
+  - Check if the script is using excessive memory (e.g., too many open files, too many objects, or too much heap usage).  
+  - If the script is using too much memory, it's likely due to **infinite loops**, **large data structures**, or **unoptimized code**.
+
+- **Result that would incriminate**:  
+  - Memory usage exceeds 90% of the system's available memory.  
+  - Memory usage spikes during the night, indicating a **memory leak** or **infinite loop**.  
+  - Memory usage is consistently high, even after the script finishes.
+
+- **Result that would clear**:  
+  - Memory usage drops to normal levels after the script finishes.  
+  - Memory usage is low and stable throughout the night.  
+  - No memory spikes or leaks detected.
+
+---
+
+### **2. Check for Infinite Loops or Deadlocks**
+
+- **What to check**:  
+  - Look for `while True` or `for` loops that run indefinitely.  
+  - Check for `threading` or `multiprocessing` issues (e.g., `Lock` or `Event` not being released).  
+  - Use `tracemalloc` to trace memory allocations and see if there are **unreleased objects**.
+
+- **What to do**:  
+  - Add `tracemalloc` to the script and run it during the night.  
+  - Look for memory leaks or **unreachable objects**.  
+  - Check if the script is running in a **threaded** or **multiprocessing** environment and ensure that all threads or processes are properly terminated.
+
+- **Result that would incriminate**:  
+  - Infinite loop detected (e.g., `while True` without a break).  
+  - Memory leak or unhandled exceptions in the script.  
+  - Memory usage increases indefinitely, indicating a **deadlock** or **infinite loop**.
+
+- **Result that would clear**:  
+  - No infinite loop detected.  
+  - Memory usage drops to normal levels after the script finishes.  
+  - No memory leaks or unhandled exceptions.
+
+---
+
+### **3. Check for Large Data Structures or Memory-Intensive Operations**
+
+- **What to check**:  
+  - Are there large lists, dictionaries, or arrays being used?  
+  - Are there **unoptimized** operations (e.g., using `numpy` for large arrays but not using `pandas` for data analysis).  
+  - Are there **large file I/O** operations (e.g., reading huge files, not closing them properly).
+
+- **What to do**:  
+  - Use `psutil` to monitor memory usage and see if the script is using too much memory.  
+  - Check if the script is using **large memory buffers** or **infinite data structures**.  
+  - If using `numpy`, ensure that the data is properly handled and not being stored in memory unnecessarily.
+
+- **Result that would incriminate**:  
+  - Memory usage is high due to large data structures.  
+  - Memory usage is high due to **infinite data structures** or **large buffers**.  
+  - Memory usage is high due to **memory-intensive operations** (e.g., large file reads, complex computations).
+
+- **Result that would clear**:  
+  - Memory usage is low and stable.  
+  - Memory usage is low due to **efficient data structures** or **optimized operations**.  
+  - No memory spikes or high memory usage during the night.
+
+---
+
+### **4. Check for Memory Leaks in the Script**
+
+- **What to check**:  
+  - Are there **unreleased objects** (e.g., `File` objects, `List` objects, `DatabaseConnection` objects)?  
+  - Are there **uninitialized variables** that are being referenced?  
+  - Are there **large memory allocations** that are not being released?
+
+- **What to do**:  
+  - Use `tracemalloc` to trace memory allocations and see if there are **unreachable objects**.  
+  - Check for **uncaught exceptions** that may be causing memory leaks.  
+  - Use `gc` to check for garbage collection and see if it's being used excessively.
+
+- **Result that would incriminate**:  
+  - Memory usage is high due to **unreachable objects** or **memory leaks**.  
+  - Memory usage is high due to **uncaught exceptions** or **unreleased objects**.  
+  - Memory usage is high due to **infinite loops** or **unoptimized code**.
+
+- **Result that would clear**:  
+  - Memory usage is low and stable.  
+  - Memory usage is low due to **efficient code** and **proper object management**.  
+  - No memory leaks or uncaught

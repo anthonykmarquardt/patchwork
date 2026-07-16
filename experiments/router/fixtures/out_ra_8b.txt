@@ -1,0 +1,441 @@
+
+================================================================================
+### ra-8b | R1-missing-dollar | reasoning | 1009 tok / 35.2s
+================================================================================
+PROMPT:
+Three people check into a hotel room. The clerk charges $30, so they each pay $10. Later the clerk realizes the room was only $25 and sends the bellhop to return $5. The bellhop keeps $2 and gives each guest $1 back. Now each guest paid $9, so 3 x $9 = $27, plus the bellhop's $2 = $29. Where did the missing dollar go? Explain precisely what is wrong with this reasoning.
+
+--- ANSWER ---
+This is a classic **mathematical puzzle** that appears to be a paradox, but it's actually a **misleading calculation** that hides a **logical error**.
+
+---
+
+### Let's break it down step by step:
+
+#### 1. **Initial Payment:**
+- The room costs **$25**.
+- Three people each pay **$10**, so total paid is:
+  $$
+  3 \times 10 = 30 \text{ dollars}
+  $$
+- The clerk keeps **$25** and gives **$5** back to the guests.
+
+#### 2. **Bellhop Returns the $5:**
+- The bellhop is sent to return **$5** to the guests.
+- He keeps **$2** and gives **$1** back to each guest.
+- So, each guest now has **$9** (because they paid $10 and got $1 back).
+- Total amount paid by guests is:
+  $$
+  3 \times 9 = 27 \text{ dollars}
+  $$
+- The bellhop keeps **$2**.
+
+#### 3. **Where is the missing dollar?**
+- The reasoning says: **$27 (guests) + $2 (bellhop) = $29**, but the room was only **$25**.
+- So, **$4 is missing**.
+
+---
+
+### **What's wrong with the reasoning?**
+
+The **error** lies in **incorrectly adding up the total amount paid**.
+
+Let’s clarify the **actual total amount paid**:
+
+- The **total amount paid** by the guests is **$30** (they each paid $10).
+- The **total amount the clerk received** is **$25** (the room cost).
+- The **bellhop gave back $5** to the guests, so the **total amount the guests actually paid** is:
+  $$
+  30 - 5 = 25 \text{ dollars}
+  $$
+- The **bellhop kept $2** and gave back **$1 to each guest**, so the **total amount the bellhop gave back** is:
+  $$
+  3 \times 1 = 3 \text{ dollars}
+  $$
+- Therefore, the **bellhop kept $2** and gave back **$3**, so the **total amount the bellhop kept** is:
+  $$
+  2 + 3 = 5 \text{ dollars}
+  $$
+- That matches the **$5** the clerk sent back.
+
+So, the **$27** that the reasoning says is the total paid by the guests is **incorrect**.
+
+---
+
+### **Correct Total Amount Paid by Guests:**
+
+- They each paid **$10**, so total is **$30**.
+- The **$5** was returned to them, so the **actual amount they paid** is:
+  $$
+  30 - 5 = 25 \text{ dollars}
+  $$
+- The **bellhop kept $2** and gave back **$1 to each guest**, so the **total amount the bellhop kept** is:
+  $$
+  2 + 3 = 5 \text{ dollars}
+  $$
+- So, the **total amount paid** is:
+  $$
+  25 \text{ (guests)} + 5 \text{ (bellhop)} = 30 \text{ dollars}
+  $$
+  which matches the original **$30** the guests paid.
+
+---
+
+### **Conclusion:**
+
+The **missing dollar** is not missing at all — it's **just an illusion** created by **incorrectly summing the amounts**.
+
+The **error** is in the reasoning that says:
+
+> "Now each guest paid $9, so 3 x $9 = $27, plus the bellhop's $2 = $29."
+
+This is **wrong** because:
+
+- The **$27** is not the total amount the guests paid — it's the **amount they paid after the bellhop returned $5**.
+- The **$27 + $2 = $29** is a **false total**.
+- The **correct total** is **$30**, which is the original amount the guests paid.
+
+---
+
+### **Final Answer:**
+
+There is **no missing dollar**. The reasoning is flawed because it **incorrectly adds up the amounts**. The **$27** is not the total amount paid by the guests — it's the **amount they paid after the bellhop returned $5**. The **$27 + $2 = $29** is a **false total**. The **correct total** is **$30**, which is the original amount the guests paid.
+
+================================================================================
+### ra-8b | R2-fruit-algebra | reasoning | 622 tok / 21.4s
+================================================================================
+PROMPT:
+A store sells apples at 3 for $1 and oranges at 2 for $1. I buy 24 pieces of fruit total and spend exactly $9. How many apples and how many oranges did I buy? Show your working and verify the answer.
+
+--- ANSWER ---
+We are given:
+
+- Apples are sold **3 for $1** → price per apple = $ \frac{1}{3} $
+- Oranges are sold **2 for $1** → price per orange = $ \frac{1}{2} $
+- You buy **24 pieces of fruit** total
+- You spend **exactly $9**
+
+We are to find how many **apples** and **oranges** you bought.
+
+---
+
+### Step 1: Let variables represent the number of apples and oranges
+
+Let:
+- $ a $ = number of apples
+- $ o $ = number of oranges
+
+We are given two equations:
+
+1. **Total number of fruits:**
+   $$
+   a + o = 24
+   $$
+
+2. **Total cost:**
+   $$
+   \frac{1}{3}a + \frac{1}{2}o = 9
+   $$
+
+---
+
+### Step 2: Solve the system of equations
+
+From the first equation:
+$$
+o = 24 - a
+$$
+
+Substitute into the second equation:
+$$
+\frac{1}{3}a + \frac{1}{2}(24 - a) = 9
+$$
+
+Simplify:
+$$
+\frac{1}{3}a + \frac{1}{2}(24) - \frac{1}{2}a = 9
+$$
+$$
+\frac{1}{3}a + 12 - \frac{1}{2}a = 9
+$$
+
+Combine like terms:
+$$
+\left( \frac{1}{3} - \frac{1}{2} \right)a + 12 = 9
+$$
+
+Find a common denominator for the fractions:
+$$
+\frac{2}{6} - \frac{3}{6} = -\frac{1}{6}
+$$
+
+So:
+$$
+-\frac{1}{6}a + 12 = 9
+$$
+
+Subtract 12 from both sides:
+$$
+-\frac{1}{6}a = -3
+$$
+
+Multiply both sides by -6:
+$$
+a = 18
+$$
+
+Now substitute back to find $ o $:
+$$
+o = 24 - a = 24 - 18 = 6
+$$
+
+---
+
+### Step 3: Verify the solution
+
+- Apples: 18 → cost = $ \frac{1}{3} \times 18 = 6 $
+- Oranges: 6 → cost = $ \frac{1}{2} \times 6 = 3 $
+- Total cost = $ 6 + 3 = 9 $
+- Total number of fruits = $ 18 + 6 = 24 $
+
+✅ **All conditions are satisfied.**
+
+---
+
+### ✅ Final Answer:
+
+- **Apples:** 18  
+- **Oranges:** 6
+
+================================================================================
+### ra-8b | A1-ops-502-toolplan | agentic | 1200 tok / 41.6s
+================================================================================
+PROMPT:
+You are an ops agent with exactly these tools: run_shell(cmd), read_file(path), http_get(url), send_slack(channel, msg). A production web service behind an nginx load balancer is returning intermittent 502s (roughly 1 in 20 requests). Lay out the concrete ordered sequence of tool calls you would make to diagnose and confirm the root cause. For each call, state the exact command/argument and what signal you are looking for in the output. Do not fix anything yet, just diagnose.
+
+--- ANSWER ---
+To diagnose the intermittent 502 Bad Gateway errors from a production web service behind an Nginx load balancer, I would follow a structured sequence of tool calls to gather information about the service, the Nginx configuration, and the network. Here is the **ordered sequence** of tool calls and what I would look for in the output:
+
+---
+
+### **1. Check Nginx Load Balancer Configuration**
+**Tool:** `read_file`  
+**Command:** `read_file /etc/nginx/conf.d/loadbalancer.conf`  
+**Signal to Look For:**  
+- The `upstream` block configuration (e.g., `server`, `port`, `proxy_pass`, `proxy_set_header`, `proxy_read_timeout`, etc.)  
+- Any `failover` or `backup` settings  
+- The `proxy_pass` target (e.g., the actual backend service URL)  
+- `proxy_read_timeout` and `proxy_send_timeout` values (which may be too short for the service to respond)
+
+---
+
+### **2. Test Backend Service Connectivity**
+**Tool:** `http_get`  
+**Command:** `http_get http://backend-service-ip:8080/health` (or a known endpoint)  
+**Signal to Look For:**  
+- HTTP status code (e.g., 200 OK for health, 502 for gateway error)  
+- Response time (latency)  
+- Any error messages in the response body (e.g., "502 Bad Gateway", "Internal Server Error", or timeout messages)
+
+---
+
+### **3. Check Backend Service Logs**
+**Tool:** `read_file`  
+**Command:** `read_file /var/log/backend-service.log` (or the appropriate log path)  
+**Signal to Look For:**  
+- Any error messages or stack traces related to the service (e.g., "upstream timeout", "connection refused", "502 Bad Gateway")  
+- Logs around the time of the error (e.g., timestamps, request IDs, or IPs)  
+- Any indication of backend service unavailability or misconfiguration
+
+---
+
+### **4. Test Backend Service Health (If Available)**
+**Tool:** `http_get`  
+**Command:** `http_get http://backend-service-ip:8080/health` (or a similar endpoint)  
+**Signal to Look For:**  
+- HTTP status code (e.g., 200 OK, 502, 503, 504)  
+- Response time  
+- Any health check failure messages (e.g., "Down", "Unreachable", "Timeout")
+
+---
+
+### **5. Check Nginx Access Logs for Failed Requests**
+**Tool:** `read_file`  
+**Command:** `read_file /var/log/nginx/access.log`  
+**Signal to Look For:**  
+- Requests that resulted in 502 errors  
+- The `upstream` server name or IP (to match the backend service)  
+- Request timestamps and durations  
+- Any `proxy_pass` or `proxy_read_timeout` values in the log (if available)
+
+---
+
+### **6. Test Backend Service Response Time**
+**Tool:** `http_get`  
+**Command:** `http_get http://backend-service-ip:8080/health` (or a known endpoint)  
+**Signal to Look For:**  
+- Response time (e.g., 100ms, 500ms, or longer)  
+- Any indication of slow or unresponsive backend (e.g., "502", "503", or "504" in the response)  
+- If the service is slow, it may be causing Nginx to time out and return a 502
+
+---
+
+### **7. Test Backend Service Connectivity from Nginx**
+**Tool:** `run_shell`  
+**Command:** `run_shell "curl -v http://localhost:8080/health"` (or the actual backend port)  
+**Signal to Look For:**  
+- Whether the backend service is reachable from Nginx (e.g., "Connected to backend", "200 OK", or "502 Bad Gateway")  
+- Any proxy or network-related errors in the curl output (e.g., "proxy_read_timeout", "Connection refused", etc.)
+
+---
+
+### **8. Check Nginx Error Logs for Gateway Failures**
+**Tool:** `read_file`  
+**Command:** `read_file /var/log/nginx/error.log`  
+**Signal to Look For:**  
+- Any "502 Bad Gateway" error messages  
+- The upstream server name or IP (to match the backend service)  
+- Request timestamps and any associated error codes
+
+---
+
+### **9. Test Backend Service with a Simple Request**
+**Tool:** `http_get`  
+**Command:** `http_get http://backend-service-ip:8080/` (or a simple endpoint)  
+**Signal to Look For:**  
+- HTTP status code (e.g., 200 OK, 502, 503, 504)  
+- Response time  
+- Any error messages in the response body or headers
+
+---
+
+### **10. Check Nginx Timeout Settings**
+**Tool:** `read_file`  
+**Command:** `read_file /etc/nginx/conf.d/loadbalancer.conf`  
+**Signal to Look For:**  
+- `proxy_read_timeout` and `proxy_send_timeout` values  
+- `proxy_connect_timeout` (if applicable)  
+- Any `failover` or `backup` settings that may be causing Nginx to retry or fail to connect
+
+---
+
+### **11. Test Backend Service with a Different Client**
+**Tool:** `run_shell`  
+**Command:** `run_shell "curl -v http://backend
+
+================================================================================
+### ra-8b | A2-nightly-oom | agentic | 1200 tok / 41.9s
+================================================================================
+PROMPT:
+A Python batch script that has run fine for months suddenly started getting OOM-killed at 3am every night, but only in production, never in staging. Give me your diagnostic plan as an ordered checklist, from cheapest / most-likely-to-most-informative first, to most expensive last. For each item say what you'd check and what result would incriminate or clear it.
+
+--- ANSWER ---
+Here's a **diagnostic plan** for your Python batch script that suddenly started getting **OOM-killed (Out of Memory)** at **3am every night in production**, but **not in staging**. The plan is ordered from **cheapest / most likely** to **most expensive / most informative**, with clear **checks** and **results** that would **incriminate or clear** the issue.
+
+---
+
+## ✅ **1. Check for Memory Leaks (Most Likely / Cheapest)**
+
+### What to Check:
+- **Memory usage over time** in production (e.g., using `top`, `htop`, `ps`, or `memory_profiler`).
+- **Logs** for the script or application (e.g., `sys.stderr`, `logging`, or application logs).
+- **Script execution time** — if it's running for a long time and then crashing, it might be a memory leak.
+
+### What to Look For:
+- **Memory usage increasing over time** (e.g., from 500MB to 5GB).
+- **Crash logs** indicating `OOM` or `MemoryError`.
+- **Script running for hours** before crashing.
+
+### Result:
+- **If memory usage is increasing and the script is running for hours**, this suggests a **memory leak**.
+- **If memory usage is stable**, the issue is **not a leak**.
+
+---
+
+## ✅ **2. Check for Unbounded Data Structures (Most Likely / Cheapest)**
+
+### What to Check:
+- **Data structures** (e.g., lists, dicts, sets) that might be growing indefinitely.
+- **Input data** — is it being read from a file, database, or API that could be large or unbounded?
+- **Caching** — is the script caching large amounts of data without limits?
+
+### What to Look For:
+- **Large data structures** being created and not released.
+- **Unbounded input** (e.g., reading from a file that's not being closed, or a stream that's not being limited).
+- **Caching with no size limit**.
+
+### Result:
+- **If large data structures are being created and not released**, this is a **memory leak**.
+- **If the script is reading from a large file or stream**, it might be **buffering too much data**.
+
+---
+
+## ✅ **3. Check for Background Processes or Threads (Most Likely / Cheapest)**
+
+### What to Check:
+- **Are there background threads or processes** running that might be consuming memory?
+- **Is the script running in a long-running process** (e.g., a daemon, a service, or a scheduled task)?
+- **Are there any child processes** (e.g., `subprocess`) that might be leaking memory?
+
+### What to Look For:
+- **High memory usage in background processes**.
+- **Threads or processes that are not being properly terminated**.
+- **Child processes that are not being cleaned up**.
+
+### Result:
+- **If background processes are running and consuming memory**, this could be the cause.
+- **If the script is running in a long-running process**, it might be **leaking memory over time**.
+
+---
+
+## ✅ **4. Check for Unhandled Exceptions or Crashes (Most Likely / Cheapest)**
+
+### What to Check:
+- **Crash logs** — are there any unhandled exceptions or `Traceback` in the logs?
+- **Signal handling** — is the script catching `SIGKILL` or `SIGOOM`?
+- **Application health checks** — are there any health checks or monitoring tools that could detect crashes?
+
+### What to Look For:
+- **Crash logs** with `OOM` or `MemoryError` messages.
+- **Uncaught exceptions** in the script or application.
+- **Application health checks** indicating a crash or restart.
+
+### Result:
+- **If there are crash logs with `OOM` or `MemoryError`**, this is a **memory issue**.
+- **If the script is crashing due to uncaught exceptions**, this is a **code issue**.
+
+---
+
+## ✅ **5. Check for Resource Contention (Most Likely / Cheapest)**
+
+### What to Check:
+- **Are there other processes** on the server that might be competing for memory?
+- **Is the server under load** (e.g., high CPU, high disk I/O, or other memory-intensive services)?
+- **Is the script being run in a container** (e.g., Docker) with limited memory?
+
+### What to Look For:
+- **High memory usage on the server** (not just the script).
+- **Other services or processes** using up memory.
+- **Container memory limits** being hit.
+
+### Result:
+- **If the server is under load**, this could be a **system-level issue**.
+- **If the script is running in a container with low memory limits**, this is a **configuration issue**.
+
+---
+
+## ✅ **6. Check for Large File or Database Operations (Most Likely / Cheapest)**
+
+### What to Check:
+- **Are large files being read or processed** (e.g., CSV, JSON, or binary files)?
+- **Is the script interacting with a database** that might be returning large result sets?
+- **Are there any bulk operations** (e.g., `INSERT`, `UPDATE`, or `SELECT` with large result sets)?
+
+### What to Look For:
+- **Large files being read** (e.g., 1GB+ files).
+- **Large result sets** from database queries.
+- **Memory usage spikes** when processing large data.
+
+### Result:
+- **If large files are being read**, this could be a **buffering or memory issue**.
+- **If large result sets are being returned**, this could be a **query or result

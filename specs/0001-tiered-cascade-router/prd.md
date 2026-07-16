@@ -107,9 +107,10 @@ observability as a cross-cutting fourth requirement.
 - [ ] Exemplar-growth loop: verified production traces → appended to the exemplar
       store (guarded by the PII rule — store features/hash, not raw text).
 - [ ] Wire the served tiers to existing endpoints (spark registry / `mlx_lm.server`).
-- [ ] Empirical closure (see decisions.md): validate embedder via V2; tune per-class
-      verifiers against this session's known T0 failure outputs; run the λ sweep and
-      record chosen per-class λ.
+- [x] Empirical closure (see **results.md**): verifiers tuned against the real T0
+      failure outputs (**closed**); λ sweep run → adopted per-class 0.40/0.35/0.20
+      (directional); embedder V2 run → bge-small kept, V2 is **P1-limited** (not
+      embedder-limited). Harness: `experiments/router/closure.py`.
 - [ ] Flip `status.yaml` `state: draft → ready` once the empirical-closure step
       above is done and design.md §Open items are settled.
 
@@ -135,6 +136,15 @@ Recorded in full in **`decisions.md`** (with rationale and expected failure mode
 
 ## Open items (settle before `ready`)
 
-- Embedder validation result (V2) — confirm bge-small clears the baseline.
-- Final per-class verifier thresholds (from tuning against failure outputs).
-- Chosen per-class λ (from the sweep).
+Empirical closure is done (see **results.md**); what remains is a design call it
+surfaced, plus firming numbers on more data:
+
+- **Predictor posture (new, from Exp 1 / P1):** pure-embedding kNN predicts *class*
+  but not *tier* at low n. Decide: add an explicit difficulty feature to the
+  predictor, **or** ship a prefilter+cascade-dominant router and let the D6
+  exemplar-growth loop strengthen the predictor over time. (This is the
+  difficulty-aware rethink flagged in decisions.md §closing.)
+- **Firm the per-class λ** (adopted 0.40/0.35/0.20 directionally) on a larger
+  battery; wire recalibration from observability data.
+- Verifier config is **settled** (nested-tool check in, step-sprawl out; R1/R2
+  checks; emotional → D5 floor) — carry into implementation.
