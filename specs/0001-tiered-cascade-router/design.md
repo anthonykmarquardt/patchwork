@@ -84,6 +84,49 @@ Cascades are FrugalGPT-lineage; the novelty here is pairing the cascade with the
 kNN predictor so most queries *start* at the right tier and the cascade only pays
 for escalation on the minority that need it.
 
+## 4. Observability (`trace.py` + telemetry) — cross-cutting
+
+The router is a decision engine; if the decisions are opaque we cannot judge
+success, debug a misroute, tune the verifiers/λ, or grow the exemplar set. So
+observability is designed in, not bolted on. It must satisfy the repo's mandatory
+**Runtime Logging** standard (JSONL, `ts/level/component/event/session_id/pid` +
+event-specific fields) and the **PII rule** (never log raw query content).
+
+**What every routed query emits — a decision trace:**
+```
+route_id, ts, session_id, class,
+prefilter:   { hint, floor, reason }
+predictor:   { embedder, k, neighbors:[{id,dist,tier}], utility_by_tier, lambda, predicted_tier }
+cascade:     [ { tier, gen_ms, tokens, verifier, verdict, score, reason }, ... ]   # one per attempt
+outcome:     { final_tier, escalations, total_ms, router_overhead_ms }
+```
+Returned inline on `route()` (the `trace` field) **and** persisted to
+`logs/router/<YYYY-MM-DD>.jsonl`.
+
+**Event classes** (each a JSONL line): `routing_decision` (prefilter+predictor),
+`tier_dispatched`, `verifier_result`, `escalation`, `route_completed`.
+
+**PII discipline (hard rule).** Emotional queries carry sensitive disclosures.
+Logs store a **query hash + derived features** (length, class, detected cues,
+listicle-ratio of the *response*) — never the raw prompt or completion. Debugging
+qualitative failures without content is harder (a known tension — see
+decisions.md), so the trace keeps rich *structured* signal to compensate.
+
+**Aggregate report (`report.json`)** rolls the JSONL up into the numbers that
+define success: tier distribution, escalation rate (overall + per class),
+per-stage latency, per-class quality, verifier false-accept / false-escalate
+rates, and **cost saved vs T2-only**. `router inspect <route_id>` renders a single
+trace for debugging.
+
+**Two second-order payoffs, by design:**
+- *Tuning substrate.* The λ sweep and per-class verifier thresholds are read off
+  this data — you cannot close those design questions without it.
+- *Exemplar growth.* A verified production trace is a labeled datapoint
+  `(query-features → tier that satisfied it)`. Appended to the exemplar store
+  (features/hash only, per the PII rule), it densifies the kNN index over time —
+  the router improves with traffic. This directly mitigates the cold-start failure
+  mode in decisions.md.
+
 ## Interfaces
 
 - `route(query) -> {answer, tier, escalations, trace}` — the one public entry.
@@ -96,6 +139,12 @@ for escalation on the minority that need it.
 
 Token-level routing, latent bridging, a trained router model, API-model routing,
 and the memory-tiering loader (router only *selects* a resident tier).
+
+## Decisions & known failure modes
+
+The rationale behind each choice above, and an honest catalog of **where this
+design is expected to break**, live in [`decisions.md`](decisions.md). Read it
+before proposing a redesign — the seams are documented on purpose.
 
 ## References
 

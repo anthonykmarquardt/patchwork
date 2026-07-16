@@ -4,7 +4,7 @@ title: "Tiered cascade router — programmatic prefilter → kNN tier predictor 
 state: "draft"
 owner: "unassigned"
 created: "2026-07-15"
-updated: "2026-07-15"
+updated: "2026-07-16"
 
 verifier:
   kind: "harness"
@@ -20,9 +20,11 @@ targets:
   - router
 paths:
   - "experiments/router/**"
+  - "logs/router/**"
 labels:
   - "routing"
   - "cascade"
+  - "observability"
   - "cost-quality"
 metadata:
   motivation: >
@@ -31,18 +33,22 @@ metadata:
     is confidently wrong on judgment tasks — which forces a cascade (verify +
     escalate), not a bare upfront router.
   notes: >
-    All three layers in one spec per operator direction ("1, 2, 3, cascade").
-    Layer 2 (kNN predictor) follows arXiv:2505.12601 — kNN over standard
-    embeddings matches/beats learned routers and needs no training; a tier is
-    added by dropping exemplars. The seed exemplar/label set is this session's
-    eval battery (R1/R2/A1/A2/E1/E2 × per-tier pass/fail).
+    Four requirements per operator direction: prefilter → kNN predictor → cascade,
+    plus observability as a first-class, cross-cutting requirement (a router we
+    cannot see into cannot be judged, debugged, tuned, or grown). Layer 2 follows
+    arXiv:2505.12601 (kNN >= learned routers, no training; add a tier by dropping
+    exemplars). Seed exemplars = this session's eval battery.
 
-    State is "draft": three design questions remain (embedder choice, verifier
-    strength per class, λ default). Flip to "ready" once those close, then the
-    dev-loop/implementer can claim it. Paper PDF: references/.
+    Design decisions are RESOLVED (embedder bge-small; per-class verifiers matched
+    to failure type; per-class λ from one principle — λ inversely tracks verifier
+    reliability); full rationale + expected failure modes in decisions.md. State
+    stays "draft" pending EMPIRICAL closure only: validate embedder (V2), tune
+    per-class verifier thresholds against the known T0 failure outputs, run the λ
+    sweep. Flip to "ready" after that. Paper PDF: references/.
   references:
-    - "arXiv:2505.12601 — Rethinking Predictive Modeling for LLM Routing: When Simple kNN Beats Complex Learned Routers (PDF in references/)"
-    - "arXiv:2506.16655 — Arch-Router"
-    - "arXiv:2603.04445 — Dynamic Model Routing and Cascading survey"
+    - "decisions.md — design decisions + expected failure modes (read before redesign)"
+    - "arXiv:2505.12601 — kNN >= learned routers (PDF in references/)"
+    - "arXiv:2506.16655 — Arch-Router; arXiv:2603.04445 — routing/cascade survey"
     - "spark/MODEL-EVAL-2026-07-15.md — tier capability matrix + failure modes"
     - "spark/spikes/human-emotion-eval-skill.md — the battery that seeds the exemplars"
+    - "../CLAUDE.md — mandatory Runtime Logging standard + PII rule (observability)"
