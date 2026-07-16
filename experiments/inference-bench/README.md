@@ -154,3 +154,55 @@ Reproduce: `scratchpad/sweep.sh` drives it (`sweep.sh out.jsonl 256 "label|repo|
 `spark run ornith` serves the DFlash arm live. Spark wiring lives in
 `~/.config/spark/config.toml` (runtime binary override) + the `ornith-1.0-9b-4bit`
 registry entry (`launch_overrides`). **Host:** Apple M2, 17.2 GB.
+
+## Result #003 — PrismML Ternary Bonsai 27B at 2-bit, MLX (2026-07-15)
+
+Can an extreme-low-bit 27B decode on this 16 GB M2 at all — and how does it sit
+against the 9B baselines? PrismML's **Ternary-Bonsai-27B** is Qwen3.6-27B moved to
+ternary weights; the HF MLX repo ships them as **stock MLX affine 2-bit (g128)** —
+`model_type qwen3_5` (same family as Ornith), so `mlx_lm` 0.31.3 loads it with no
+fork and no custom kernel. (The "custom 2-bit hybrid-attention kernels" PrismML
+advertises are only on the *GGUF/llama.cpp* path — a separate PrismML fork — not
+this MLX build.) It's a `ForConditionalGeneration` VLM, but the lean `mlx_lm` text
+path serves it fine; image input would route through mlx_vlm (untested).
+
+Same harness as #001/#002: `bench.py`, 256-tok, temp 0, median of 3 warm runs,
+served via `spark run ternary-bonsai-27b-mlx-2bit` (`mlx_lm.server` on :8081).
+
+| Model | Params | Runtime | Quant | Weights on disk | Peak RSS | Decode tok/s | TTFT (warm) |
+|---|---|---|---|---|---|---|---|
+| **Bonsai** | **27.8B** | `mlx_lm.server` | MLX 2-bit affine g128 | 8.49 GB | **7.86 GB** | **9.55** (9.48–9.60) | ~0.35 s |
+| Ornith (#002) | 9.0B | `mlx_lm` | 8-bit | ~10.5 GB | ~10.5 GB | 10.3 | — |
+| Ornith (#002) | 9.0B | `mlx_lm` | 4-bit | ~5.2 GB | ~5.2 GB | 18.2 | ~0.25 s |
+
+Rock-stable across runs (deterministic at temp 0). Raw `mlx_lm.generate` clocks
+11.3 tok/s on a short prompt; the served/streamed number under the standard bench
+(longer thinking prompt) is **9.55** — that's the comparable figure.
+
+### The finding that matters for patchwork
+
+**A 27.8B model fits the 16 GB box in 7.86 GB peak and decodes at ~9.5 tok/s —
+right in the envelope of Ornith-9B at *8-bit* (10.5 GB, 10.3 tok/s).** Extreme-low-bit
+buys you a **3× larger model at the same memory + throughput cost** as a mid-bit
+9B. This is a direct, real data point for patchwork's north-star ("~30B-equivalent
+capability at ~16 GB"): a single 2-bit 27B is one concrete way to hit that
+envelope — the modular-composition alternative now has a monolithic baseline to
+beat, on both quality (PrismML claims ~95% of FP16) and the tok/s above.
+
+Caveats:
+- **Not a quality measurement.** This is decode throughput on a thinking model;
+  most of the 256-tok budget is chain-of-thought. Whether the 2-bit 27B actually
+  out-reasons a 4-bit 9B is a separate eval, not run here.
+- **Bandwidth, not the point of comparison to PrismML's numbers.** PrismML cites
+  26 tok/s (M5 Pro) / 87 (M5 Max) for this build; 9.55 on an M2 is roughly the
+  memory-bandwidth ratio. Re-baseline on the M4 Max target profile before treating
+  9.55 as anything but this-host.
+- **2-bit affine ≠ their "1.71 bits/weight."** The efficient ternary packing that
+  hits 1.71 bpw lives in the GGUF/native path; the MLX repo spends a full 2 bits
+  (hence 8.49 GB for 27.8B). A native-packed MLX build, if PrismML ships one, would
+  shrink footprint further.
+
+Reproduce: `spark run ternary-bonsai-27b-mlx-2bit` (registry entry
+`~/.local/share/spark/models/ternary-bonsai-27b-mlx-2bit.toml`, backend `mlx_lm`),
+then `python3 bench.py --base-url http://127.0.0.1:8081/v1 --model prism-ml/Ternary-Bonsai-27B-mlx-2bit --runs 3`.
+**Host:** Apple M2, 16 GB.
