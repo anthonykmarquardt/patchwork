@@ -1,0 +1,48 @@
+id: "0001"
+slug: "tiered-cascade-router"
+title: "Tiered cascade router — programmatic prefilter → kNN tier predictor → verify-and-escalate"
+state: "draft"
+owner: "unassigned"
+created: "2026-07-15"
+updated: "2026-07-15"
+
+verifier:
+  kind: "harness"
+  command: >
+    python experiments/router/verify.py
+    --battery experiments/router/battery.jsonl
+    --report experiments/router/report.json
+    --assert-thresholds
+  requires_tests: true
+depends_on: []
+blocks: []
+targets:
+  - router
+paths:
+  - "experiments/router/**"
+labels:
+  - "routing"
+  - "cascade"
+  - "cost-quality"
+metadata:
+  motivation: >
+    First composition primitive for patchwork. Established this session: three
+    local tiers (Bonsai 1.7B/8B/27B ternary) with a hard failure mode — the 1.7B
+    is confidently wrong on judgment tasks — which forces a cascade (verify +
+    escalate), not a bare upfront router.
+  notes: >
+    All three layers in one spec per operator direction ("1, 2, 3, cascade").
+    Layer 2 (kNN predictor) follows arXiv:2505.12601 — kNN over standard
+    embeddings matches/beats learned routers and needs no training; a tier is
+    added by dropping exemplars. The seed exemplar/label set is this session's
+    eval battery (R1/R2/A1/A2/E1/E2 × per-tier pass/fail).
+
+    State is "draft": three design questions remain (embedder choice, verifier
+    strength per class, λ default). Flip to "ready" once those close, then the
+    dev-loop/implementer can claim it. Paper PDF: references/.
+  references:
+    - "arXiv:2505.12601 — Rethinking Predictive Modeling for LLM Routing: When Simple kNN Beats Complex Learned Routers (PDF in references/)"
+    - "arXiv:2506.16655 — Arch-Router"
+    - "arXiv:2603.04445 — Dynamic Model Routing and Cascading survey"
+    - "spark/MODEL-EVAL-2026-07-15.md — tier capability matrix + failure modes"
+    - "spark/spikes/human-emotion-eval-skill.md — the battery that seeds the exemplars"
