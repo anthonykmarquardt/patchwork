@@ -1,0 +1,78 @@
+# A3 | class agentic | final T0 | escalations 0 | flagged False
+--- QUERY ---
+You are an ops agent with tools kubectl/dig/curl/read_file. A pod cannot resolve external DNS names but cluster-internal service names work. Give the ordered tool calls to diagnose.
+--- ANSWER ---
+To diagnose why a pod cannot resolve external DNS names but can resolve cluster-internal service names, you can use the following ordered tool calls with `kubectl`, `dig`, and `curl`:
+
+---
+
+### **1. Check Pod's Network Configuration**
+Use `kubectl get pods` to see if the pod is using a network that doesn't allow external DNS resolution.
+
+```bash
+kubectl get pods -o jsonpath='{.metadata.name}:{{.status.phase}}'
+```
+
+Look for any pods that are in the `Pending` or `Running` phase and check their network configuration.
+
+---
+
+### **2. Check Pod's DNS Resolution**
+Use `dig` to see if the pod can resolve external DNS names.
+
+```bash
+dig @<pod-ip> <external-domain-name>
+```
+
+Replace `<pod-ip>` with the actual IP address of the pod and `<external-domain-name>` with a known external domain (e.g., `google.com`, `example.com`).
+
+---
+
+### **3. Check Pod's DNS Resolution via `read_file`**
+Use `read_file` to check if the pod's DNS configuration is set correctly.
+
+```bash
+read_file /etc/resolv.conf
+```
+
+Look for lines that might be preventing external DNS resolution, such as:
+
+```
+nameserver 8.8.8.8
+nameserver 8.8.4.4
+```
+
+These are typically used for internal DNS resolution, not external.
+
+---
+
+### **4. Check Cluster-Internal Service Names**
+Use `kubectl get services` to see if the service name is correct and if it's configured to use internal DNS.
+
+```bash
+kubectl get services -o jsonpath='{.metadata.name}:{{.status.phase}}'
+```
+
+Look for services that are in the `Running` phase and check their `type` and `address`.
+
+---
+
+### **5. Check Pod's Network Policy**
+Use `kubectl get pods` with `--network-policy=host` to see if the pod is restricted to the host network.
+
+```bash
+kubectl get pods -o jsonpath='{.metadata.name}:{{.status.phase}}' --network-policy=host
+```
+
+If the pod is in the `Pending` phase, it might be blocked from accessing external services.
+
+---
+
+### **6. Check Pod's DNS Resolution via `curl`**
+Use `curl` to test DNS resolution from the pod.
+
+```bash
+curl -v -s https://example.com
+```
+
+Replace `https://example.com` with a

@@ -1,0 +1,484 @@
+{
+  "bench": "darkcore-v0.1",
+  "ts": "2026-07-16T22:36:42",
+  "config_version": 2,
+  "n_queries": 12,
+  "tier_distribution": {
+    "T2": 2,
+    "T0": 6,
+    "T1": 4
+  },
+  "pct_at_or_below_T1": 83.3,
+  "escalation_rate": 0.417,
+  "class_detection_accuracy": 0.833,
+  "flagged": [],
+  "labeled_subset": {
+    "n": 6,
+    "cascade_total_s": 618.7,
+    "t2_only_total_s": 1061.5,
+    "speedup_vs_t2_only": 1.72,
+    "mean_quality_cascade": 0.9,
+    "mean_quality_t2_only": 0.992
+  },
+  "t2_baseline": {
+    "R1": {
+      "load_ms": 3829.2,
+      "gen_ms": 175319.3,
+      "tokens": 1378,
+      "tps": 7.98,
+      "wall_s": 179.31
+    },
+    "R2": {
+      "load_ms": 0.0,
+      "gen_ms": 198611.6,
+      "tokens": 1536,
+      "tps": 7.81,
+      "wall_s": 198.61
+    },
+    "A1": {
+      "load_ms": 0.0,
+      "gen_ms": 190803.2,
+      "tokens": 1536,
+      "tps": 8.14,
+      "wall_s": 190.8
+    },
+    "A2": {
+      "load_ms": 0.0,
+      "gen_ms": 188694.8,
+      "tokens": 1536,
+      "tps": 8.22,
+      "wall_s": 188.7
+    },
+    "E1": {
+      "load_ms": 0.0,
+      "gen_ms": 117009.2,
+      "tokens": 970,
+      "tps": 8.43,
+      "wall_s": 117.01
+    },
+    "E2": {
+      "load_ms": 0.0,
+      "gen_ms": 187255.3,
+      "tokens": 1536,
+      "tps": 8.29,
+      "wall_s": 187.26
+    }
+  },
+  "routes": [
+    {
+      "id": "R1",
+      "class_expected": "reasoning",
+      "class_detected": "reasoning",
+      "start_tier": "T0",
+      "final_tier": "T2",
+      "escalations": 2,
+      "flagged": false,
+      "attempts": [
+        {
+          "tier": "T0",
+          "outcome": "fail",
+          "load_ms": 734.3,
+          "ttft_ms": 190.9,
+          "gen_ms": 4527.0,
+          "tokens": 512,
+          "tps": 118.4,
+          "verify_ms": 4838.3,
+          "rung": 4
+        },
+        {
+          "tier": "T1",
+          "outcome": "fail",
+          "load_ms": 0.0,
+          "ttft_ms": 487.8,
+          "gen_ms": 21345.0,
+          "tokens": 729,
+          "tps": 34.99,
+          "verify_ms": 67959.8,
+          "rung": 4
+        },
+        {
+          "tier": "T2",
+          "outcome": "pass",
+          "load_ms": 0.0,
+          "ttft_ms": 1545.8,
+          "gen_ms": 133521.3,
+          "tokens": 1378,
+          "tps": 10.45,
+          "verify_ms": 0.0,
+          "rung": 4
+        }
+      ],
+      "total_ms": 235513.5,
+      "overhead_ms": 0.01,
+      "wall_s": 235.51,
+      "labels": {
+        "T0": 0.1,
+        "T1": 0.85,
+        "T2": 1.0
+      },
+      "smallest_sat": "T1",
+      "route_id": "d6753ff191d0"
+    },
+    {
+      "id": "R2",
+      "class_expected": "reasoning",
+      "class_detected": "reasoning",
+      "start_tier": "T0",
+      "final_tier": "T0",
+      "escalations": 0,
+      "flagged": false,
+      "attempts": [
+        {
+          "tier": "T0",
+          "outcome": "pass",
+          "load_ms": 732.5,
+          "ttft_ms": 167.3,
+          "gen_ms": 3583.4,
+          "tokens": 410,
+          "tps": 120.45,
+          "verify_ms": 0.0,
+          "rung": 1
+        }
+      ],
+      "total_ms": 4450.4,
+      "overhead_ms": 0.05,
+      "wall_s": 4.45,
+      "labels": {
+        "T0": 1.0,
+        "T1": 1.0,
+        "T2": 1.0
+      },
+      "smallest_sat": "T0",
+      "route_id": "ea5c25a3f6a8"
+    },
+    {
+      "id": "A1",
+      "class_expected": "agentic",
+      "class_detected": "agentic",
+      "start_tier": "T0",
+      "final_tier": "T1",
+      "escalations": 1,
+      "flagged": false,
+      "attempts": [
+        {
+          "tier": "T0",
+          "outcome": "fail",
+          "load_ms": 0.0,
+          "ttft_ms": 166.7,
+          "gen_ms": 4517.0,
+          "tokens": 512,
+          "tps": 118.01,
+          "verify_ms": 0.0,
+          "rung": 0
+        },
+        {
+          "tier": "T1",
+          "outcome": "pass",
+          "load_ms": 1300.4,
+          "ttft_ms": 509.7,
+          "gen_ms": 23765.8,
+          "tokens": 768,
+          "tps": 33.07,
+          "verify_ms": 0.0,
+          "rung": 0
+        }
+      ],
+      "total_ms": 29585.3,
+      "overhead_ms": 0.01,
+      "wall_s": 29.59,
+      "labels": {
+        "T0": 0.2,
+        "T1": 0.85,
+        "T2": 1.0
+      },
+      "smallest_sat": "T1",
+      "route_id": "b0f5a930e037"
+    },
+    {
+      "id": "A2",
+      "class_expected": "agentic",
+      "class_detected": "default",
+      "start_tier": "T0",
+      "final_tier": "T2",
+      "escalations": 2,
+      "flagged": false,
+      "attempts": [
+        {
+          "tier": "T0",
+          "outcome": "fail",
+          "load_ms": 0.0,
+          "ttft_ms": 193.4,
+          "gen_ms": 4880.5,
+          "tokens": 512,
+          "tps": 109.56,
+          "verify_ms": 3756.5,
+          "rung": 4
+        },
+        {
+          "tier": "T1",
+          "outcome": "fail",
+          "load_ms": 0.0,
+          "ttft_ms": 504.6,
+          "gen_ms": 27982.1,
+          "tokens": 768,
+          "tps": 27.99,
+          "verify_ms": 86134.40000000001,
+          "rung": 4
+        },
+        {
+          "tier": "T2",
+          "outcome": "pass",
+          "load_ms": 0.0,
+          "ttft_ms": 1833.3,
+          "gen_ms": 187853.9,
+          "tokens": 1536,
+          "tps": 8.26,
+          "verify_ms": 0.0,
+          "rung": 4
+        }
+      ],
+      "total_ms": 310767.2,
+      "overhead_ms": 0.05,
+      "wall_s": 310.77,
+      "labels": {
+        "T0": 0.35,
+        "T1": 0.6,
+        "T2": 1.0
+      },
+      "smallest_sat": "T2",
+      "route_id": "33bd221cb18c"
+    },
+    {
+      "id": "E1",
+      "class_expected": "emotional",
+      "class_detected": "emotional",
+      "start_tier": "T1",
+      "final_tier": "T1",
+      "escalations": 0,
+      "flagged": false,
+      "attempts": [
+        {
+          "tier": "T1",
+          "outcome": "pass",
+          "load_ms": 1231.9,
+          "ttft_ms": 477.6,
+          "gen_ms": 6240.6,
+          "tokens": 165,
+          "tps": 28.78,
+          "verify_ms": 0.0,
+          "rung": 5
+        }
+      ],
+      "total_ms": 7593.8,
+      "overhead_ms": 0.03,
+      "wall_s": 7.59,
+      "labels": {
+        "T0": 0.35,
+        "T1": 0.8,
+        "T2": 1.0
+      },
+      "smallest_sat": "T1",
+      "route_id": "6d88271de286"
+    },
+    {
+      "id": "E2",
+      "class_expected": "emotional",
+      "class_detected": "emotional",
+      "start_tier": "T1",
+      "final_tier": "T1",
+      "escalations": 0,
+      "flagged": false,
+      "attempts": [
+        {
+          "tier": "T1",
+          "outcome": "pass",
+          "load_ms": 0.0,
+          "ttft_ms": 579.5,
+          "gen_ms": 30801.6,
+          "tokens": 732,
+          "tps": 24.25,
+          "verify_ms": 0.0,
+          "rung": 5
+        }
+      ],
+      "total_ms": 30802.3,
+      "overhead_ms": 0.03,
+      "wall_s": 30.8,
+      "labels": {
+        "T0": 0.3,
+        "T1": 0.75,
+        "T2": 0.95
+      },
+      "smallest_sat": "T1",
+      "route_id": "416338ad43ee"
+    },
+    {
+      "id": "R3",
+      "class_expected": "reasoning",
+      "class_detected": "reasoning",
+      "start_tier": "T0",
+      "final_tier": "T0",
+      "escalations": 0,
+      "flagged": false,
+      "attempts": [
+        {
+          "tier": "T0",
+          "outcome": "pass",
+          "load_ms": 818.9,
+          "ttft_ms": 133.2,
+          "gen_ms": 2158.2,
+          "tokens": 204,
+          "tps": 101.4,
+          "verify_ms": 0.0,
+          "rung": 1
+        }
+      ],
+      "total_ms": 2977.8,
+      "overhead_ms": 0.02,
+      "wall_s": 2.98,
+      "labels": null,
+      "smallest_sat": null,
+      "route_id": "5533ae4408e7"
+    },
+    {
+      "id": "R4",
+      "class_expected": "reasoning",
+      "class_detected": "reasoning",
+      "start_tier": "T0",
+      "final_tier": "T0",
+      "escalations": 0,
+      "flagged": false,
+      "attempts": [
+        {
+          "tier": "T0",
+          "outcome": "pass",
+          "load_ms": 0.0,
+          "ttft_ms": 184.0,
+          "gen_ms": 5686.7,
+          "tokens": 483,
+          "tps": 88.01,
+          "verify_ms": 4358.6,
+          "rung": 4
+        }
+      ],
+      "total_ms": 10045.9,
+      "overhead_ms": 0.03,
+      "wall_s": 10.05,
+      "labels": null,
+      "smallest_sat": null,
+      "route_id": "32ef629d54c9"
+    },
+    {
+      "id": "A3",
+      "class_expected": "agentic",
+      "class_detected": "agentic",
+      "start_tier": "T0",
+      "final_tier": "T0",
+      "escalations": 0,
+      "flagged": false,
+      "attempts": [
+        {
+          "tier": "T0",
+          "outcome": "pass",
+          "load_ms": 0.0,
+          "ttft_ms": 189.3,
+          "gen_ms": 5852.3,
+          "tokens": 512,
+          "tps": 90.65,
+          "verify_ms": 0.0,
+          "rung": 0
+        }
+      ],
+      "total_ms": 5853.3,
+      "overhead_ms": 0.01,
+      "wall_s": 5.85,
+      "labels": null,
+      "smallest_sat": null,
+      "route_id": "4631109f2f2e"
+    },
+    {
+      "id": "A4",
+      "class_expected": "agentic",
+      "class_detected": "agentic",
+      "start_tier": "T0",
+      "final_tier": "T0",
+      "escalations": 0,
+      "flagged": false,
+      "attempts": [
+        {
+          "tier": "T0",
+          "outcome": "pass",
+          "load_ms": 0.0,
+          "ttft_ms": 242.9,
+          "gen_ms": 6309.8,
+          "tokens": 512,
+          "tps": 84.62,
+          "verify_ms": 0.0,
+          "rung": 0
+        }
+      ],
+      "total_ms": 6310.6,
+      "overhead_ms": 0.01,
+      "wall_s": 6.31,
+      "labels": null,
+      "smallest_sat": null,
+      "route_id": "618d48294d16"
+    },
+    {
+      "id": "E3",
+      "class_expected": "emotional",
+      "class_detected": "default",
+      "start_tier": "T0",
+      "final_tier": "T0",
+      "escalations": 0,
+      "flagged": false,
+      "attempts": [
+        {
+          "tier": "T0",
+          "outcome": "pass",
+          "load_ms": 0.0,
+          "ttft_ms": 188.1,
+          "gen_ms": 6079.1,
+          "tokens": 512,
+          "tps": 87.15,
+          "verify_ms": 4346.2,
+          "rung": 4
+        }
+      ],
+      "total_ms": 10425.9,
+      "overhead_ms": 0.04,
+      "wall_s": 10.43,
+      "labels": null,
+      "smallest_sat": null,
+      "route_id": "24b6d7a7f689"
+    },
+    {
+      "id": "E4",
+      "class_expected": "emotional",
+      "class_detected": "emotional",
+      "start_tier": "T1",
+      "final_tier": "T1",
+      "escalations": 0,
+      "flagged": false,
+      "attempts": [
+        {
+          "tier": "T1",
+          "outcome": "pass",
+          "load_ms": 0.0,
+          "ttft_ms": 534.7,
+          "gen_ms": 29446.1,
+          "tokens": 768,
+          "tps": 26.59,
+          "verify_ms": 0.0,
+          "rung": 5
+        }
+      ],
+      "total_ms": 29446.7,
+      "overhead_ms": 0.01,
+      "wall_s": 29.45,
+      "labels": null,
+      "smallest_sat": null,
+      "route_id": "124ebdfc2b4b"
+    }
+  ]
+}

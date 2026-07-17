@@ -71,6 +71,58 @@ discounted *down*. Principle over cost-curve.
 
 ---
 
+## Exp 4 — Swap economics (2026-07-16): **the cascade survives its falsification test**
+
+The open cost-model question (prd.md, architecture doc §11): on a 16 GB
+single-resident box, escalation = *loading* a model — does swap latency eat the
+cascade's savings? Harness: `experiments/router/swap_econ.py` (mlx-lm uv-tool
+python); raw datapoints: `experiments/router/swap-econ.results.jsonl`.
+
+**Measured (M2 16 GB, mlx_lm 0.31.3, 2 rounds, page-cache warmth uncontrolled):**
+
+| Tier | load (r1/r2) | TTFT after load | decode tok/s | Metal peak |
+|---|---|---|---|---|
+| T0 1.7B | 0.77 / 0.70 s | 0.30 / 0.14 s | **127.1** | 0.61 GB |
+| T1 8B | 1.39 / 1.21 s | 0.52 / 0.32 s | **36.7** | 2.43 GB |
+| T2 27B | 4.24 / 3.44 s | 2.14 / 1.69 s | **11.0** | 7.86 GB |
+
+Unload is free (~0.1 s). **Co-residency T0+T1 works:** both loaded = 2.93 GB
+Metal peak, **zero throughput penalty** (T0 126.9, T1 36.7 tok/s — identical to
+solo). The single-resident constraint is real only for T2.
+
+**The verdict — generation dominates, swap is second-order.** For a ~400-token
+answer: T0 ≈ 3.1 s, T1 ≈ 10.9 s, T2 ≈ 36.4 s of *generation*. The worst swap
+(T2, ~3.8 s) is ~10 % of one T2 generation. The ternary 27B is so slow to decode
+that the thing the cascade avoids (T2 generation) towers over the thing the
+cascade costs (a wasted small attempt + a load).
+
+**Break-even success rates** (expected-cost model, 400-tok answers, rung-0/1
+verifier ≈ free):
+
+| Transition | cascade beats direct-start when | battery says |
+|---|---|---|
+| T0→T1 (co-resident) | T0 success ≥ **28 %** | R2-class ✓; T0 satisfies 1/6 overall — *marginal, class-dependent* |
+| T0→T1 (swap) | T0 success ≥ **31 %** | same |
+| T1→T2 | T1 success ≥ **30 %** | T1 satisfies **4/6 ≈ 67 %** — *decisive win* |
+
+**Design consequences (feed prd.md cost model + cascade policy):**
+1. **The paying edge is T1→T2.** T1-start beats always-T2 by ~2.4× expected
+   latency at the battery's T1 success rate. This is the cascade's economic core.
+2. **T0 earns its place only on prefilter-certain mechanical queries** (its
+   overall satisfy-rate ~17 % is *below* the 28 % break-even) — consistent with
+   the class-start map (`agentic/reasoning → T0` only because rung-0/1 verifiers
+   catch failures cheaply; emotional floors at T1 per D5).
+3. **Keep T0+T1 co-resident by default** (2.9 GB total): a T0→T1 escalation then
+   costs zero swap, which softens point 2.
+4. **TTFT-after-escalation is the human-time cost:** a T1→T2 escalation shows
+   ~12 s (T1 attempt) + ~3.8 s (load) + ~1.7 s (T2 TTFT) ≈ **17 s to first T2
+   token**. Budget/interactivity policy should surface escalation to the caller
+   (streaming a status line), not hide it.
+5. RSS grew monotonically across the run (max 4.1 GB proc RSS) — watch for
+   fragmentation on long-lived processes; the T2 OOM-thrash gotcha stands.
+
+---
+
 ## Closure status
 
 | Experiment | Status |
@@ -78,6 +130,7 @@ discounted *down*. Principle over cost-curve.
 | Verifiers (Exp 2) | **Closed** — config decided (nested-check in, step-sprawl out; R1/R2 checks; emotional→D5 floor) |
 | λ (Exp 3) | **Directional-closed** — global knee ~0.35; adopted per-class 0.40 / 0.35 / 0.20; recalibrate from traffic |
 | Embedder (Exp 1) | **Informative** — bge-small kept; V2 is **P1-limited**; predictor needs a difficulty feature or exemplar growth |
+| Swap economics (Exp 4) | **Closed** — cascade viable: swap ≈ 10 % of a T2 generation; T1→T2 edge wins ~2.4×; T0+T1 co-residency free; T0 restricted to prefilter-certain starts |
 
 **Net effect on the design.** The centre of gravity shifts: at low exemplar
 counts the kNN predictor contributes *class* but not *tier*, so the **prefilter +

@@ -1,0 +1,9 @@
+# E1 | class emotional | final T1 | escalations 0 | flagged False
+--- QUERY ---
+My dad passed away three weeks ago. We hadn't spoken in two years after a bad fight. I keep swinging between grief and anger. I just needed to say it to someone.
+--- ANSWER ---
+I'm so sorry for your loss. It's completely normal to feel a mix of grief and anger when someone you care about has passed, especially after a difficult period of silence or conflict. You're not alone in this — many people experience these emotions in the wake of loss, and it's a sign that you're processing what's happening.
+
+It's brave of you to reach out and share what you're feeling. Sometimes just saying it to someone — even if they can't fully understand — helps to begin the healing process. If you're open to it, I'd be honored to listen and support you in any way I can.
+
+Would you like to talk more about what you're going through? I'm here to listen, not to fix things, just to be with you in the space of your pain.

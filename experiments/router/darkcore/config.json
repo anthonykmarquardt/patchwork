@@ -1,0 +1,106 @@
+{
+  "surface_version": 1,
+  "config_version": 2,
+  "updated": "2026-07-17T03:13:44Z",
+  "updated_by": "operator",
+  "params": {
+    "tier_roster": [
+      {
+        "id": "T0",
+        "model": "prism-ml/Ternary-Bonsai-1.7B-mlx-2bit",
+        "max_tokens": 512
+      },
+      {
+        "id": "T1",
+        "model": "prism-ml/Ternary-Bonsai-8B-mlx-2bit",
+        "max_tokens": 768
+      },
+      {
+        "id": "T2",
+        "model": "prism-ml/Ternary-Bonsai-27B-mlx-2bit",
+        "max_tokens": 1536
+      }
+    ],
+    "class_start_map": {
+      "agentic": "T0",
+      "reasoning": "T0",
+      "emotional": "T1",
+      "default": "T0"
+    },
+    "class_floor": {
+      "emotional": "T1",
+      "default": "T0"
+    },
+    "lambda_by_class": {
+      "agentic": 0.4,
+      "reasoning": 0.35,
+      "emotional": 0.2,
+      "default": 0.35
+    },
+    "verifier_config": {
+      "agentic": {
+        "rung": 0,
+        "verifier": "nested_tool_check",
+        "thresholds": {}
+      },
+      "reasoning": {
+        "rung": 1,
+        "verifier": "plugback_or_judge",
+        "thresholds": {}
+      },
+      "emotional": {
+        "rung": 5,
+        "verifier": null,
+        "thresholds": {}
+      },
+      "default": {
+        "rung": 4,
+        "verifier": "next_tier_judge",
+        "thresholds": {}
+      }
+    },
+    "prefilter_rules": [
+      {
+        "id": "tool-list",
+        "signal": "tool_roster_present",
+        "set": {
+          "class": "agentic"
+        }
+      },
+      {
+        "id": "code-fence",
+        "signal": "code_fence_present",
+        "set": {
+          "class": "agentic"
+        }
+      },
+      {
+        "id": "affective",
+        "signal": "affective_first_person",
+        "set": {
+          "class": "emotional"
+        }
+      },
+      {
+        "id": "reasoning-shape",
+        "signal": "reasoning_shape",
+        "set": {
+          "class": "reasoning"
+        }
+      }
+    ],
+    "exemplar_store_ref": {
+      "uri": null,
+      "index_version": 0
+    },
+    "predictor_enabled": false,
+    "cascade_policy": {
+      "max_tiers_per_query": 3,
+      "per_query_ms_budget": 300000,
+      "retry_policy": "escalate",
+      "skip_start": false,
+      "terminal_failure": "emit_flagged"
+    },
+    "escalation_overrides": {}
+  }
+}

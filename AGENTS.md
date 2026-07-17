@@ -73,19 +73,25 @@ patchwork/
 ├── AGENTS.md                         # This file — read first
 ├── MEMORY.md                         # Project state, known issues, decisions
 ├── CONTINUE.md                       # Session handoff (auto-updated)
-├── plans/
-│   ├── index.md                      # Master planning document (this)
-│   └── 01-model-selection.md         # Deep-dive: model family evaluation
-├── research/
-│   ├── README.md                     # Index of research artifacts and findings
-│   ├── latent-bridge-survey.md       # Cross-model latent communication techniques
-│   ├── routing-literature.md         # Token routing approaches (MoE, mixture of adapters, etc.)
-│   ├── memory-tiering-analysis.md    # Colibrì-inspired tiering at module level
-│   └── quant-impact.md               # Quantization-aware bridge quality
+├── docs/
+│   ├── routing-architecture.md       # MASTER doc for the active routing workstream
+│   └── references.md                 # External papers, projects, and tools
+├── specs/
+│   ├── 0001-tiered-cascade-router/   # data plane ("dark-core") — built v0 2026-07-16
+│   ├── 0002-config-tuner/            # control plane (scaffold)
+│   └── 0003-supervisory-orchestrator/# control plane (scaffold)
 ├── experiments/
-│   └── README.md                     # Scratch space for prototypes and benchmarks
-└── docs/
-    └── references.md                 # External papers, projects, and tools
+│   ├── router/                       # spec 0001 harnesses + darkcore/ (the router itself)
+│   │   ├── darkcore/                 # surface/prefilter/models/verifiers/cascade/router/cli/tui
+│   │   ├── battery.jsonl             # labeled battery + probes
+│   │   ├── closure.py, swap_econ.py  # Exp 1–3, Exp 4 harnesses
+│   │   ├── darkcore_bench.py, verify.py, BENCH-REPORT.md
+│   │   └── fixtures/
+│   └── inference-bench/              # tier perf measurements
+├── plans/
+│   └── index.md                      # latent-bridge thread (paused)
+└── research/
+    └── README.md                     # research artifact index
 ```
 
 ---

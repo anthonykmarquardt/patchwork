@@ -1,0 +1,14 @@
+{"session_id": "9e04f4fd0f80", "kind": "run_meta", "ts": "2026-07-16T20:05:22", "prompt_hash": "652cfcc09f80", "max_tokens": 64, "tiers": {"T0": "prism-ml/Ternary-Bonsai-1.7B-mlx-2bit", "T1": "prism-ml/Ternary-Bonsai-8B-mlx-2bit", "T2": "prism-ml/Ternary-Bonsai-27B-mlx-2bit"}}
+{"session_id": "9e04f4fd0f80", "kind": "tier_cell", "tier": "T0", "round": 1, "load_s": 0.767, "ttft_s": 0.296, "gen_s": 0.661, "tokens": 45, "decode_tps": 127.09, "metal_peak_gb": 0.607, "proc_max_rss_gb": 1.153}
+{"session_id": "9e04f4fd0f80", "kind": "unload", "tier": "T0", "round": 1, "unload_s": 0.067}
+{"session_id": "9e04f4fd0f80", "kind": "tier_cell", "tier": "T1", "round": 1, "load_s": 1.392, "ttft_s": 0.515, "gen_s": 1.881, "tokens": 49, "decode_tps": 36.62, "metal_peak_gb": 2.432, "proc_max_rss_gb": 1.856}
+{"session_id": "9e04f4fd0f80", "kind": "unload", "tier": "T1", "round": 1, "unload_s": 0.09}
+{"session_id": "9e04f4fd0f80", "kind": "tier_cell", "tier": "T2", "round": 1, "load_s": 4.243, "ttft_s": 2.143, "gen_s": 8.013, "tokens": 64, "decode_tps": 10.98, "metal_peak_gb": 7.856, "proc_max_rss_gb": 2.544}
+{"session_id": "9e04f4fd0f80", "kind": "unload", "tier": "T2", "round": 1, "unload_s": 0.105}
+{"session_id": "9e04f4fd0f80", "kind": "tier_cell", "tier": "T0", "round": 2, "load_s": 0.701, "ttft_s": 0.135, "gen_s": 0.501, "tokens": 45, "decode_tps": 127.12, "metal_peak_gb": 0.595, "proc_max_rss_gb": 2.544}
+{"session_id": "9e04f4fd0f80", "kind": "unload", "tier": "T0", "round": 2, "unload_s": 0.068}
+{"session_id": "9e04f4fd0f80", "kind": "tier_cell", "tier": "T1", "round": 2, "load_s": 1.211, "ttft_s": 0.323, "gen_s": 1.683, "tokens": 49, "decode_tps": 36.68, "metal_peak_gb": 2.442, "proc_max_rss_gb": 3.051}
+{"session_id": "9e04f4fd0f80", "kind": "unload", "tier": "T1", "round": 2, "unload_s": 0.082}
+{"session_id": "9e04f4fd0f80", "kind": "tier_cell", "tier": "T2", "round": 2, "load_s": 3.444, "ttft_s": 1.688, "gen_s": 7.552, "tokens": 64, "decode_tps": 10.99, "metal_peak_gb": 7.856, "proc_max_rss_gb": 4.099}
+{"session_id": "9e04f4fd0f80", "kind": "unload", "tier": "T2", "round": 2, "unload_s": 0.101}
+{"session_id": "9e04f4fd0f80", "kind": "coresidency", "tiers": "T0+T1", "both_load_s": 2.013, "metal_peak_gb": 2.927, "proc_max_rss_gb": 4.099, "per_tier": {"T0": {"ttft_s": 0.157, "decode_tps": 126.87, "tokens": 45}, "T1": {"ttft_s": 0.305, "decode_tps": 36.67, "tokens": 49}}}

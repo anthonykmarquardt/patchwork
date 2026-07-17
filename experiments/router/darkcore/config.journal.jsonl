@@ -1,0 +1,2 @@
+{"ts": "2026-07-17T03:13:44Z", "actor": "tuner", "base_version": 0, "new_version": 1, "patch": {"lambda_by_class": {"agentic": 0.45}}, "note": "smoke"}
+{"ts": "2026-07-17T03:13:44Z", "actor": "operator", "base_version": 1, "new_version": 2, "patch": {"lambda_by_class": {"agentic": 0.4}}, "note": "rollback smoke"}

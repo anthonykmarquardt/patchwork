@@ -182,6 +182,11 @@ From this session (harness `experiments/router/closure.py`; details in
   reliability discount, D4).
 - **~8B competence threshold** for emotional attunement; procedure is size-robust,
   insight is not.
+- **Swap economics measured (Exp 4)** — the cascade survives its falsification
+  test: model-swap ≈ 10 % of one T2 generation (T2 load ~3.8 s vs ~36 s of T2
+  decode at 11 tok/s); T1→T2 break-even at ~30 % T1 success (measured ~67 %);
+  **T0+T1 co-reside free** (2.93 GB, no throughput penalty); T0 is economically
+  marginal except on prefilter-certain starts. `specs/0001/results.md` §Exp 4.
 
 ## 9. Decision & abandon register (with revisit triggers)
 
@@ -218,12 +223,15 @@ tenet; cascade-as-spine; certificate-rung taxonomy; embedder (bge-small,
 P1-limited); 3-class verifier config; observability schema; λ (directional);
 governance (firm-based).
 
-**Open (router):** control-surface schema (the pivot — do first); layer
-arbitration + who owns class detection (embedder is better at class than rules —
-§8); cascade policy (terminal-failure, retry-vs-escalate, skip-start, escalation
-budget); **cost model incompleteness** (ignores model-swap/residency latency on
-single-resident hardware, and verifier cost); infra-failure handling (tier
-down/OOM-thrash); cold-start/zero-config default mode; predictor posture.
+**Settled 2026-07-16:** control-surface schema **firmed**
+(`specs/0001/control-surface.md` v1 — file transport + atomic rename, invariants
+I1–I10, snapshot exemplar store); **cost model measured** (Exp 4: swap is
+second-order, T0+T1 co-resident, T1→T2 is the paying edge); cascade policy +
+cold-start defaults shipped as control-surface defaults.
+
+**Open (router):** layer arbitration + who owns class detection (embedder is
+better at class than rules — §8); infra-failure handling (tier down/OOM-thrash)
+beyond the timeout basics; predictor posture (needs the corpus).
 
 **Open (control plane, to plan next):** 0003 orchestrator **attention budget**
 (recursive routing of its own inspection); 0002 tuner **trust/label-provenance**

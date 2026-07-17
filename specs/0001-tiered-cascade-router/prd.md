@@ -97,39 +97,46 @@ observability as a cross-cutting fourth requirement.
 
 ## Task checklist
 
-- [ ] Assemble `battery.jsonl` — the R1/R2/A1/A2/E1/E2 prompts + per-tier
-      pass/fail labels from this session's runs, as the exemplar/label set.
-- [ ] Layer 1: `prefilter.py` — deterministic rule set returning
-      `{route_hint, floor, class, reason}`; unit-tested, side-effect free.
+> **2026-07-16: dark-core v0 is built** — `experiments/router/darkcore/`
+> (surface / prefilter / models / verifiers / cascade / router / cli / tui).
+> Bench + findings: `experiments/router/BENCH-REPORT.md`.
+
+- [x] Assemble `battery.jsonl` — the R1/R2/A1/A2/E1/E2 prompts + per-tier
+      pass/fail labels from this session's runs, as the exemplar/label set
+      (+ 6 unlabeled probes for behavior/latency coverage).
+- [x] Layer 1: `darkcore/prefilter.py` — deterministic signal registry; rules
+      are data on the control surface (`prefilter_rules`); side-effect free.
 - [ ] Layer 2: `predictor.py` — embed (pluggable; default `bge-small-en-v1.5`,
       L2-normalized), hnswlib/FAISS kNN index over exemplars,
-      `utility = quality − λ·latency` → predicted tier.
-- [ ] Layer 3: `cascade.py` — run tier → verifier → escalate; pluggable per-class
-      verifiers (structural for agentic, checker/judge for reasoning, heuristic
-      for emotional — see design.md §3 and decisions.md D3).
-- [ ] Observability: `trace.py` + `telemetry` — structured JSONL per the repo
-      Runtime Logging standard; per-request trace object; **hash-not-content**
-      redaction; event classes `routing_decision / tier_dispatched /
-      verifier_result / escalation / route_completed`.
-- [ ] `router.py` — wire prefilter → predictor → cascade behind one `route(query)`
-      returning `{answer, tier, escalations, trace}`, emitting telemetry throughout.
-- [ ] Verifiers registry — minimum set per tests.md, task-class dispatch.
-- [ ] `verify.py` harness — run battery through the router, emit `report.json`
-      (per-query trace rollups) + assert thresholds; a `router inspect` view over
-      the JSONL for single-request debugging.
-- [ ] **Control surface** (`control-surface.md`): the versioned, validated,
-      hot-reloadable knob interface. Build **first, after the dark core** — it
-      gates 0002/0003. Router reads the exemplar store; the tuner writes it.
-- [ ] **Cold-start / zero-config mode:** empty exemplar store → predictor
-      auto-disabled; prefilter sets class+floor; cascade carries. Ship a default
-      `class_start_map`. This is the "useful out of the box" requirement.
-- [ ] **Cascade policy:** terminal-failure behavior (T2 verifier also fails →
-      emit-flagged + alarm), retry-vs-escalate, optional skip-start, per-query
-      escalation budget (cap tiers/latency).
-- [ ] **Cost model:** count model-swap/residency latency (one model resident on
-      16 GB → escalation loads a model) **and** verifier cost, not just generation.
-- [ ] **Infra-failure handling:** tier down / timeout / OOM-thrash (the 27B does
-      this) → failover/degrade, distinct from verifier-fail.
+      `utility = quality − λ·latency` → predicted tier. **Deliberately not built
+      at n=6** (P1/P2): dark mode ships predictor-off; gate on the Phase-0 corpus.
+- [x] Layer 3: `darkcore/cascade.py` — run tier → verifier → escalate; per-class
+      verifiers from the registry; infra-failover distinct from verifier-fail.
+- [x] Observability: `darkcore/telemetry.py` — structured JSONL per the repo
+      Runtime Logging standard; **hash-not-content** enforced at the sink
+      (asserts on content-shaped keys); event classes `routing_decision /
+      tier_dispatched / verifier_result / escalation / route_completed` (+ pool
+      lifecycle `model_loaded / model_evicted`, alarms).
+- [x] `darkcore/router.py` — `route(query)` → `{answer, tier, escalations,
+      trace}`; config hot-reload on version change; telemetry throughout.
+- [x] Verifiers registry — `nested_tool_check` (rung 0), `plugback_or_judge`
+      (rung 1), `next_tier_judge` (rung 4); emotional = rung 5 → no verifier (D5).
+- [x] `verify.py` harness — `darkcore_bench.py` emits `report.json`; `verify.py
+      --assert-thresholds` checks S1–S5. (`router inspect` = `darkcore.tui`.)
+- [x] **Control surface**: firmed (`control-surface.md` v1) **and implemented**
+      (`darkcore/surface.py`): versioned + validated (I1–I10) + atomic
+      hot-reload + journaled. Gates 0002/0003 — now open.
+- [x] **Cold-start / zero-config mode:** shipped defaults (config_version 0);
+      empty exemplar store → predictor auto-off (I8); prefilter sets class,
+      cascade carries.
+- [x] **Cascade policy:** terminal-failure → emit-flagged + alarm; per-query
+      attempt + wall-clock budgets; retry policy knob (v0: escalate).
+      skip-start reserved on the surface, not yet exercised.
+- [x] **Cost model:** measured (Exp 4, results.md) — swap/residency latency
+      counted per-attempt in every trace (`load_ms`), verifier cost as
+      `verify_ms`; T0+T1 co-residency policy encoded in the pool.
+- [~] **Infra-failure handling:** tier-unavailable → failover to next tier
+      (distinct from verifier-fail). OOM-thrash *detection* still open.
 - [ ] Exemplar-growth loop — **NOTE: this is a tuner (0002/control-plane) function.**
       The router only *emits* traces; the tuner *curates* which become exemplars
       (gated on label trustworthiness + the PII rule). Tracked here for continuity.

@@ -1,0 +1,42 @@
+# R3 | class reasoning | final T0 | escalations 0 | flagged False
+--- QUERY ---
+What is 17 * 23? Show the arithmetic.
+--- ANSWER ---
+To find the product of 17 and 23, we can use the **standard multiplication algorithm**.
+
+---
+
+### **Step-by-step multiplication:**
+
+We multiply:
+
+$$
+17 \times 23
+$$
+
+We can break this down into:
+
+$$
+17 \times 23 = 17 \times (20 + 3) = (17 \times 20) + (17 \times 3)
+$$
+
+Now compute each part:
+
+- $17 \times 20 = 340$
+- $17 \times 3 = 51$
+
+Now add them together:
+
+$$
+340 + 51 = 391
+$$
+
+---
+
+### ✅ Final Answer:
+
+$$
+\boxed{17 \times 23 = 391}
+$$
+
+Let me know if you'd like to see the multiplication using another method, like the distributive property or a calculator!

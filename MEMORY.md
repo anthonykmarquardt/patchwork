@@ -30,7 +30,15 @@ Last updated: 2026-07-16
 
 <!-- AUTO:issues — refreshable by scripts/agent-tools/update-memory.py --issue -->
 
-- *(none yet — project is new)*
+- **V-struct (S1 gap) — FIXED in bench v0.1:** rung-0 gained an argument-shape
+  table; A1 now escalates T0✗→T1✓ and **all five spec thresholds pass**
+  (quality 0.900, speedup 1.72×). Residual: rung-0 stays blind to *strategy*
+  (A4) — by design. `experiments/router/BENCH-REPORT.md`.
+- **P-class lexicon brittleness:** prefilter missed an emotional query
+  ("furious" not in lexicon) → D5 floor never engaged → judge false-accept.
+  Argues for embedder-owned class detection.
+- **Bonsai-27B CoT leak:** narrates thinking as prose (no `<think>` tags);
+  answer extraction can't strip it → would poison exemplar labels if unfixed.
 
 <!-- /AUTO:issues -->
 
@@ -44,6 +52,7 @@ Last updated: 2026-07-16
 - 2026-07-14 — Agent interface built: agent-tools scripts (update-continue, update-memory, update-agents, memory-maintenance), agent-guide docs (continue-handoff, memory-maintenance, anti-drift), pre-commit hook
 - 2026-07-16 — Routing pillar architected (specs 0001–0003 + docs/routing-architecture.md): data/control-plane split, cascade spine, certificate-rung verifiers, empirical closure (P1 confirmed). Nothing built yet; all specs draft.
 - 2026-07-16 — Repo hygiene pass: router experiment README + fixture renames; plans/index.md re-scoped to the (paused) latent-bridge thread.
+- 2026-07-16 — **dark-core v0 built + benched** (`experiments/router/darkcore/`): control surface firmed v1 + implemented; Exp 4 swap economics measured (cascade viable, T0+T1 co-resident); bench 1.66× vs T2-only at 83% ≤T1, S2/S3/S4/S5 pass, S1 fails on V-struct; gauge-board TUI (Catppuccin Frappé). Specs 0002/0003 unblocked.
 
 <!-- /AUTO:changes -->
 

@@ -1,0 +1,56 @@
+# A4 | class agentic | final T0 | escalations 0 | flagged False
+--- QUERY ---
+You are an ops agent with tools run_shell/read_file/http_get/send_slack. After a rolling deploy, OAuth token refresh intermittently returns 401 for ~2% of users, only on one AZ. Give the ordered tool calls to isolate the cause before rollback.
+--- ANSWER ---
+To isolate the cause of the intermittent OAuth token refresh (401) returning for ~2% of users on a single AZ, you can use the following **ordered tool calls** to trace the issue systematically. These tools are commonly used in DevOps and infrastructure monitoring:
+
+---
+
+### **1. Collect User Data (Optional)**
+- **`read_file`** – Read user metadata (e.g., user ID, role, token expiration time) from a centralized file or database.
+- **`send_slack`** – Send a notification to a Slack channel (e.g., `#ops` or a custom channel) to alert the team about the issue.
+
+```bash
+read_file /path/to/user_metadata.txt
+send_slack "OAuth token refresh issue detected: ~2% of users (AZ: <AZ_NAME>) are experiencing 401 errors."
+```
+
+---
+
+### **2. Check User Token Status**
+- **`http_get`** – Fetch the user's current token status (e.g., `https://api.example.com/user/<USER_ID>/tokens`).
+- **`send_slack`** – Send a notification to a Slack channel about the token status.
+
+```bash
+http_get https://api.example.com/user/<USER_ID>/tokens
+send_slack "User token status: <STATUS> (401 error occurred)"
+```
+
+---
+
+### **3. Analyze Token Expiration and Validity**
+- **`read_file`** – Check if the token is still valid and has not expired.
+- **`http_get`** – Verify if the token is being used correctly (e.g., by checking the `Authorization` header).
+
+```bash
+read_file /path/to/token_expiration.txt
+http_get https://api.example.com/user/<USER_ID>/tokens
+send_slack "Token expiration status: <EXPIRED> (401 error occurred)"
+```
+
+---
+
+### **4. Check for OAuth Token Refresh**
+- **`http_get`** – Fetch the OAuth refresh endpoint (e.g., `https://api.example.com/oauth/token/refresh`).
+- **`send_slack`** – Alert the team about the refresh endpoint.
+
+```bash
+http_get https://api.example.com/oauth/token/refresh
+send_slack "OAuth refresh endpoint: <ENDPOINT_URL>"
+```
+
+---
+
+### **5. Monitor User Activity**
+- **`http_get`** – Check if the user is being accessed or authenticated via the OAuth endpoint.
+- **`

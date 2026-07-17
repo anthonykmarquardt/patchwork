@@ -1,0 +1,137 @@
+# A1 | class agentic | final T1 | escalations 1 | flagged False
+--- QUERY ---
+You are an ops agent with tools run_shell/read_file/http_get/send_slack. Intermittent 502s behind nginx. Give the ordered tool calls to diagnose.
+--- ANSWER ---
+To diagnose **intermittent 502 Bad Gateway errors behind Nginx**, you can use the following **ordered tool calls** with the tools you have access to:
+
+---
+
+### ✅ **1. Check Nginx Configuration (read_file)**
+
+**Why:** Misconfigured Nginx can cause 502 errors, especially with upstream settings.
+
+**Command:**
+```bash
+read_file /etc/nginx/nginx.conf
+```
+
+**What to look for:**
+- `upstream` blocks
+- `proxy_pass` directives
+- `proxy_set_header` (especially `Host`)
+- `proxy_read_timeout` and `proxy_connect_timeout`
+
+---
+
+### ✅ **2. Test Nginx Upstream Backend (http_get)**
+
+**Why:** The upstream server might be down, misconfigured, or not responding.
+
+**Command:**
+```bash
+http_get http://<upstream-server-ip>:<upstream-port>
+```
+
+**What to look for:**
+- 502 or 503 errors
+- Connection timeouts
+- Server not responding
+
+---
+
+### ✅ **3. Test Nginx Proxy Headers (read_file)**
+
+**Why:** Nginx might be stripping or missetting headers, causing the backend to reject the request.
+
+**Command:**
+```bash
+read_file /etc/nginx/conf.d/proxy.conf
+```
+
+**What to look for:**
+- `proxy_set_header Host $host`
+- `proxy_set_header X-Real-IP $remote_addr`
+- `proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for`
+
+---
+
+### ✅ **4. Test Nginx with a Simple Request (http_get)**
+
+**Why:** Confirm that Nginx is functioning and not the issue.
+
+**Command:**
+```bash
+http_get http://localhost
+```
+
+**What to look for:**
+- 200 OK
+- No 502 errors
+
+---
+
+### ✅ **5. Check Nginx Access Logs (read_file)**
+
+**Why:** Logs can show the exact request that triggered the 502 error.
+
+**Command:**
+```bash
+read_file /var/log/nginx/access.log
+```
+
+**What to look for:**
+- `502 Bad Gateway` in the log
+- IP address and timestamp of the error
+- Request method, path, headers
+
+---
+
+### ✅ **6. Test Backend Server (http_get)**
+
+**Why:** The backend server might be misconfigured or down.
+
+**Command:**
+```bash
+http_get http://<backend-server-ip>:<backend-port>
+```
+
+**What to look for:**
+- 200 OK
+- No 502 errors
+- Check if the backend is accepting connections
+
+---
+
+### ✅ **7. Test Nginx with a Custom Header (http_get)**
+
+**Why:** Nginx might be stripping headers, which the backend expects.
+
+**Command:**
+```bash
+http_get http://localhost -H "Host: example.com"
+```
+
+**What to look for:**
+- 200 OK
+- No 502 errors
+
+---
+
+### ✅ **8. Test Nginx with a Timeout (http_get)**
+
+**Why:** Timeouts can cause 502 errors if the backend is slow or unresponsive.
+
+**Command:**
+```bash
+http_get http://localhost -t 5
+```
+
+**What to look for:**
+- 200 OK
+- No 502 errors
+
+---
+
+### ✅ **9. Test Nginx with a Simple Proxy (http_get)**
+
+**Why:** Confirm that the proxy is working as expected.

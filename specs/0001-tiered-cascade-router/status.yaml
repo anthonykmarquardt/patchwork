@@ -4,7 +4,7 @@ title: "Tiered cascade router — programmatic prefilter → kNN tier predictor 
 state: "draft"
 owner: "unassigned"
 created: "2026-07-15"
-updated: "2026-07-16"
+updated: "2026-07-16"  # dark-core v0 built + benched this date (see results/notes)
 
 verifier:
   kind: "harness"
@@ -53,6 +53,15 @@ metadata:
     emotional→D5 floor). λ directional: adopted per-class 0.40/0.35/0.20.
     Embedder: bge-small kept; V2 is P1-limited (embeddings see class, not
     difficulty) — predictor posture is the remaining design call before ready.
+
+    2026-07-16 (later): Exp 4 swap economics MEASURED (cascade survives; swap
+    second-order; T0+T1 co-reside free). Control surface FIRMED (v1) and
+    IMPLEMENTED. dark-core v0 BUILT (experiments/router/darkcore/) and BENCHED:
+    1.66x vs T2-only, 83% <=T1, safety catch works, router overhead 0.05ms.
+    S1 quality retention FAILS (0.792 vs 0.992) — sole cause: rung-0 V-struct
+    false-accept on agentic; fix = tool-semantics layer on rung 0. P-class miss
+    (E3) argues class detection -> embedder. Judge tax = 26% of spend.
+    Full findings: experiments/router/BENCH-REPORT.md.
   references:
     - "../../docs/routing-architecture.md — master conceptual doc (planes, taxonomy, certificate rungs, DAG)"
     - "control-surface.md — the hard data/control-plane interface (build first; gates 0002/0003)"

@@ -1,0 +1,64 @@
+# R4 | class reasoning | final T0 | escalations 0 | flagged False
+--- QUERY ---
+A bat and a ball cost $1.10 in total. The bat costs $1.00 more than the ball. How much does the ball cost? Explain why the intuitive answer is wrong.
+--- ANSWER ---
+Let's break this down step by step.
+
+### Problem:
+A bat and a ball cost **$1.10 in total**.  
+The bat costs **$1.00 more than the ball**.  
+How much does the ball cost?
+
+---
+
+### Step 1: Define variables
+Let the cost of the ball be **$x**.
+
+Then the cost of the bat is **$x + $1.00**.
+
+---
+
+### Step 2: Set up the equation
+The total cost of the bat and the ball is:
+$$
+x + (x + 1.00) = 1.10
+$$
+
+Simplify:
+$$
+2x + 1.00 = 1.10
+$$
+
+Subtract 1.00 from both sides:
+$$
+2x = 0.10
+$$
+
+Divide both sides by 2:
+$$
+x = 0.05
+$$
+
+So, the ball costs **$0.05**.
+
+---
+
+### Step 3: Intuitive answer explanation
+Some people might think the ball costs **$0.10**, because they might assume the bat is $1.00 more than the ball, and then add them together. But that's **not correct**.
+
+Let’s test that:
+
+- If the ball costs **$0.10**, then the bat would cost **$1.10**.
+- Total cost would be **$0.10 + $1.10 = $1.20**, which is **more than $1.10**.
+
+So, the **intuitive answer** of $0.10 is **incorrect** because it doesn't match the total cost of $1.10.
+
+---
+
+### Final Answer:
+The ball costs **$0.05**.
+
+---
+
+### Why the intuitive answer is wrong:
+The intuitive answer assumes that the bat is $1.00 more than the ball, and then adds them together. However, this leads to a **total cost that exceeds the given total of $1.10**, which is not possible. Therefore, the ball must cost **$0.05**, and the bat must cost **$1.05** to make the total cost **$1.10**.
