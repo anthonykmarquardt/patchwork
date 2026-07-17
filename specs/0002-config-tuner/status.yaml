@@ -4,14 +4,17 @@ title: "Config tuner — async control-plane learning/config for the router"
 state: "draft"
 owner: "unassigned"
 created: "2026-07-16"
-updated: "2026-07-16"
+updated: "2026-07-17"  # fully planned: prd.md + design.md written; 4 open items gate ready
 
 verifier:
-  kind: "tbd"
-  command: "TBD — scaffold; planned next session"
+  kind: "harness"
+  command: >
+    python experiments/router/tuner/verify.py --assert-thresholds
+  # deterministic fixtures for S1/S2/S3/S5/S6 (no model inference);
+  # add --empirical to re-run the 0001 bench for S4 (needs $MLXPY)
   requires_tests: true
 depends_on:
-  - "0001-tiered-cascade-router"   # its control surface must be fixed first
+  - "0001-tiered-cascade-router"   # control surface (firm v1) + candidate buffer (prd T1)
 blocks: []
 targets:
   - control-plane
@@ -27,7 +30,17 @@ metadata:
     telemetry, recomputes params (λ, verifier thresholds, start-map, exemplars),
     hot-reloads via the control surface. Async, out-of-band, cross-session.
   notes: >
-    SCAFFOLD only — role + decisions captured, full planning next session. Hard
-    problem: trust/label-provenance on classes it can't cheaply label (inherits
-    the certificate problem). Single writer of the exemplar store. RL/bandit
-    (taxonomy C) lives here, later. See docs/routing-architecture.md §5.
+    PLANNED 2026-07-17 (prd.md + design.md; generalizes seed_exemplars.py,
+    the hand-run prototype). Core design: provenance ladder L0/L1/L2
+    (certificates auto-admit; judge labels quarantined until corroborated;
+    rung-5 refused — no self-labeling), with class labels and tier labels
+    admitted separately (D2). Key discovery shaping the plan: telemetry is
+    hash+features only (PII rule), so production queries can never be
+    re-embedded — the router must emit embeddings at route time into a
+    bounded candidate buffer (prd T1, a small 0001-side addendum).
+    Consequence D4: embedder migration (planned mlx port) invalidates
+    production-derived exemplars — port early, while n is small.
+    State stays draft pending operator sign-off on 4 open items (prd.md):
+    ladder policy D1, T1 buffer shape, minimum-evidence thresholds,
+    empirical-rebench epsilon. RL/bandit (taxonomy C) deferred until the
+    batch loop has a trustworthy corpus.

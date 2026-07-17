@@ -101,9 +101,12 @@ it as a first-class citizen.
 
 1. ~~S4 budget decision~~ — DONE 2026-07-17 (option (b), above); spec 0001
    is `ready`, all thresholds pass.
-2. **Plan 0002 (tuner).** `seed_exemplars.py` literally performed the tuner's
-   job by hand (build snapshot → publish via set_config): write the spec from
-   this working example. Hard core: label provenance (journal + decisions.md).
+2. ~~Plan 0002 (tuner)~~ — PLANNED 2026-07-17: full prd.md + design.md in
+   specs/0002-config-tuner/. Core: provenance ladder (L0 certificates
+   auto-admit / L1 judge quarantined+corroborated / L2 rung-5 refused);
+   class vs tier labels admitted separately; propose-then-apply CLI.
+   **Needs operator sign-off on 4 open items (prd.md tail)** — then
+   implement (T1 candidate buffer first; it gates the growth loop).
 3. **Plan 0003 (orchestrator).** Hard core: the attention budget. Alarm feed
    exists (`terminal_failure`, `budget_exhausted`); silent-failure sampling
    does not yet.
@@ -114,6 +117,10 @@ it as a first-class citizen.
    (predictor.py); an mlx-resident embedder removes the torch dependency from
    the query path and ends the 27B-eviction/rewarm saga structurally — and
    should comfortably beat the 20 ms aspirational absolute target.
+   **Sequencing pressure discovered while planning 0002 (D4):** production
+   exemplars store embeddings, never text (PII) — an embedder migration
+   invalidates them all with no re-embed path. **Port while n is small**
+   (before the growth loop ships), or pay a corpus reset.
 6. Residual seams (attack via tuner, not more rules): rung-0 blind to strategy
    (A4); Bonsai-27B CoT-as-prose leaks into answers (would poison exemplar
    labels — fix answer extraction before the growth loop ships).
