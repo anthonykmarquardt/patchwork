@@ -1,6 +1,6 @@
 {
   "bench": "darkcore-v0.2",
-  "ts": "2026-07-17T00:16:01",
+  "ts": "2026-07-16T23:50:31",
   "config_version": 3,
   "n_queries": 12,
   "tier_distribution": {
@@ -14,9 +14,9 @@
   "flagged": [],
   "labeled_subset": {
     "n": 6,
-    "cascade_total_s": 559.1,
+    "cascade_total_s": 586.0,
     "t2_only_total_s": 1061.5,
-    "speedup_vs_t2_only": 1.9,
+    "speedup_vs_t2_only": 1.81,
     "mean_quality_cascade": 0.9,
     "mean_quality_t2_only": 0.992
   },
@@ -77,47 +77,47 @@
         {
           "tier": "T0",
           "outcome": "fail",
-          "load_ms": 653.8,
-          "ttft_ms": 186.1,
-          "gen_ms": 4519.5,
+          "load_ms": 651.2,
+          "ttft_ms": 176.6,
+          "gen_ms": 4491.4,
           "tokens": 512,
-          "tps": 118.48,
-          "verify_ms": 3930.7000000000003,
+          "tps": 118.99,
+          "verify_ms": 4061.1,
           "rung": 4
         },
         {
           "tier": "T1",
           "outcome": "fail",
           "load_ms": 0.0,
-          "ttft_ms": 478.9,
-          "gen_ms": 21058.3,
+          "ttft_ms": 474.4,
+          "gen_ms": 21269.9,
           "tokens": 729,
-          "tps": 35.48,
-          "verify_ms": 68267.3,
+          "tps": 35.11,
+          "verify_ms": 67877.0,
           "rung": 4
         },
         {
           "tier": "T2",
           "outcome": "pass",
           "load_ms": 0.0,
-          "ttft_ms": 1534.7,
-          "gen_ms": 137492.7,
+          "ttft_ms": 1539.3,
+          "gen_ms": 132160.1,
           "tokens": 1378,
-          "tps": 10.14,
+          "tps": 10.55,
           "verify_ms": 0.0,
           "rung": 4
         }
       ],
-      "total_ms": 236187.3,
+      "total_ms": 230774.0,
       "overhead_ms": 0.02,
-      "wall_s": 236.36,
+      "wall_s": 230.77,
       "labels": {
         "T0": 0.1,
         "T1": 0.85,
         "T2": 1.0
       },
       "smallest_sat": "T1",
-      "route_id": "9e3bfafca92f"
+      "route_id": "4df6c604207e"
     },
     {
       "id": "R2",
@@ -131,25 +131,25 @@
         {
           "tier": "T0",
           "outcome": "pass",
-          "load_ms": 720.4,
-          "ttft_ms": 163.1,
-          "gen_ms": 3556.6,
+          "load_ms": 774.5,
+          "ttft_ms": 176.2,
+          "gen_ms": 3602.7,
           "tokens": 410,
-          "tps": 121.25,
+          "tps": 120.08,
           "verify_ms": 0.0,
           "rung": 1
         }
       ],
-      "total_ms": 4379.2,
+      "total_ms": 4496.1,
       "overhead_ms": 0.03,
-      "wall_s": 4.38,
+      "wall_s": 4.5,
       "labels": {
         "T0": 1.0,
         "T1": 1.0,
         "T2": 1.0
       },
       "smallest_sat": "T0",
-      "route_id": "a57cfb8e2791"
+      "route_id": "9b66cc059eb7"
     },
     {
       "id": "A1",
@@ -164,35 +164,35 @@
           "tier": "T0",
           "outcome": "fail",
           "load_ms": 0.0,
-          "ttft_ms": 162.9,
-          "gen_ms": 4432.3,
+          "ttft_ms": 165.6,
+          "gen_ms": 4533.2,
           "tokens": 512,
-          "tps": 120.27,
+          "tps": 117.55,
           "verify_ms": 0.0,
           "rung": 0
         },
         {
           "tier": "T1",
           "outcome": "pass",
-          "load_ms": 1264.1,
-          "ttft_ms": 487.1,
-          "gen_ms": 22509.9,
+          "load_ms": 1272.1,
+          "ttft_ms": 523.5,
+          "gen_ms": 22900.5,
           "tokens": 768,
-          "tps": 34.93,
+          "tps": 34.37,
           "verify_ms": 0.0,
           "rung": 0
         }
       ],
-      "total_ms": 28209.7,
+      "total_ms": 28708.5,
       "overhead_ms": 0.01,
-      "wall_s": 28.21,
+      "wall_s": 28.71,
       "labels": {
         "T0": 0.2,
         "T1": 0.85,
         "T2": 1.0
       },
       "smallest_sat": "T1",
-      "route_id": "b6bdffae0a7e"
+      "route_id": "453c9eb3fcb4"
     },
     {
       "id": "A2",
@@ -207,46 +207,46 @@
           "tier": "T0",
           "outcome": "fail",
           "load_ms": 0.0,
-          "ttft_ms": 172.1,
-          "gen_ms": 4514.0,
+          "ttft_ms": 169.4,
+          "gen_ms": 4619.2,
           "tokens": 512,
-          "tps": 118.31,
-          "verify_ms": 3475.6,
+          "tps": 115.39,
+          "verify_ms": 3626.7,
           "rung": 4
         },
         {
           "tier": "T1",
           "outcome": "fail",
           "load_ms": 0.0,
-          "ttft_ms": 451.2,
-          "gen_ms": 24055.8,
+          "ttft_ms": 505.7,
+          "gen_ms": 24799.9,
           "tokens": 768,
-          "tps": 32.57,
-          "verify_ms": 72479.6,
+          "tps": 31.65,
+          "verify_ms": 73647.59999999999,
           "rung": 4
         },
         {
           "tier": "T2",
           "outcome": "pass",
           "load_ms": 0.0,
-          "ttft_ms": 1587.8,
-          "gen_ms": 155274.8,
+          "ttft_ms": 1709.1,
+          "gen_ms": 180167.9,
           "tokens": 1536,
-          "tps": 10.0,
+          "tps": 8.61,
           "verify_ms": 0.0,
           "rung": 4
         }
       ],
-      "total_ms": 259976.3,
-      "overhead_ms": 22.36,
-      "wall_s": 260.04,
+      "total_ms": 287037.2,
+      "overhead_ms": 25.76,
+      "wall_s": 287.06,
       "labels": {
         "T0": 0.35,
         "T1": 0.6,
         "T2": 1.0
       },
       "smallest_sat": "T2",
-      "route_id": "52fa54588b78"
+      "route_id": "f7888db1f340"
     },
     {
       "id": "E1",
@@ -260,25 +260,25 @@
         {
           "tier": "T1",
           "outcome": "pass",
-          "load_ms": 1244.6,
-          "ttft_ms": 488.3,
-          "gen_ms": 5270.4,
+          "load_ms": 1283.1,
+          "ttft_ms": 487.5,
+          "gen_ms": 6078.4,
           "tokens": 165,
-          "tps": 34.75,
+          "tps": 29.66,
           "verify_ms": 0.0,
           "rung": 5
         }
       ],
-      "total_ms": 6648.9,
-      "overhead_ms": 0.03,
-      "wall_s": 6.65,
+      "total_ms": 7509.5,
+      "overhead_ms": 0.05,
+      "wall_s": 7.51,
       "labels": {
         "T0": 0.35,
         "T1": 0.8,
         "T2": 1.0
       },
       "smallest_sat": "T1",
-      "route_id": "5108b4f8b73b"
+      "route_id": "0910478748c9"
     },
     {
       "id": "E2",
@@ -293,24 +293,24 @@
           "tier": "T1",
           "outcome": "pass",
           "load_ms": 0.0,
-          "ttft_ms": 478.7,
-          "gen_ms": 23708.3,
+          "ttft_ms": 559.2,
+          "gen_ms": 27516.5,
           "tokens": 732,
-          "tps": 31.56,
+          "tps": 27.2,
           "verify_ms": 0.0,
           "rung": 5
         }
       ],
-      "total_ms": 23709.2,
-      "overhead_ms": 0.03,
-      "wall_s": 23.71,
+      "total_ms": 27517.7,
+      "overhead_ms": 0.02,
+      "wall_s": 27.52,
       "labels": {
         "T0": 0.3,
         "T1": 0.75,
         "T2": 0.95
       },
       "smallest_sat": "T1",
-      "route_id": "c6cc6de8092a"
+      "route_id": "519d0e7a5b4a"
     },
     {
       "id": "R3",
@@ -324,21 +324,21 @@
         {
           "tier": "T0",
           "outcome": "pass",
-          "load_ms": 740.1,
-          "ttft_ms": 129.5,
-          "gen_ms": 1805.1,
+          "load_ms": 784.1,
+          "ttft_ms": 134.5,
+          "gen_ms": 1944.7,
           "tokens": 204,
-          "tps": 122.76,
+          "tps": 113.7,
           "verify_ms": 0.0,
           "rung": 1
         }
       ],
-      "total_ms": 2546.3,
-      "overhead_ms": 0.03,
-      "wall_s": 2.55,
+      "total_ms": 2730.9,
+      "overhead_ms": 0.04,
+      "wall_s": 2.73,
       "labels": null,
       "smallest_sat": null,
-      "route_id": "dd64d21b7c4f"
+      "route_id": "267089d70775"
     },
     {
       "id": "R4",
@@ -353,20 +353,20 @@
           "tier": "T0",
           "outcome": "pass",
           "load_ms": 0.0,
-          "ttft_ms": 163.2,
-          "gen_ms": 4331.5,
+          "ttft_ms": 175.3,
+          "gen_ms": 4946.9,
           "tokens": 483,
-          "tps": 116.28,
-          "verify_ms": 3343.8,
+          "tps": 101.58,
+          "verify_ms": 3844.0,
           "rung": 4
         }
       ],
-      "total_ms": 7676.0,
-      "overhead_ms": 0.03,
-      "wall_s": 7.68,
+      "total_ms": 8791.8,
+      "overhead_ms": 0.04,
+      "wall_s": 8.79,
       "labels": null,
       "smallest_sat": null,
-      "route_id": "ca9576109207"
+      "route_id": "8789674b0083"
     },
     {
       "id": "A3",
@@ -381,20 +381,20 @@
           "tier": "T0",
           "outcome": "pass",
           "load_ms": 0.0,
-          "ttft_ms": 153.5,
-          "gen_ms": 4535.4,
+          "ttft_ms": 168.3,
+          "gen_ms": 5084.0,
           "tokens": 512,
-          "tps": 117.25,
+          "tps": 104.5,
           "verify_ms": 0.0,
           "rung": 0
         }
       ],
-      "total_ms": 4536.7,
+      "total_ms": 5085.4,
       "overhead_ms": 0.01,
-      "wall_s": 4.54,
+      "wall_s": 5.09,
       "labels": null,
       "smallest_sat": null,
-      "route_id": "78a17cc3a7e1"
+      "route_id": "4d3109d230b1"
     },
     {
       "id": "A4",
@@ -409,20 +409,20 @@
           "tier": "T0",
           "outcome": "pass",
           "load_ms": 0.0,
-          "ttft_ms": 198.8,
-          "gen_ms": 4698.0,
+          "ttft_ms": 213.4,
+          "gen_ms": 5328.4,
           "tokens": 512,
-          "tps": 114.19,
+          "tps": 100.41,
           "verify_ms": 0.0,
           "rung": 0
         }
       ],
-      "total_ms": 4699.0,
+      "total_ms": 5329.2,
       "overhead_ms": 0.01,
-      "wall_s": 4.7,
+      "wall_s": 5.33,
       "labels": null,
       "smallest_sat": null,
-      "route_id": "7e433a2b83e1"
+      "route_id": "634c4556d9c4"
     },
     {
       "id": "E3",
@@ -437,20 +437,20 @@
           "tier": "T1",
           "outcome": "pass",
           "load_ms": 0.0,
-          "ttft_ms": 473.7,
-          "gen_ms": 15694.2,
+          "ttft_ms": 554.3,
+          "gen_ms": 18336.9,
           "tokens": 473,
-          "tps": 31.15,
+          "tps": 26.64,
           "verify_ms": 0.0,
           "rung": 5
         }
       ],
-      "total_ms": 15695.0,
-      "overhead_ms": 19.13,
-      "wall_s": 15.71,
+      "total_ms": 18337.5,
+      "overhead_ms": 23.98,
+      "wall_s": 18.36,
       "labels": null,
       "smallest_sat": null,
-      "route_id": "ae632da04d86"
+      "route_id": "b9f8ccdc14a6"
     },
     {
       "id": "E4",
@@ -465,20 +465,20 @@
           "tier": "T1",
           "outcome": "pass",
           "load_ms": 0.0,
-          "ttft_ms": 510.4,
-          "gen_ms": 24728.2,
+          "ttft_ms": 561.6,
+          "gen_ms": 29285.4,
           "tokens": 768,
-          "tps": 31.76,
+          "tps": 26.78,
           "verify_ms": 0.0,
           "rung": 5
         }
       ],
-      "total_ms": 24729.2,
-      "overhead_ms": 0.03,
-      "wall_s": 24.73,
+      "total_ms": 29286.4,
+      "overhead_ms": 0.02,
+      "wall_s": 29.29,
       "labels": null,
       "smallest_sat": null,
-      "route_id": "14c1022cfc65"
+      "route_id": "2f059ba22ce3"
     }
   ]
 }

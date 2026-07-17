@@ -9,88 +9,83 @@
 
 ```bash
 cd ../patchwork
-git status                              # expected: untracked/modified darkcore work (uncommitted as of writing)
+git status && git log --oneline -5      # expect dark-core v0.2 commits at HEAD, clean tree
 
 # THE conceptual entry point:
 cat docs/routing-architecture.md
 
-# The JOURNEY — how every decision and next step was derived (read 2nd):
+# The JOURNEY — evidence→decision→next-step chain, episodes 1–6 (read 2nd):
 cat specs/0001-tiered-cascade-router/journal.md
 
-# What happened last session (v0/v0.1 build + bench):
+# The bench findings (v0 → v0.1 → v0.2 comparison up top):
 cat experiments/router/BENCH-REPORT.md
 
-# Watch the bench replay on the gauge board (recommended, ~1 min at speed 20):
+# Watch it happen on the gauge board (~2 min):
 MLXPY=$HOME/.local/share/uv/tools/mlx-lm/bin/python
-cd experiments/router && $MLXPY -m darkcore.tui --replay --speed 20
+cd experiments/router && $MLXPY -m darkcore.tui --replay --speed 30
 ```
 
 ---
 
-## Current Status
+## Current Status (2026-07-17)
 
-**dark-core v0 EXISTS and is benched.** The routing pillar went from
-paper-only to a running data plane this session (2026-07-16):
+**dark-core v0.2: built, benched three times, steps 1–3 of the backlog done.**
 
-- `experiments/router/darkcore/` — prefilter → cascade(verify+escalate),
-  swap-aware model pool (T0+T1 co-resident), verifier registry (rungs 0/1/4;
-  emotional = rung-5 → D5 floor), PII-safe JSONL telemetry, CLI, and the
-  **gauge board TUI** (`darkcore/tui.py`, Catppuccin Frappé, snapshot/--live/--replay).
-- **Control surface FIRMED (v1) + implemented** (`specs/0001/control-surface.md`
-  ↔ `darkcore/surface.py`): file transport + atomic rename, invariants I1–I10,
-  optimistic concurrency, patch journal, hot reload. **0002/0003 are now
-  unblocked** — they were gated on this schema.
-- **Exp 4 (swap economics) measured** — results.md §Exp 4: cascade survives its
-  falsification test; swap ≈ 10% of one T2 generation; T0+T1 co-reside free.
-- Spec 0001 stays `draft`: predictor posture still open + S1 fails (below).
+- **Predictor live in class-prior mode** (`darkcore/predictor.py`): bge-small
+  kNN over an immutable exemplar snapshot (n=21), published through the
+  control surface (config **v3**, journaled). Class detection **12/12**;
+  the E3 emotional miss is fixed with a receipt. Arbitration pinned:
+  rules-when-they-fire > embedder > abstain-to-default.
+- **Rung-0 verifier** now: nesting + arg-shape + **inconclusive→judge
+  fallthrough** (a certificate with nothing to certify is not a pass).
+- **Judge caps** (T1 256 / T2 512 tokens) + **skip_start** for unclassifiable
+  queries; judge tax 26.2% → 24.5%.
+- **Escalation visibility**: `route(query, on_event=...)`; CLI streams
+  `◉ ✓ ✗ ➜` status on stderr.
+- **Bench v0.2 final:** quality 0.900 (S1 ✓), safety stable ×3 (S2 ✓),
+  83% ≤T1 (S3 ✓), observability ✓ — **S4 FAILS by 2.36 ms** (22.36 vs 20 ms
+  worst-route overhead; see decision below).
 
-## Bench headlines (full: experiments/router/BENCH-REPORT.md)
+## THE OPEN DECISION (operator input needed before spec 0001 → ready)
 
-- **1.66× vs T2-only**, 83% of routes ≤T1, escalation rate 0.33, overhead 0.05 ms.
-- **Safety works:** R1 (confidently-wrong T0) caught twice, landed T2 (S2 ✓).
-- **S1 quality retention FAILS** (0.792 vs 0.992, ε 0.15) — sole cause: rung-0
-  **V-struct false-accept** on agentic (A1: well-formed calls, absurd semantics).
-- **Cost decomposition: swap 0.5% · gen 73% · judge 26%** — the feared cost
-  (swap) is dead; the real tax is the rung-4 judge (C2 confirmed).
-- **P-class miss live-confirmed (E3):** lexicon missed "furious" → no D5 floor
-  → T0 listicle → T1 judge passed it. One gap defeated three defenses.
-- Bonsai-27B narrates CoT without `<think>` tags → leaks into answers.
+**S4 budget.** The 27B's residency pages out the embedder; mitigations applied
+(single-thread torch, init warmup, causally-honest rewarm at the evicting
+route's tail — telemetered `prior_rewarmed`), worst residual 22.36 ms vs the
+20 ms budget. Options: **(a)** keep 20 ms absolute → pin embedder memory or
+port it to mlx; **(b)** restate S4 as *overhead < 1% of route cost* (worst
+measured: 0.008% on its route; ≤0.8% on the cheapest route). Iteration was
+stopped deliberately — don't chase page-cache noise without deciding this.
 
 ## What's Next (Prioritized)
 
-> **Derivation:** every item below is traced to its measured evidence in
-> `specs/0001-tiered-cascade-router/journal.md` §"How the next steps were
-> derived". Steps 1–3 are IN PROGRESS this session (journal Episode 6);
-> if this snapshot is stale mid-build, `git status` + task list tell the truth.
+> Derivations: journal.md Episode 6 tail. Bench snapshots:
+> report-v0 / v0.1 / v0.2-rc1 / v0.2-rc2 / report.json (final).
 
-1. ~~Agentic rung-0 semantics layer~~ — **DONE (bench v0.1, later this same
-   date): ALL THRESHOLDS PASS** (S1 0.900 vs 0.842; speedup 1.72×; A1 now
-   T0✗→T1✓; v0 snapshot kept as `report-v0.json`).
-2. **Layer arbitration → embedder owns class.** E3 is the proof of need; Exp 1
-   showed class-locality is what embeddings do well. Prefilter keeps floors.
-3. **Plan 0002 (tuner) + 0003 (orchestrator)** — unblocked by the firmed
-   surface; every bench recommendation is a control-surface patch a tuner could
-   learn. 0003's attention budget + 0002's label provenance are the hard cores.
-4. **Judge economics:** skip_start for judge-chain classes; per-tier judge
-   token caps.
-5. Phase 0 corpus (exemplars at n ≫ 6) → predictor posture → spec 0001 `ready`.
-
-## Open Questions / Blockers
-
-- Predictor posture (unchanged; needs the corpus).
-- **Uncommitted work:** the entire darkcore build + doc updates from this
-  session need a commit (operator hadn't asked; nothing pushed).
+1. **S4 budget decision** (above) — small, unblocks `ready` for spec 0001.
+2. **Plan 0002 (tuner).** `seed_exemplars.py` literally performed the tuner's
+   job by hand (build snapshot → publish via set_config): write the spec from
+   this working example. Hard core: label provenance (journal + decisions.md).
+3. **Plan 0003 (orchestrator).** Hard core: the attention budget. Alarm feed
+   exists (`terminal_failure`, `budget_exhausted`); silent-failure sampling
+   does not yet.
+4. **Phase-0 exemplar corpus** (n ≫ 21) → tier prediction posture → recalibrate
+   λ (still unused: predictor abstains from tiers at low n).
+5. Residual seams (attack via tuner, not more rules): rung-0 blind to strategy
+   (A4); Bonsai-27B CoT-as-prose leaks into answers (would poison exemplar
+   labels — fix answer extraction before the growth loop ships).
 
 ## Gotchas
 
 - Run darkcore/TUI **from `experiments/router/`** with the mlx-lm uv-tool
-  python (`$MLXPY` above) — package is not installed, imported by cwd.
-- Only T2 needs the box alone; **T0+T1 co-reside safely** (2.93 GB, Exp 4).
-- Thinking-tier T2 needs ≥1000 completion tokens (roster ships 1536) **and**
-  narrates CoT as prose (no `<think>` tags) — answer extraction is imperfect.
-- Bench answers (raw text) live in `experiments/router/bench-answers/` — a
-  bench artifact, NOT logs; telemetry itself is hash+features only (PII rule).
-- `config.json` is at config_version 2 (two smoke-test journal entries); the
-  journal is the audit trail (`config.journal.jsonl`).
-- Eval substrate lives in **spark**: `spark/MODEL-EVAL-2026-07-15.md`,
-  `spark/bake-offs/`, `spark/spikes/human-emotion-eval-skill.md`.
+  python (`$MLXPY`). Config is at **v3** (predictor on, skip_start on).
+- Re-seeding exemplars: `seed_exemplars.py` bumps the snapshot version — it
+  will `conflict` if config moved; read current version first (by design).
+- **The 27B evicts the embedder** (the S4 saga) — any new resident component
+  must assume T2 wipes the page cache; put rewarms at the evicting route's
+  tail, and never trust solo latency measurements on this box.
+- T0+T1 co-reside safely; only T2 needs the box alone (Exp 4).
+- Thinking-tier T2: ≥1000 completion tokens or empty answers; narrates CoT
+  without `<think>` tags.
+- Bench answer snapshots: `experiments/router/bench-answers/` (bench artifact,
+  not logs; telemetry stays hash+features per the PII rule).
+- Eval substrate lives in **spark**: `spark/MODEL-EVAL-2026-07-15.md`.

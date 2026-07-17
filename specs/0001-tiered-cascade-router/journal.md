@@ -98,9 +98,41 @@ falsifier first → bench → match observed failures to predictions → fix the
 cheapest confirmed seam, one variable at a time → re-bench → let the surviving
 failures rank the backlog.** The backlog above wasn't chosen; it fell out.
 
-## Episode 6 — Steps 1–3 (this session, in progress)
+## Episode 6 — Steps 1–3 shipped; bench v0.2 (2026-07-17)
 
-Class detection moves to the embedder behind the existing arbitration
-(structural rules still win when they fire; floors always apply); skip-start
-+ judge caps attack the 26% tax; the CLI streams climb status. Bench v0.2
-will judge all three. Results to be appended here.
+**Built:** the class-prior predictor (bge-small kNN over an immutable
+21-exemplar snapshot, **published through the control surface** — config v3,
+journaled — exactly the tuner's future write path, exercised by hand);
+arbitration pinned (deterministic rules win when they fire → embedder owns
+the rest → low confidence abstains); judge token caps + skip-start; live
+escalation status to the caller.
+
+**Two design moments worth remembering:**
+- *Correct classification can lower quality.* Classing A2 correctly (agentic)
+  would have handed its checklist answers to a rung-0 check with nothing to
+  check — a vacuous pass at T0. Resolution came from the architecture itself:
+  **a certificate that has nothing to certify is inconclusive, not a pass** —
+  rung 0 falls through to the rung-4 judge (§6 "cascade the certificate").
+- *The 27B evicts the embedder.* First classify after a T2 climb paid
+  24→197 ms (page-fault reload of torch weights; run-to-run variance is pure
+  page-cache luck). Fix: **the route that loads the exclusive tier re-warms
+  the embedder at its own tail** — costs land on their cause, never the next
+  query. Single-resident hardware keeps teaching the same lesson: residency,
+  not compute, is the scarce resource.
+
+**Bench v0.2 (three-run table in BENCH-REPORT.md):** class detection 12/12
+(E3 fixed with a receipt — the answer engages the stated cue); quality 0.900
+held; **1.90× vs T2-only**; judge tax 26.2% → 24.5%; safety catch stable
+across all three benches. **S4 fails by 2.36 ms** (22.36 vs 20 ms, worst
+route, paging residue) — iteration stopped deliberately; the budget's
+*intent* (overhead ≪ generation) is honored at 0.008% of the route that
+carries it. **Operator decision requested:** absolute 20 ms (→ pin or port
+the embedder) vs restate as <1% of route cost.
+
+**Next steps as derived now:** (a) the S4 budget decision (operator); (b) plan
+0002 tuner — the seed script literally performed the tuner's job by hand this
+episode, so its spec can be written from a working example; (c) 0003
+orchestrator (attention budget); (d) Phase-0 corpus (unchanged); (e) residual
+known-blindness: rung-0 passes valid-but-strategically-weak agentic plans
+(A4) — attack via sampled judge or the tuner's exemplar growth, not more
+rung-0 rules.

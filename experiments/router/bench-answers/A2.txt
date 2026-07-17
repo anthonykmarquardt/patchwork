@@ -1,4 +1,4 @@
-# A2 | class default | final T2 | escalations 2 | flagged False
+# A2 | class agentic | final T2 | escalations 2 | flagged False
 --- QUERY ---
 A Python batch script suddenly gets OOM-killed at 3am nightly, only in production. Give an ordered diagnostic checklist cheapest-first.
 --- ANSWER ---

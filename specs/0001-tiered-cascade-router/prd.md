@@ -87,6 +87,9 @@ observability as a cross-cutting fourth requirement.
 - **Extensibility:** adding a tier is exemplars-only — no retrain, no code change to
   the predictor.
 - **Budget:** router overhead (prefilter + embed + kNN) < 20 ms/query on the M2.
+  *(v0.2 note: fails by 2.36 ms worst-route after paging mitigations — the 27B
+  evicts the embedder's pages. Open operator decision: absolute 20 ms → pin or
+  mlx-port the embedder, vs restate as <1% of route cost. journal.md Ep. 6.)*
 - **Observability:** every `route()` call emits a complete decision trace and the
   aggregate report reconstructs tier distribution, escalation rate, per-stage
   latency, and per-class quality — with **zero raw query content** in any log
@@ -106,10 +109,12 @@ observability as a cross-cutting fourth requirement.
       (+ 6 unlabeled probes for behavior/latency coverage).
 - [x] Layer 1: `darkcore/prefilter.py` — deterministic signal registry; rules
       are data on the control surface (`prefilter_rules`); side-effect free.
-- [ ] Layer 2: `predictor.py` — embed (pluggable; default `bge-small-en-v1.5`,
-      L2-normalized), hnswlib/FAISS kNN index over exemplars,
-      `utility = quality − λ·latency` → predicted tier. **Deliberately not built
-      at n=6** (P1/P2): dark mode ships predictor-off; gate on the Phase-0 corpus.
+- [~] Layer 2: `darkcore/predictor.py` — **built in CLASS-PRIOR mode** (v0.2):
+      bge-small kNN over snapshot exemplar store, class only (P1: abstains from
+      tier), 15/15 on battery+fresh incl. the E3 miss, ~8 ms/query. Arbitration
+      pinned: deterministic rules win when they fire; embedder owns the rest;
+      low-confidence abstains to `default`. **Tier prediction** still gated on
+      the Phase-0 corpus (`utility = quality − λ·latency` unused until then).
 - [x] Layer 3: `darkcore/cascade.py` — run tier → verifier → escalate; per-class
       verifiers from the registry; infra-failover distinct from verifier-fail.
 - [x] Observability: `darkcore/telemetry.py` — structured JSONL per the repo

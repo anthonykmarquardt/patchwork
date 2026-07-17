@@ -15,10 +15,24 @@ import sys
 from . import surface, telemetry
 
 
+def _status(name, **f):
+    """Live climb visibility on stderr (stdout stays machine-readable)."""
+    line = {
+        "dispatch": lambda: f"◉ {f['tier']} answering (attempt {f['attempt']}) …",
+        "verdict": lambda: (f"{'✓' if f['passed'] else '✗'} {f['tier']} "
+                            f"{'accepted' if f['passed'] else 'rejected'} "
+                            f"[{f.get('check')}] {f.get('gen_ms', 0)/1000:.1f}s"),
+        "escalation": lambda: f"➜ escalating {f['from_tier']} → {f['to_tier']} (loading if cold) …",
+        "terminal_failure": lambda: f"⚑ {f['tier']} also failed — emitting flagged answer",
+    }.get(name)
+    if line:
+        print("  " + line(), file=sys.stderr, flush=True)
+
+
 def cmd_route(args):
     from .router import Router  # deferred: needs mlx
     r = Router()
-    out = r.route(args.query)
+    out = r.route(args.query, on_event=None if args.quiet else _status)
     print(json.dumps({k: out[k] for k in ("tier", "escalations", "flagged", "trace")},
                      indent=2))
     print("\n--- answer ---\n" + out["answer"])
@@ -72,6 +86,7 @@ def main():
 
     p = sub.add_parser("route")
     p.add_argument("query")
+    p.add_argument("--quiet", action="store_true", help="suppress live status stream")
     p.set_defaults(fn=cmd_route)
 
     p = sub.add_parser("config")

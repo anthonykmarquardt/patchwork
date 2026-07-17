@@ -1,0 +1,9 @@
+{"id": "XA1", "class": "agentic", "query": "You are an ops agent with tools kubectl/read_file/run_shell. A deployment rollout is stuck at 2/5 replicas ready. Give the ordered tool calls to find out why."}
+{"id": "XA2", "class": "agentic", "query": "With tools http_get/run_shell/send_slack, investigate why the /healthz endpoint alternates between 200 and 503 under load. Give the ordered calls."}
+{"id": "XA3", "class": "agentic", "query": "You have tools dig/curl/read_file. TLS handshake failures spiked right after a certificate rotation. Give the ordered diagnostic tool calls."}
+{"id": "XR1", "class": "reasoning", "query": "A train leaves at 3:40pm averaging 80 km/h and another at 4:10pm averaging 100 km/h on the same route. When does the second catch the first? Show your work."}
+{"id": "XR2", "class": "reasoning", "query": "A rope ladder hangs over a ship's side with rungs 30 cm apart. The tide rises 90 cm. How many rungs go underwater? Explain the trick in the question."}
+{"id": "XR3", "class": "reasoning", "query": "Three boxes are labeled apples, oranges, and mixed — every label is wrong. You may draw one fruit from one box. Explain how to relabel all three correctly."}
+{"id": "XE1", "class": "emotional", "query": "I've been the caregiver for my mom for three years and yesterday I screamed at her over nothing. I can't stop replaying it."}
+{"id": "XE2", "class": "emotional", "query": "My manager praised my teammate in front of everyone for work that was mostly mine, and I just smiled. It's been eating at me all week."}
+{"id": "XE3", "class": "emotional", "query": "We put our dog down on Saturday. The house is so quiet now and I keep listening for her."}

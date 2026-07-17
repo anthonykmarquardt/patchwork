@@ -18,7 +18,11 @@ _DEFAULT_TOOLS = ["run_shell", "read_file", "http_get", "send_slack"]
 _PASS = re.compile(r"(?i)\bPASS\b")
 _FAIL = re.compile(r"(?i)\bFAIL\b")
 
-JUDGE_MAX_TOKENS = 512  # T2 thinks; leave room for the verdict after the think
+# Per-judge-tier token caps (bench v0.2, journal Episode 6 step 2): the judge
+# tax measured 26% of all spend in v0. T1 doesn't think — 256 is plenty for a
+# verdict; T2 narrates CoT before the verdict, keep its 512 headroom.
+JUDGE_MAX_TOKENS = {"T1": 256, "T2": 512}
+JUDGE_MAX_TOKENS_DEFAULT = 384
 
 # ---- rung-0 argument-shape table (bench v0.1, BENCH-REPORT rec #1) ----------
 # The v0 S1 failure: T0 emitted `http_get /etc/nginx/nginx.conf` — well-formed,
@@ -65,9 +69,21 @@ def nested_tool_check(query, answer, pool, tier, ctx):
         v = _shape_violation(m.group(1), m.group(2))
         if v:
             shape_viols.append(v)
+    invocations = len(re.findall(r"(?:%s)\s*\(" % alts, answer)) + \
+        len(re.findall(r"(?m)^\s*(?:%s)\s+\S" % alts, answer))
+    if invocations == 0:
+        # No tool invocations to certify — a rung-0 pass here would be vacuous
+        # (the v0.2 A2 hazard: a checklist answer sails through a structural
+        # check). Cascade the certificate itself (architecture doc §6):
+        # inconclusive -> fall through to the rung-4 judge.
+        passed, detail = next_tier_judge(query, answer, pool, tier, ctx)
+        detail["check"] = "rung0_inconclusive->judge"
+        detail["invocations"] = 0
+        return passed, detail
     ok = nested == 0 and not shape_viols
     return ok, {"rung": 0, "check": "nested_tool+arg_shape",
-                "nested_calls": nested, "shape_violations": len(shape_viols),
+                "invocations": invocations, "nested_calls": nested,
+                "shape_violations": len(shape_viols),
                 "shape_detail": shape_viols[:4], "verify_ms": 0.0}
 
 
@@ -93,7 +109,8 @@ def next_tier_judge(query, answer, pool, tier, ctx):
         "PASS or FAIL.\n\n"
         f"QUESTION:\n{query}\n\nANSWER:\n{answer}\n\nVerdict (PASS or FAIL):"
     )
-    r = pool.generate(judge, prompt, max_tokens=JUDGE_MAX_TOKENS)
+    r = pool.generate(judge, prompt,
+                      max_tokens=JUDGE_MAX_TOKENS.get(judge, JUDGE_MAX_TOKENS_DEFAULT))
     text = r["answer"]
     if _PASS.search(text) and not _FAIL.search(text):
         verdict = True

@@ -1,4 +1,59 @@
-# dark-core v0 / v0.1 — benchmark findings report
+# dark-core v0 / v0.1 / v0.2 — benchmark findings report
+
+## v0.2 (2026-07-17): steps 1–3 landed — class detection 100%, 1.9×, one honest FAIL
+
+Three changes over v0.1 (journal Episode 6): **(1)** class detection moved to
+the embedder (`darkcore/predictor.py`, class-prior mode: bge-small kNN over a
+21-exemplar snapshot store, published through the control surface as config
+v3; deterministic rules still win when they fire; low confidence abstains);
+**(2)** judge token caps (T1 256 / T2 512) + `skip_start` for unclassifiable
+queries; **(3)** live escalation status streamed to the caller (CLI shows
+`◉ / ✓ / ✗ / ➜` progress on stderr).
+
+| | v0 | v0.1 | **v0.2** |
+|---|---|---|---|
+| class detection | 10/12 | 10/12 | **12/12** |
+| mean quality (labeled) | 0.792 | 0.900 | **0.900** |
+| speedup vs T2-only | 1.66× | 1.72× | **1.90×** |
+| ≤T1 routing | 83.3% | 83.3% | 83.3% |
+| verify (judge) share | 26.2% | — | **24.5%** |
+| E3 (the P-class miss) | T0 via lexicon gap | same | **emotional → T1 floor** |
+| thresholds | S1 FAIL | all pass | S4 FAIL (see below) |
+
+**The E3 receipt.** v0: T0 interrogated a furious person ("What were your
+weaknesses?"). v0.2: classified `emotional` by the embedder (conf 0.643, no
+keyword needed), floored at T1, and the answer engages the stated cue
+directly ("the phrase 'it happens for a reason' can feel dismissive").
+Validation: 15/15 class accuracy on battery + 3 never-seen queries.
+
+**The A2 hazard, handled.** Correct classification (default→agentic) would
+have handed A2's *checklist* answers to a rung-0 check with nothing to check
+— a vacuous pass at T0 (quality 0.35). Fix: **rung-0 returns inconclusive
+when no tool invocations exist and falls through to the rung-4 judge**
+("cascade the certificate itself", architecture §6). A2 still climbs to its
+labeled-correct T2, now 287 s (was 332.8/310.8 — judge caps).
+
+**The S4 story (the run's real finding).** Moving the embedder into the
+router put a 33 M-param torch model on the query path: ~8 ms solo — but the
+27B's 7.9 GB residency **pages the embedder out**, and the first classify
+after a T2 climb paid 24→197 ms across runs (page-cache luck). Fixes applied:
+single-thread torch + init warm-up; then a **causally-honest rewarm** — the
+route that loads the exclusive tier re-pages the embedder at its own tail
+(measured 39–169 ms, telemetered as `prior_rewarmed`), so the climb pays for
+its own eviction, not the next query. Result: E3 19.1 ms (passes), A2
+**22.36 ms — S4 fails by 2.36 ms** (two small-model loads between rewarm and
+classify partially re-evicted pages). We stop here: chasing ~2 ms of OS
+paging noise is not engineering. **Operator decision requested:** keep 20 ms
+absolute (then the embedder needs pinning/mlx-porting), or restate S4 as
+intent — router overhead < 1% of route cost (worst measured: 22 ms on a
+287 s route = 0.008%; on the cheapest 2.7 s route it would be 0.8%).
+
+**Cost split (v0.2 final):** swap 0.7% · gen 74.8% · verify 24.5%. Judge caps
+trimmed the tax; the deeper fix (predictor-assisted skip of doomed attempts)
+is 0002-tuner territory. Snapshots kept: `report-v0.json`, `report-v0.1.json`,
+`report-v0.2-rc1/rc2.json` (the paging saga is visible across the rc's).
+
+---
 
 > **Runs:** 2026-07-16, M2 16 GB, mlx_lm 0.31.3, config v2. 12 queries
 > (6 labeled + 6 probes) through the real cascade, plus a T2-only baseline on

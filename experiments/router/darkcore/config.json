@@ -1,7 +1,7 @@
 {
   "surface_version": 1,
-  "config_version": 2,
-  "updated": "2026-07-17T03:13:44Z",
+  "config_version": 3,
+  "updated": "2026-07-17T06:38:33Z",
   "updated_by": "operator",
   "params": {
     "tier_roster": [
@@ -90,15 +90,15 @@
       }
     ],
     "exemplar_store_ref": {
-      "uri": null,
-      "index_version": 0
+      "uri": "../patchwork/experiments/router/darkcore/exemplars/v1",
+      "index_version": 1
     },
-    "predictor_enabled": false,
+    "predictor_enabled": true,
     "cascade_policy": {
       "max_tiers_per_query": 3,
       "per_query_ms_budget": 300000,
       "retry_policy": "escalate",
-      "skip_start": false,
+      "skip_start": true,
       "terminal_failure": "emit_flagged"
     },
     "escalation_overrides": {}

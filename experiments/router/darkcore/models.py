@@ -25,6 +25,11 @@ class ModelPool:
         self.roster = {t["id"]: t for t in roster}
         self.order = [t["id"] for t in roster]
         self._live = {}  # tier_id -> (model, tokenizer)
+        # Set when an exclusive (non-coresident) tier is loaded: its memory
+        # footprint pages out other residents (e.g. the class-prior embedder —
+        # measured 197 ms page-fault classify after a T2 climb). The router
+        # re-warms dependents at the end of the route that caused it.
+        self.exclusive_used = False
 
     def _evict(self, tier_id, reason):
         if tier_id in self._live:
@@ -46,6 +51,7 @@ class ModelPool:
 
         # residency policy (Exp 4)
         if tier_id not in CORESIDENT:
+            self.exclusive_used = True
             for other in list(self._live):
                 self._evict(other, f"exclusive_load_{tier_id}")
         else:

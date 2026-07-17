@@ -11,7 +11,15 @@ from . import telemetry, verifiers
 from .models import TierUnavailable
 
 
-def run(pool, query, qhash, route_id, klass, start_tier, params):
+def run(pool, query, qhash, route_id, klass, start_tier, params, on_event=None):
+    def notify(name, **fields):
+        """Caller-visible status stream (step 3) — never breaks the data path."""
+        if on_event is not None:
+            try:
+                on_event(name, **fields)
+            except Exception:  # noqa: BLE001 — caller's problem, not ours
+                pass
+
     policy = params["cascade_policy"]
     vconf = params["verifier_config"].get(klass, params["verifier_config"]["default"])
     override = params["escalation_overrides"].get(klass)
@@ -39,6 +47,7 @@ def run(pool, query, qhash, route_id, klass, start_tier, params):
 
         telemetry.emit("tier_dispatched", route_id=route_id, tier=tier,
                        attempt=len(attempts) + 1, **{"class": klass})
+        notify("dispatch", tier=tier, attempt=len(attempts) + 1)
         try:
             result = pool.generate(tier, query)
         except TierUnavailable:
@@ -61,6 +70,8 @@ def run(pool, query, qhash, route_id, klass, start_tier, params):
         telemetry.emit("verifier_result", route_id=route_id, tier=tier,
                        verdict="pass" if passed else "fail", **{"class": klass},
                        **detail)
+        notify("verdict", tier=tier, passed=passed,
+               check=detail.get("check"), gen_ms=result["gen_ms"])
         attempts.append({
             "tier": tier, "outcome": "pass" if passed else "fail",
             "load_ms": result["load_ms"], "ttft_ms": result["ttft_ms"],
@@ -78,9 +89,11 @@ def run(pool, query, qhash, route_id, klass, start_tier, params):
             telemetry.emit("terminal_failure", level="error", route_id=route_id,
                            tier=tier, action=policy["terminal_failure"],
                            alarm=True, **{"class": klass})
+            notify("terminal_failure", tier=tier)
             break
         telemetry.emit("escalation", route_id=route_id,
                        from_tier=tier, to_tier=nxt, **{"class": klass})
+        notify("escalation", from_tier=tier, to_tier=nxt)
         tier = nxt
 
     total_ms = round((time.perf_counter() - t_start) * 1000, 1)

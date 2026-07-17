@@ -24,7 +24,10 @@ $MLXPY -m darkcore.tui --replay --speed 8        # replay telemetry history
 ```
 
 - `battery.jsonl` — the labeled n=6 battery + 6 unlabeled probes (bench input,
-  future kNN seed exemplars).
+  kNN seed exemplars).
+- `exemplar-seeds.jsonl` + `seed_exemplars.py` — authored class exemplars and
+  the script that builds `darkcore/exemplars/v<N>/` (embeddings, no raw text)
+  and publishes it via a control-surface patch (plays the tuner's role).
 - `darkcore_bench.py` — full battery through the real cascade + T2-only
   baseline → `report.json` (+ per-answer snapshots in `bench-answers/`).
 - `verify.py` — asserts prd.md success criteria against `report.json`
