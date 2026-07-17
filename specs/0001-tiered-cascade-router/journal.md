@@ -136,3 +136,27 @@ orchestrator (attention budget); (d) Phase-0 corpus (unchanged); (e) residual
 known-blindness: rung-0 passes valid-but-strategically-weak agentic plans
 (A4) — attack via sampled judge or the tuner's exemplar growth, not more
 rung-0 rules.
+
+## Episode 7 — The S4 decision: gate on intent, report the absolute (2026-07-17)
+
+Operator ruled on the Episode-6 question: **option (b)**. S4 now gates on
+*router overhead < 1% of the route's total cost* (worst measured 0.122%, E3);
+the **20 ms absolute stays as the aspirational target** — verify.py prints
+worst-case absolute overhead every run, non-gating, so drift stays visible.
+Two operator constraints attached to the decision:
+
+- **No black box.** The metric must be logged, not just benched. Confirmed
+  already true: `overhead_ms` rides on `routing_decision` and
+  `route_completed` telemetry and `router_overhead_ms` on every trace; the
+  restated verifier line names the worst route and its absolute cost.
+- **Native hardware where we can.** Surfaced a latent assumption: the
+  embedder was thought to be mlx — it is **torch/transformers** (predictor.py
+  loads bge-small via HF AutoModel on CPU; mlx runs only the generation
+  tiers). That is *why* the 27B can evict it. The **mlx port of bge-small is
+  now a planned backlog item** (CONTINUE.md #5): it removes torch from the
+  query path, makes the eviction structurally impossible, and should beat the
+  20 ms absolute for free — but it is a plan, not a gate.
+
+Verifier re-run post-restatement: **all five thresholds PASS** →
+`status.yaml` state flipped to **ready**. Spec 0001's empirical closure is
+complete; 0002 (tuner) planning is unblocked and next.

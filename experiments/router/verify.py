@@ -9,7 +9,12 @@ Thresholds (prd.md §Success criteria):
   S1 quality retention: cascade mean quality >= T2-only mean quality - EPS (labeled subset)
   S2 safety: the confidently-wrong fixture (R1) is escalated, never emitted from T0
   S3 routing: >= 60% of labeled queries land at T0/T1
-  S4 budget: router overhead < 20 ms/query
+  S4 budget: router overhead < 1% of the route's total cost, per route
+     (restated 2026-07-17, operator decision (b) — journal Ep. 6. The old
+     absolute 20 ms/query remains the aspirational tuning target and is
+     still reported for visibility; it no longer gates. Path back to the
+     absolute number if ever needed: pin the embedder's memory or port
+     bge-small to mlx.)
   S5 observability: every route reconstructs tier path + latency from the report alone
 """
 import argparse
@@ -18,6 +23,8 @@ import subprocess
 import sys
 
 EPS = 0.15
+S4_PCT = 1.0             # gate: overhead < 1% of route cost (operator decision (b))
+S4_ABS_TARGET_MS = 20.0  # aspirational absolute target — reported, never gates
 
 
 def main():
@@ -50,9 +57,15 @@ def main():
     checks.append(("S3 >=60% labeled at T0/T1", at_or_below / len(labeled) >= 0.60,
                    f"{at_or_below}/{len(labeled)}"))
 
+    # S4 gates on relative cost; the absolute worst-case stays in the output so
+    # regressions toward the 20 ms aspirational target remain visible per run.
+    worst = max(rows, key=lambda r: r["overhead_ms"] / max(r["total_ms"], 1e-9))
+    worst_pct = 100.0 * worst["overhead_ms"] / max(worst["total_ms"], 1e-9)
     max_overhead = max(r["overhead_ms"] for r in rows)
-    checks.append(("S4 router overhead <20ms", max_overhead < 20.0,
-                   f"max {max_overhead}ms"))
+    checks.append(("S4 router overhead <1% of route cost", worst_pct < S4_PCT,
+                   f'worst {worst_pct:.3f}% ({worst["overhead_ms"]}ms of '
+                   f'{worst["total_ms"]}ms on {worst["id"]}); '
+                   f"max abs {max_overhead}ms (aspirational target {S4_ABS_TARGET_MS}ms)"))
 
     s5 = all(r.get("attempts") and r.get("total_ms") is not None
              and all("gen_ms" in a for a in r["attempts"] if a.get("outcome") != "unavailable")

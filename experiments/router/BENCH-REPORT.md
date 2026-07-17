@@ -47,6 +47,14 @@ paging noise is not engineering. **Operator decision requested:** keep 20 ms
 absolute (then the embedder needs pinning/mlx-porting), or restate S4 as
 intent — router overhead < 1% of route cost (worst measured: 22 ms on a
 287 s route = 0.008%; on the cheapest 2.7 s route it would be 0.8%).
+**RESOLVED 2026-07-17 — operator chose (b):** S4 now gates on overhead < 1%
+of route cost (worst measured 0.122%, on E3). The 20 ms absolute number is
+kept as the aspirational tuning target — verify.py prints worst-case absolute
+overhead every run so drift stays visible, and `overhead_ms` remains on every
+`routing_decision`/`route_completed` event and route trace. An mlx port of
+bge-small went on the backlog (the embedder is torch/transformers today; a
+resident-mlx embedder would use the native hardware and end the eviction
+class of problem outright).
 
 **Cost split (v0.2 final):** swap 0.7% · gen 74.8% · verify 24.5%. Judge caps
 trimmed the tax; the deeper fix (predictor-assisted skip of doomed attempts)

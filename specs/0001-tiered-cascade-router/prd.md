@@ -86,10 +86,19 @@ observability as a cross-cutting fourth requirement.
   verifier and escalated**, not emitted.
 - **Extensibility:** adding a tier is exemplars-only — no retrain, no code change to
   the predictor.
-- **Budget:** router overhead (prefilter + embed + kNN) < 20 ms/query on the M2.
-  *(v0.2 note: fails by 2.36 ms worst-route after paging mitigations — the 27B
-  evicts the embedder's pages. Open operator decision: absolute 20 ms → pin or
-  mlx-port the embedder, vs restate as <1% of route cost. journal.md Ep. 6.)*
+- **Budget:** router overhead (prefilter + embed + kNN) < **1% of the route's
+  total cost**, per route. *(Restated 2026-07-17, operator decision (b),
+  journal Ep. 6 — the intent is "the router must not tax the routes it
+  serves". The absolute number, **20 ms/query**, stays as the aspirational
+  tuning target: verify.py reports worst-case absolute overhead every run so
+  regressions stay visible, but it no longer gates. Worst measured residual
+  above 20 ms is OS paging noise after the 27B evicts the embedder's pages.
+  If the absolute target is ever reinstated, the path is pinning the
+  embedder's memory or porting bge-small to mlx — the port is on the backlog
+  regardless, to use native hardware and make the eviction structurally
+  impossible.)* Overhead is per-route observable: `overhead_ms` on the
+  `routing_decision` and `route_completed` telemetry events and
+  `router_overhead_ms` in every returned trace — never a black box.
 - **Observability:** every `route()` call emits a complete decision trace and the
   aggregate report reconstructs tier distribution, escalation rate, per-stage
   latency, and per-class quality — with **zero raw query content** in any log

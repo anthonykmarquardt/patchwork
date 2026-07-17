@@ -1,10 +1,10 @@
 id: "0001"
 slug: "tiered-cascade-router"
 title: "Tiered cascade router — programmatic prefilter → kNN tier predictor → verify-and-escalate"
-state: "draft"
+state: "ready"
 owner: "unassigned"
 created: "2026-07-15"
-updated: "2026-07-16"  # dark-core v0 built + benched this date (see results/notes)
+updated: "2026-07-17"  # S4 restated per operator decision (b); all thresholds pass
 
 verifier:
   kind: "harness"
@@ -62,6 +62,15 @@ metadata:
     false-accept on agentic; fix = tool-semantics layer on rung 0. P-class miss
     (E3) argues class detection -> embedder. Judge tax = 26% of spend.
     Full findings: experiments/router/BENCH-REPORT.md.
+
+    2026-07-17: S4 RESOLVED — operator chose (b): gate is overhead < 1% of
+    route cost (worst measured 0.122%); 20 ms absolute kept as aspirational
+    target, reported by verify.py every run but non-gating. Overhead stays
+    per-route observable (overhead_ms on routing_decision/route_completed,
+    router_overhead_ms in traces). NB the embedder is torch/transformers,
+    NOT mlx — mlx port of bge-small is on the backlog (native hardware;
+    makes the 27B eviction structurally impossible). All five thresholds
+    pass -> state flipped to ready.
   references:
     - "../../docs/routing-architecture.md — master conceptual doc (planes, taxonomy, certificate rungs, DAG)"
     - "control-surface.md — the hard data/control-plane interface (build first; gates 0002/0003)"
