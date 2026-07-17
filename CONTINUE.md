@@ -14,7 +14,10 @@ git status                              # expected: untracked/modified darkcore 
 # THE conceptual entry point:
 cat docs/routing-architecture.md
 
-# What happened last session (v0 build + bench):
+# The JOURNEY — how every decision and next step was derived (read 2nd):
+cat specs/0001-tiered-cascade-router/journal.md
+
+# What happened last session (v0/v0.1 build + bench):
 cat experiments/router/BENCH-REPORT.md
 
 # Watch the bench replay on the gauge board (recommended, ~1 min at speed 20):
@@ -54,6 +57,11 @@ paper-only to a running data plane this session (2026-07-16):
 - Bonsai-27B narrates CoT without `<think>` tags → leaks into answers.
 
 ## What's Next (Prioritized)
+
+> **Derivation:** every item below is traced to its measured evidence in
+> `specs/0001-tiered-cascade-router/journal.md` §"How the next steps were
+> derived". Steps 1–3 are IN PROGRESS this session (journal Episode 6);
+> if this snapshot is stale mid-build, `git status` + task list tell the truth.
 
 1. ~~Agentic rung-0 semantics layer~~ — **DONE (bench v0.1, later this same
    date): ALL THRESHOLDS PASS** (S1 0.900 vs 0.842; speedup 1.72×; A1 now
