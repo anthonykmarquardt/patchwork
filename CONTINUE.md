@@ -56,6 +56,39 @@ port it to mlx; **(b)** restate S4 as *overhead < 1% of route cost* (worst
 measured: 0.008% on its route; ≤0.8% on the cheapest route). Iteration was
 stopped deliberately — don't chase page-cache noise without deciding this.
 
+## Router Server & Integration (NEW)
+
+The **dark-core router now runs as a standalone OpenAI-compatible inference
+server** (`darkcore.server`). Agent harnesses can call it directly, or via spark
+(which relays). The server manages T0/T1/T2 lifecycle internally — no external
+config needed for basic operation.
+
+**Quick start:**
+```bash
+cd experiments/router
+# Terminal 1: start the router server
+$MLXPY -m darkcore.server --port 8000
+
+# Terminal 2: test it (agent harness style)
+curl -X POST http://localhost:8000/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "patchwork-dynamic-router",
+    "messages": [{"role": "user", "content": "What is 2+2?"}]
+  }' | python3 -m json.tool
+```
+
+**With spark (via relay):**
+- Spark v2 (spark repo) now has a `relay` backend type
+- Configure: `config/runtimes/relay.toml` → `relay_base_url = "http://localhost:8000"`
+- Then: `spark <model-configured-as-relay>` → proxies to the router transparently
+- Agent harness calls spark normally; spark handles relay under the hood
+
+**Integration:** The router is completely decoupled from spark. The relay is a
+generic proxying layer (useful for any external OpenAI-compatible service). This
+lets the router develop independently in patchwork while spark eventually absorbs
+it as a first-class citizen.
+
 ## What's Next (Prioritized)
 
 > Derivations: journal.md Episode 6 tail. Bench snapshots:
