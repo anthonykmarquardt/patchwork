@@ -1,5 +1,12 @@
 # External References
 
+> **Scope.** The papers below are for the **latent-bridge / composition** thread.
+> The **routing pillar**'s references live with their spec:
+> `../specs/0001-tiered-cascade-router/references/` (incl. the kNN paper PDF) and
+> `../docs/routing-architecture.md` §12. Key routing refs: arXiv:2505.12601
+> (kNN ≥ learned routers), 2506.16655 (Arch-Router), 2603.04445 (routing/cascade
+> survey), RouteLLM, FrugalGPT.
+
 ## Papers
 
 ### Cross-Model Representation Bridging

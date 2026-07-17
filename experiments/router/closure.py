@@ -113,8 +113,10 @@ def v_emotional(t):
 
 def exp2():
     banner("EXP 2 — per-class verifiers vs real captured outputs (fixtures/)")
-    ans = {"T0": {**load_answers(f"{FIX}/out_ra_1.7b.txt"), **load_answers(f"{FIX}/emo_bonsai-1.7b-t.txt")},
-           "T1": {**load_answers(f"{FIX}/out_ra_8b.txt"),   **load_answers(f"{FIX}/emo_bonsai-8b-t.txt")}}
+    ans = {"T0": {**load_answers(f"{FIX}/bonsai-1.7b-ternary.reasoning-agentic.txt"),
+                  **load_answers(f"{FIX}/bonsai-1.7b-ternary.emotional.txt")},
+           "T1": {**load_answers(f"{FIX}/bonsai-8b-ternary.reasoning-agentic.txt"),
+                  **load_answers(f"{FIX}/bonsai-8b-ternary.emotional.txt")}}
     print("  AGENTIC (nested-tool check = the signal; step-count = noisy):")
     for tier in ("T0","T1"):
         r = v_agentic(ans[tier].get("A1",""))

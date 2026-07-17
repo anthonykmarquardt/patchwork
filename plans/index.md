@@ -1,8 +1,16 @@
-# Patchwork — Master Planning Document
+# Patchwork — Master Planning Document (latent-bridge thread)
+
+> **⚠️ Scope / status (2026-07-16).** This document plans the **latent-bridge /
+> composition** thread (Qwen2.5, cross-model bridging, memory tiering) — **paused,
+> not abandoned.** The **active** workstream is the **routing pillar**, which is
+> spec-driven: start at `../docs/routing-architecture.md`, then `../specs/0001–0003`
+> and `../CONTINUE.md`. This file is *not* the current plan of record; it's the
+> design space for a future thread. Host note: the target profile is an M4 Max, but
+> all router measurements were taken on the **dev machine, an Apple Silicon M2 / 16 GB**.
 
 > **Status:** Early exploration. Open questions outnumber settled design decisions. This document is the central planning artifact — it lays out the design space, presents alternatives at every layer, and identifies where investigation is needed before a design can be locked in.
 > **Intended audience:** Any agent entering this workspace. The goal is to bring a future agent up to speed and give it clear next steps to investigate.
-> **Last updated:** 2026-07-14
+> **Last updated:** 2026-07-14 (latent-bridge thread; banner added 2026-07-16)
 
 ---
 
