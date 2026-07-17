@@ -1,0 +1,34 @@
+id: "0003"
+slug: "supervisory-orchestrator"
+title: "Supervisory orchestrator — firm-based control-plane supervisor for the router"
+state: "draft"
+owner: "unassigned"
+created: "2026-07-16"
+updated: "2026-07-16"
+
+verifier:
+  kind: "tbd"
+  command: "TBD — scaffold; planned next session"
+  requires_tests: true
+depends_on:
+  - "0001-tiered-cascade-router"   # control surface + alarm/telemetry channel
+blocks: []
+targets:
+  - control-plane
+paths:
+  - "experiments/router/orchestrator/**"
+labels:
+  - "control-plane"
+  - "orchestrator"
+  - "supervision"
+metadata:
+  motivation: >
+    The supervisory half of the control plane. Firm-based/hierarchical. Consumes
+    alarms (certificate-backed failures) and performs sampled volitional inspection
+    of the no-certificate classes; actuates policy overrides via the control
+    surface. Out-of-band, never in the request path.
+  notes: >
+    SCAFFOLD only — role + decisions captured, full planning next session. Hard
+    problem: the attention budget — routing its own (expensive) inspection
+    (recursive routing). Silent-failure coverage is sampled, not guaranteed.
+    See docs/routing-architecture.md §3, §11.

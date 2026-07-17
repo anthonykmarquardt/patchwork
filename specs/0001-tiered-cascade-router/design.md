@@ -84,6 +84,35 @@ Cascades are FrugalGPT-lineage; the novelty here is pairing the cascade with the
 kNN predictor so most queries *start* at the right tier and the cascade only pays
 for escalation on the minority that need it.
 
+### Verifier registry — indexed by certificate rung
+
+The verifier for each class is chosen by **certificate cost** — the cheapest check
+that *reliably* catches that class's failure, subject to `certificate cost ≪ the
+escalation it gates`. The full rung taxonomy (0 structural → 5 no-cheap-certificate)
+and its design rules live in `../../docs/routing-architecture.md` §6–7. The
+**class → rung** assignment for this spec, validated against real outputs in
+`results.md` (Exp 2):
+
+| Class | Rung | Verifier | Empirical note |
+|---|---|---|---|
+| agentic | **0** | tool-call/schema well-formedness (nested-tool check) | catches T0/A1 broken calls; **drop step-sprawl** (false-positives T1) |
+| reasoning (checkable) | **1** | plug-back / execute (R2: 18/6 verified) | true certificate — cheap + reliable |
+| reasoning (non-checkable) | **4** | verdict-only next-tier judge (R1) | caught T0/R1 confidently-wrong |
+| emotional | **5 → fixed policy** | *no reliable cheap certificate* (rung-3 heuristic is soft — missed T0/E1 prose) | **don't verify — floor at T1 (D5)** |
+| world-fact | 1 | ground-truth / retrieval lookup | future class |
+| code-gen | 1 | run tests / typecheck | future class |
+| open investigation / creative | 5 → fixed policy | none | conservative fixed tier |
+
+**Escalation policy (open — see prd.md):** terminal-failure (T2 verifier also
+fails → emit-flagged + raise an alarm), retry-vs-escalate, optional skip-start,
+and a per-query escalation budget are cascade-policy knobs on the control surface.
+
+**Layer arbitration (open):** Exp 1 shows the *embedder* separates **class** well
+(0.615 vs 0.457) while prefilter rules are brittle — so **class detection likely
+belongs to the predictor, not the prefilter**, with the prefilter consuming the
+class to set floors. Precedence (prefilter-floor ≥ predictor-prior; cascade always
+outer) and multi-label handling (P-class) are to be pinned before `ready`.
+
 ## 4. Observability (`trace.py` + telemetry) — cross-cutting
 
 The router is a decision engine; if the decisions are opaque we cannot judge

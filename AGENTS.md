@@ -4,6 +4,13 @@
 > **Workspace:** `../patchwork/`
 > **Theme:** Modular model composition — routing, latent bridging, and runtime composition of small dense models into a coherent inference ensemble.
 
+> **⇒ Active workstream (2026-07): the routing pillar.** The "Routing" leg below is
+> now a concrete architecture. Start at **`docs/routing-architecture.md`** (planes,
+> taxonomy, certificate rungs, DAG, glossary), then the specs: **`specs/0001`**
+> (router / data plane, draft), **`specs/0002`** (config tuner, scaffold),
+> **`specs/0003`** (supervisory orchestrator, scaffold). Session handoff:
+> **`CONTINUE.md`**.
+
 ---
 
 ## 0. The Core Insight

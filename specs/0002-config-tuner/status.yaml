@@ -1,0 +1,33 @@
+id: "0002"
+slug: "config-tuner"
+title: "Config tuner — async control-plane learning/config for the router"
+state: "draft"
+owner: "unassigned"
+created: "2026-07-16"
+updated: "2026-07-16"
+
+verifier:
+  kind: "tbd"
+  command: "TBD — scaffold; planned next session"
+  requires_tests: true
+depends_on:
+  - "0001-tiered-cascade-router"   # its control surface must be fixed first
+blocks: []
+targets:
+  - control-plane
+paths:
+  - "experiments/router/tuner/**"
+labels:
+  - "control-plane"
+  - "tuner"
+  - "learning"
+metadata:
+  motivation: >
+    The configuration/learning half of the control plane. Consumes router
+    telemetry, recomputes params (λ, verifier thresholds, start-map, exemplars),
+    hot-reloads via the control surface. Async, out-of-band, cross-session.
+  notes: >
+    SCAFFOLD only — role + decisions captured, full planning next session. Hard
+    problem: trust/label-provenance on classes it can't cheaply label (inherits
+    the certificate problem). Single writer of the exemplar store. RL/bandit
+    (taxonomy C) lives here, later. See docs/routing-architecture.md §5.

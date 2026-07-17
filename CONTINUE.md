@@ -9,100 +9,103 @@
 
 ```bash
 cd ../patchwork
-git status                              # expected: (clean)
-git log --oneline -5                    # expected: e9845a7... (initial commit on vibes)
+git status                              # expected: clean
+git log --oneline -8                    # expect the "0001-0003 router architecture handoff" commits at HEAD
 
-python3 scripts/agent-tools/update-continue.py --verify   # Validate handoff
-python3 scripts/agent-tools/update-agents.py --report     # Validate doc refs
+# THE conceptual entry point — read before touching any spec:
+cat docs/routing-architecture.md
+
+# The active workstream:
+ls specs/                               # 0001 (router, draft) · 0002 (tuner, scaffold) · 0003 (orchestrator, scaffold)
+cat specs/0001-tiered-cascade-router/prd.md
 ```
 
 ---
 
 ## Current Status
 
-**Phase:** 0 (Foundations — early exploration)
-**Completed:** Workspace bootstrapped with full project-agent-interface (v1.3.0 patterns).
-- AGENTS.md, MEMORY.md, CONTINUE.md, plans/index.md — all written
-- Scripts: update-continue.py, update-memory.py, update-agents.py, memory-maintenance.sh — all built and verified
-- Agent-guide: continue-handoff.md, memory-maintenance.md, anti-drift.md — all written
-- Pre-commit hook installed (subtree-scoped, no-op unless patchwork/ staged)
-- Project-agent-interface skill amended to v1.3.0 with 6 new patterns from quorum
+**Active workstream: the routing/composition pillar** — the "Routing" leg of
+patchwork's thesis, now a concrete architecture. (The older Phase-0 latent-bridge
+/ Qwen2.5 investigations still live in `plans/index.md`; they are a separate,
+paused thread.)
+
+**Where we are:** design is deep and largely settled; **nothing is built yet.**
+The router (spec 0001) is `draft`; the two control-plane specs (0002 tuner, 0003
+orchestrator) are `draft` scaffolds awaiting planning.
+
+**Master doc:** `docs/routing-architecture.md` — planes, taxonomy, certificate
+rungs, evidence, decision register, DAG, glossary. Everything references it.
 
 ---
 
-## What Was Last Built / Decided
+## What Was Last Built / Decided (this session)
 
-- [x] Project scoped (modular model composition runtime, Qwen2.5 family, IQ4_XS, 16 GB target)
-- [x] Directory structure created (scripts/agent-tools/, scripts/hooks/, docs/agent-guide/)
-- [x] AGENTS.md — workspace bootstrap with open questions and workflow
-- [x] plans/index.md — 18k-word master planning document with design alternatives, 12 investigations, risk assessment
-- [x] update-continue.py — CONTINUE.md scaffold/verify with test -f exit-code fix
-- [x] update-memory.py — idempotent AUTO marker MEMORY.md updater (borrowed from quorum)
-- [x] update-agents.py — file reference validator
-- [x] memory-maintenance.sh — cron wrapper
-- [x] pre-commit hook — subtree-scoped commit gate
-- [x] Agent-guide docs (continue-handoff, memory-maintenance, anti-drift)
-- [x] Skill amend: project-agent-interface → v1.3.0 with Pattern E (check-drift.py), Pattern F (pre-commit hook), AUTO marker convention, DESIGN_LOG.md supplement, quorum-interface-patterns.md reference
-- [x] Template fix: update-continue.py now handles test -f exit-code-based bootstrap checks
+**Architecture (settled):**
+- [x] **Data plane / control plane split.** Router = fast, dumb, standalone,
+      **dark-operable** data plane. Tuner (0002) + orchestrator (0003) = out-of-band
+      async control plane. They act **only** through the router's **control surface**
+      (hard interface — `specs/0001/control-surface.md`).
+- [x] **Design tenet:** agent-operable control surfaces for underspecified problems;
+      build for day-2 operability from day one. Intelligence lives in the operators
+      (control plane), not frozen into the tool.
+- [x] **Governance:** firm-based / hierarchical (quorum is a *separate* project).
+- [x] **Cascade is the spine** (verify-and-escalate); the predictor is demoted to a
+      weak class-prior (P1). Verifiers indexed by **certificate cost (rungs 0–5)**;
+      organize classes by **verifiability, not topic**.
+
+**Empirical (this session, don't re-derive — `specs/0001/results.md`):**
+- [x] **P1 confirmed:** embeddings cluster by class (0.615 vs 0.457) but LOO tier
+      accuracy 0.33 < 0.67 baseline — they see class, not difficulty.
+- [x] **Verifier config closed:** agentic rung-0 nested-tool check (drop step-sprawl);
+      reasoning rung-1 plug-back + rung-4 judge; emotional = rung-5 → **fixed policy
+      (floor T1)**, not a verifier.
+- [x] **λ directional:** per-class 0.40 / 0.35 / 0.20.
+- [x] Harness promoted: `experiments/router/closure.py` + fixtures (reproducible).
+
+**Docs produced this session:** `docs/routing-architecture.md`; `specs/0001`
+(prd reframed to data-plane, `control-surface.md`, `design.md` verifier registry,
+`decisions.md`, `results.md`, `tests.md`); `specs/0002` + `specs/0003` scaffolds.
 
 ---
 
 ## What's Next (Prioritized)
 
-### Tier 1 — Already Spec'd, Just Needs Building
-Pick any unchecked Phase 0 investigation from plans/index.md §5:
+### Tier 1 — Plan the control plane (the operator's stated next step)
+- [ ] **Spec the control surface** (`specs/0001/control-surface.md` → firm the
+      schema). **This is the pivot** — it gates 0002 and 0003.
+- [ ] **Plan 0003 orchestrator:** the *attention budget* (routing its own inspection).
+- [ ] **Plan 0002 tuner:** *trust/label-provenance* on classes it can't cheaply label.
 
-- [ ] 0a: Verify Qwen2.5 family compatibility — download 1.5B variants, run CKA
-- [ ] 0b: Measure cold-swap latency for Qwen2.5-7B GGUF from NVMe
-- [ ] 0c: Survey existing cross-model inference frameworks (llama.cpp, MLX, MergeKit, FrankenMoE)
-- [ ] 0d: Evaluate tokenizer compatibility across model families
-- [ ] 0e: Measure representation similarity between Qwen2.5 base/coder/instruct (CKA)
+### Tier 2 — Close the router's standalone-operability gaps (spec 0001)
+- [ ] Layer arbitration + who owns class detection (embedder > rules for class).
+- [ ] Cascade policy (terminal-failure, retry-vs-escalate, skip-start, budget).
+- [ ] Cost model (add model-swap/residency + verifier cost).
+- [ ] Infra-failure handling (tier down / 27B OOM-thrash).
+- [ ] Cold-start / zero-config default mode.
 
-### Tier 2 — High Value, Needs Design
-- Phase 1: Latent bridge prototype (requires 0a/0b/0c first)
-- Phase 2: Routing prototype
-
-### Quick Wins (30 min or less)
-- Install the pre-commit hook: `git config core.hooksPath patchwork/scripts/hooks`
+### Tier 3 — The foundation that unblocks the predictor (Phase 0 precursor)
+- [ ] Exemplar corpus + class-taxonomy expansion → re-run closure experiments at
+      n ≫ 6 → decide predictor posture. (Not yet spec'd; the DAG's root.)
 
 ---
 
 ## Open Questions / Blockers
 
-None currently. Every Phase 0 investigation is unstarted.
+- **Predictor posture** (difficulty feature vs prefilter/cascade-dominant) — needs
+  the corpus (Tier 3) to resolve.
+- Control-surface **transport** (in-process vs IPC/HTTP) and exemplar-store
+  concurrency (single writer = tuner, single reader = router).
+- All Tier-2 gaps above are unresolved but *don't block* planning the control plane.
 
 ## Gotchas
 
-- `test -f X` commands in bootstrap sequences signal via exit code, not stdout. update-continue.py's `_bootstrap_check_ok()` handles this — the template was fixed in the skill with this same pattern.
-- Model downloads from HuggingFace need `huggingface-cli login`.
-- IQ4_XS quantization requires llama.cpp's `./quantize` or equivalent MLX path.
-- The quorum project (`../quorum/`) is the reference implementation for all these patterns — consult its check-drift.py, DESIGN_LOG.md, and ARCHITECTURE.md.
-
-## Key File Paths
-
-| Path | Purpose | When |
-|------|---------|------|
-| `AGENTS.md` | Workspace bootstrap | First read |
-| `plans/index.md` | Master planning doc | Before any investigation |
-| `MEMORY.md` | Project state | Every session |
-| `CONTINUE.md` | Handoff snapshot | Every session start/end |
-| `docs/references.md` | External papers/projects | As needed |
-| `scripts/agent-tools/` | Maintenance tools | Session end ritual |
-
-## Key Decisions Made (and Why)
-
-| ID | Decision | Status |
-|----|----------|--------|
-| D001 | Qwen2.5 family as primary model candidate | Tentative |
-| D002 | IQ4_XS via GGUF as quantisation baseline | Tentative |
-| D003 | Prototype path: Stack → Ensemble → MoE → Adaptive | Tentative |
-| D004 | Bridge training post-hoc on cached representations | Tentative |
-
-## Agent Handoff Checklist
-
-- [x] Update `What's Next` with next steps
-- [x] Log completion in `What Was Last Built`
-- [x] Record new gotchas
-- [x] Run `python scripts/agent-tools/update-agents.py --report` (0 issues)
-- [x] Run `python scripts/agent-tools/update-continue.py --verify` (all pass)
-- [x] **Overwrite this file** — not append
+- **Only one model is resident at a time on the 16 GB M2.** Escalating tiers means
+  *loading* a model — swap latency can dominate; the 27B (T2) **OOM-thrashes** if
+  the box isn't clean. The Exp-3 cost model ignored this — fix it.
+- Thinking-tier models (T2, Ornith) need ≥1000 completion tokens or they emit an
+  empty answer.
+- All four tested models run on **stock `mlx_lm`**; the 8B-1bit was deleted (needed
+  a PrismML fork). Models are in the HF cache.
+- `/no_think` does **not** work on Ornith (it reasons about the directive).
+- Eval substrate lives in **spark**, not patchwork: `spark/MODEL-EVAL-2026-07-15.md`,
+  `spark/bake-offs/`, `spark/spikes/human-emotion-eval-skill.md`.

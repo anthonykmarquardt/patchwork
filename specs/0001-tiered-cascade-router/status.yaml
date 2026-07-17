@@ -15,7 +15,9 @@ verifier:
     --assert-thresholds
   requires_tests: true
 depends_on: []
-blocks: []
+blocks:
+  - "0002-config-tuner"           # via the control surface (control-surface.md)
+  - "0003-supervisory-orchestrator"
 targets:
   - router
 paths:
@@ -52,6 +54,8 @@ metadata:
     Embedder: bge-small kept; V2 is P1-limited (embeddings see class, not
     difficulty) — predictor posture is the remaining design call before ready.
   references:
+    - "../../docs/routing-architecture.md — master conceptual doc (planes, taxonomy, certificate rungs, DAG)"
+    - "control-surface.md — the hard data/control-plane interface (build first; gates 0002/0003)"
     - "results.md — empirical closure results (2026-07-16); harness experiments/router/closure.py"
     - "decisions.md — design decisions + expected failure modes (read before redesign)"
     - "arXiv:2505.12601 — kNN >= learned routers (PDF in references/)"

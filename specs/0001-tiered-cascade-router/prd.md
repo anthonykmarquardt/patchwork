@@ -19,6 +19,19 @@ A router we cannot *see into* is a router we cannot trust, debug, or improve.
 Observability is therefore a first-class engineering requirement of this spec,
 not an afterthought (§Goals.4).
 
+## Role — the standalone data plane
+
+Per the architecture (`../../docs/routing-architecture.md`), this router is the
+**data plane**: a fast, standalone, **dark-operable** component. It must be useful
+**out of the box with zero config** (sensible defaults, graceful degradation to a
+static class→start-tier map when the exemplar store is empty), and it must have
+**no hard dependency** on the control plane. Intelligence for the parts it can't
+model (difficulty, quality) lives *outside* it — in the tuner (0002) and
+orchestrator (0003), which act **only** through the router's **control surface**
+(`control-surface.md`), the hard interface between the planes. The router exposes
+the knobs; it does not supervise or tune itself. Build the dark core first, then
+the control surface; the control plane is additive.
+
 ## Tiers (local, cost = latency + RAM, not $)
 
 | Tier | Model | Role |
@@ -104,8 +117,22 @@ observability as a cross-cutting fourth requirement.
 - [ ] `verify.py` harness — run battery through the router, emit `report.json`
       (per-query trace rollups) + assert thresholds; a `router inspect` view over
       the JSONL for single-request debugging.
-- [ ] Exemplar-growth loop: verified production traces → appended to the exemplar
-      store (guarded by the PII rule — store features/hash, not raw text).
+- [ ] **Control surface** (`control-surface.md`): the versioned, validated,
+      hot-reloadable knob interface. Build **first, after the dark core** — it
+      gates 0002/0003. Router reads the exemplar store; the tuner writes it.
+- [ ] **Cold-start / zero-config mode:** empty exemplar store → predictor
+      auto-disabled; prefilter sets class+floor; cascade carries. Ship a default
+      `class_start_map`. This is the "useful out of the box" requirement.
+- [ ] **Cascade policy:** terminal-failure behavior (T2 verifier also fails →
+      emit-flagged + alarm), retry-vs-escalate, optional skip-start, per-query
+      escalation budget (cap tiers/latency).
+- [ ] **Cost model:** count model-swap/residency latency (one model resident on
+      16 GB → escalation loads a model) **and** verifier cost, not just generation.
+- [ ] **Infra-failure handling:** tier down / timeout / OOM-thrash (the 27B does
+      this) → failover/degrade, distinct from verifier-fail.
+- [ ] Exemplar-growth loop — **NOTE: this is a tuner (0002/control-plane) function.**
+      The router only *emits* traces; the tuner *curates* which become exemplars
+      (gated on label trustworthiness + the PII rule). Tracked here for continuity.
 - [ ] Wire the served tiers to existing endpoints (spark registry / `mlx_lm.server`).
 - [x] Empirical closure (see **results.md**): verifiers tuned against the real T0
       failure outputs (**closed**); λ sweep run → adopted per-class 0.40/0.35/0.20
@@ -136,15 +163,29 @@ Recorded in full in **`decisions.md`** (with rationale and expected failure mode
 
 ## Open items (settle before `ready`)
 
-Empirical closure is done (see **results.md**); what remains is a design call it
-surfaced, plus firming numbers on more data:
+Empirical closure is done (see **results.md**). Verifier config is **settled**
+(nested-tool check in, step-sprawl out; R1/R2 checks; emotional → D5 floor). What
+remains splits into design calls and standalone-operability gaps
+(`../../docs/routing-architecture.md` §11 is the canonical open-items list):
 
-- **Predictor posture (new, from Exp 1 / P1):** pure-embedding kNN predicts *class*
-  but not *tier* at low n. Decide: add an explicit difficulty feature to the
-  predictor, **or** ship a prefilter+cascade-dominant router and let the D6
-  exemplar-growth loop strengthen the predictor over time. (This is the
-  difficulty-aware rethink flagged in decisions.md §closing.)
-- **Firm the per-class λ** (adopted 0.40/0.35/0.20 directionally) on a larger
-  battery; wire recalibration from observability data.
-- Verifier config is **settled** (nested-tool check in, step-sprawl out; R1/R2
-  checks; emotional → D5 floor) — carry into implementation.
+**Design calls**
+- **Predictor posture (from Exp 1 / P1):** pure-embedding kNN predicts *class* but
+  not *tier* at low n. Decide: add an explicit difficulty feature, **or** ship a
+  prefilter+cascade-dominant router and let the exemplar-growth loop strengthen the
+  predictor over time. (The difficulty-aware rethink in decisions.md §closing.)
+- **Layer arbitration + who owns class detection.** Exp 1 shows the *embedder* is
+  good at class (0.615 vs 0.457) while rules are brittle — class detection likely
+  belongs to the predictor, not the prefilter. Pin the precedence between
+  prefilter-floor / predictor-prior / cascade-escalation and multi-label
+  resolution (P-class).
+- **Firm the per-class λ** (0.40/0.35/0.20 directional) on a larger battery; wire
+  recalibration via the tuner.
+
+**Standalone-operability gaps** (the router must answer these itself, dark)
+- **Control-surface schema** — do first (pivot; gates 0002/0003). See
+  `control-surface.md`.
+- **Cascade policy** — terminal-failure, retry-vs-escalate, skip-start, escalation
+  budget.
+- **Cost model** — include model-swap/residency latency + verifier cost.
+- **Infra-failure handling** — tier down / OOM-thrash / timeout.
+- **Cold-start default mode** — zero-config predictor-off + default start map.
