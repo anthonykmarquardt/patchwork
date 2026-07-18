@@ -61,38 +61,38 @@ AutoModel — the mlx side is only T0/T1/T2 generation); **mlx port of
 bge-small is now a planned backlog item** (native hardware; makes the 27B
 eviction structurally impossible), not an S4 gate.
 
-## Router Server & Integration (NEW)
+## Router Server & Integration — SEAMS 1–6 DONE (2026-07-17, all live-verified)
 
-The **dark-core router now runs as a standalone OpenAI-compatible inference
-server** (`darkcore.server`). Agent harnesses can call it directly, or via spark
-(which relays). The server manages T0/T1/T2 lifecycle internally — no external
-config needed for basic operation.
+**Operator CLI** (`$MLXPY -m darkcore …`): `serve` = server **+ live gauge
+board by default on a TTY** (banner, status bar, ctrl-c; `--headless` for
+logs), `route` (one-shot with climb trace + answer panel), `status`
+(config/predictor/tiers/verifiers/rollup), `board` (TUI modes), `config` /
+`state` (unchanged JSON contracts for the control plane).
 
-**Quick start:**
-```bash
-cd experiments/router
-# Terminal 1: start the router server
-$MLXPY -m darkcore.server --port 8000
+**The seam contract** (server, all verified against real tiers):
+1. **Full context** — route/verify on the last user message; the winning
+   tier generates with system + history (verified: remembers name from
+   history, obeys system prompt). Telemetry logs message counts only.
+2. **Trace handle** — `X-Patchwork-Route-Id` header + `patchwork` response
+   object (route_id, tier, routed_class, escalations, flagged, per-attempt
+   tokens).
+3. **Real usage** — true token counts (winning attempt) +
+   `total_generation_tokens` across all attempts.
+4. **SSE streaming** — `"stream": true`; escalation progress as comment
+   lines (spec-safe keep-alives), content chunks only after the verifier
+   accepts — unverified tokens never leave the process.
+5. **Spark owns the router** — `spark darkcore-router` spawns
+   `darkcore.server` supervised (health-wait, restart, SIGINT reaps child).
+   Runtime: `spark/config/runtimes/darkcore.toml` (pure TOML; PYTHONPATH
+   carries the package). Relay backend remains for remote routers only.
+6. **Deep health** — `/health?deep=1`: config version, predictor/store,
+   tier residency, busy flag.
 
-# Terminal 2: test it (agent harness style)
-curl -X POST http://localhost:8000/v1/chat/completions \
-  -H "Content-Type: application/json" \
-  -d '{
-    "model": "patchwork-dynamic-router",
-    "messages": [{"role": "user", "content": "What is 2+2?"}]
-  }' | python3 -m json.tool
-```
-
-**With spark (via relay):**
-- Spark v2 (spark repo) now has a `relay` backend type
-- Configure: `config/runtimes/relay.toml` → `relay_base_url = "http://localhost:8000"`
-- Then: `spark <model-configured-as-relay>` → proxies to the router transparently
-- Agent harness calls spark normally; spark handles relay under the hood
-
-**Integration:** The router is completely decoupled from spark. The relay is a
-generic proxying layer (useful for any external OpenAI-compatible service). This
-lets the router develop independently in patchwork while spark eventually absorbs
-it as a first-class citizen.
+Also: endpoints are sync (threadpool) + route lock — `/health` answers
+during minutes-long T2 climbs; **Bonsai-27B CoT-as-prose leak FIXED** at
+answer extraction (bare `</think>` handling in models.py — was residual
+seam, unblocks 0002 label admission). Guides updated: QUICKSTART.md
+(§seam contract), INTEGRATION-GUIDE.md (Path C), ROUTER-SERVER.md.
 
 ## What's Next (Prioritized)
 
@@ -122,8 +122,8 @@ it as a first-class citizen.
    invalidates them all with no re-embed path. **Port while n is small**
    (before the growth loop ships), or pay a corpus reset.
 6. Residual seams (attack via tuner, not more rules): rung-0 blind to strategy
-   (A4); Bonsai-27B CoT-as-prose leaks into answers (would poison exemplar
-   labels — fix answer extraction before the growth loop ships).
+   (A4). ~~Bonsai-27B CoT-as-prose leak~~ — FIXED 2026-07-17 at answer
+   extraction (models.py bare-`</think>` handling; unit-tested 4/4).
 
 ## Gotchas
 

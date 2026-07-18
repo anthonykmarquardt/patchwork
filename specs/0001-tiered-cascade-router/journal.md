@@ -160,3 +160,38 @@ Two operator constraints attached to the decision:
 Verifier re-run post-restatement: **all five thresholds PASS** →
 `status.yaml` state flipped to **ready**. Spec 0001's empirical closure is
 complete; 0002 (tuner) planning is unblocked and next.
+
+## Episode 8 — The integration seams: the router meets its callers (2026-07-17)
+
+Operator direction: refine the darkcore↔spark integration — all six named
+seams, plus a spark-grade operator CLI with the gauge board live by default
+on `serve`. Everything below was live-verified against real tiers.
+
+**Two architecture decisions got made by the seams, worth recording:**
+
+- **The context contract (seam 1).** Route and verify on the *last user
+  message*; generate with the *full conversation*. Classification stays a
+  single-utterance problem (the exemplar store and battery stay valid), while
+  answers stop being amnesiac. First live test: T0✗→T1✗→T2✓ where the
+  final answer honored both the system prompt and a name stated two turns
+  earlier — with real usage (66 prompt / 317 completion) in the response.
+- **Never stream unverified tokens (seam 4).** A cascade cannot stream what
+  a verifier might still reject, so SSE sends escalation progress as comment
+  lines (spec-compliant keep-alives that OpenAI SDKs ignore) and chunks the
+  answer only after acceptance. The progress stream *is* the on_event
+  channel from Episode 6, now caller-visible over HTTP.
+
+**The rest:** route_id now returns to the caller (header + `patchwork`
+object — the telemetry join key leaves the black box); usage is real (plus
+total spend across attempts — the escalation tax, priced per response);
+`/health?deep=1` exposes config/predictor/residency; endpoints went sync +
+route-locked so health answers mid-climb (a supervised child that looks dead
+during a T2 climb would get restart-looped). Spark now *owns* the router
+(`spark darkcore-router` — spawn, health-wait, restart, reap; pure-TOML
+runtime), with the relay demoted to remote-router duty.
+
+**A bench-visible fix fell out:** the Bonsai-27B CoT-as-prose leak (bare
+`</think>`, reasoning served as answer) is now stripped at extraction —
+seam 1's first climb put the leak on screen in an API response, which is
+what finally got it fixed. The 0002 poison-guard prerequisite (prd T2) is
+half-done: served answers are clean; the admission-side detector remains.

@@ -5,10 +5,17 @@
 ```bash
 cd ../patchwork/experiments/router
 MLXPY=$HOME/.local/share/uv/tools/mlx-lm/bin/python
-$MLXPY -m darkcore.server --port 8000
+$MLXPY -m darkcore serve            # server + live gauge board (default on a TTY)
+# $MLXPY -m darkcore serve --headless   # plain uvicorn logs
+# spark darkcore-router                 # spark-supervised (restart on crash)
 ```
 
-The router is now listening at `http://localhost:8000`.
+The router is now listening at `http://localhost:8000`. Old form
+`$MLXPY -m darkcore.server --port 8000` still works (always headless).
+
+Also new: `$MLXPY -m darkcore status` (config/tiers/rollup at a glance),
+`$MLXPY -m darkcore route "query"` (one-shot with climb trace),
+`$MLXPY -m darkcore board --live` (gauge board alone).
 
 ## One-Line Query
 
@@ -161,21 +168,39 @@ Answer returned from T1
 
 | Endpoint | Method | Purpose |
 |----------|--------|---------|
-| `/health` | GET | Health check (returns `{"status": "ok"}`) |
+| `/health` | GET | Liveness (`?deep=1` adds config version, predictor/store, tier residency, busy flag) |
 | `/v1/models` | GET | List available models |
-| `/v1/chat/completions` | POST | Generate completions (OpenAI-compatible) |
+| `/v1/chat/completions` | POST | OpenAI-compatible; `"stream": true` for SSE |
+
+## The seam contract (2026-07-17)
+
+- **Full context honored:** the router routes/verifies on the *last user
+  message*; the winning tier generates with the whole conversation
+  (system + history). Telemetry sees message counts only, never content.
+- **Trace handle:** every response carries `X-Patchwork-Route-Id` and a
+  `patchwork` object (`route_id`, `tier`, `routed_class`, `escalations`,
+  `flagged`, `total_generation_tokens`, per-attempt tokens) — join any
+  answer to `logs/router/<date>.jsonl`.
+- **Real usage:** `usage` is true token counts from the winning attempt;
+  total spend across attempts is in `patchwork`.
+- **Streaming:** `"stream": true` → SSE. Escalation progress arrives as
+  comment lines (`: ◉ T1 answering …` — spec-compliant keep-alives; OpenAI
+  SDKs ignore them). Content chunks stream only after the verifier accepts:
+  unverified tokens never leave the process.
+- One route at a time (route lock); `/health` stays responsive during
+  minutes-long T2 climbs.
 
 ## Server Options
 
 ```bash
-$MLXPY -m darkcore.server --port 8000 --host 127.0.0.1 --workers 1
+$MLXPY -m darkcore serve --port 8000 --host 127.0.0.1 [--headless]
 ```
 
 | Flag | Default | Notes |
 |------|---------|-------|
 | `--port` | 8000 | Port to listen on |
 | `--host` | 127.0.0.1 | Host to bind to (loopback by default, safe) |
-| `--workers` | 1 | Number of worker processes (keep at 1 for now) |
+| `--headless` | off | Plain uvicorn logs; auto when stderr is not a TTY |
 
 ## Monitoring
 

@@ -1,6 +1,16 @@
-# Router Server + Spark Relay — End-to-End Integration Guide
+# Router Server + Spark — End-to-End Integration Guide
 
-The patchwork dynamic router is now production-ready. Your agent harness can reach it via two clean paths: directly as a standalone server, or through spark's relay backend.
+Your agent harness can reach the patchwork dynamic router three ways:
+directly as a standalone server (Path A), through spark's relay backend for
+remote routers (Path B), or spawned and supervised BY spark (Path C — local
+default).
+
+**Interface contract (seams, 2026-07-17):** full conversation context is
+honored (route on last user message, generate with system + history); every
+response carries `X-Patchwork-Route-Id` + a `patchwork` trace object; `usage`
+is real token counts; `"stream": true` gives SSE with escalation-progress
+comments and verified-only content; `/health?deep=1` reports config/predictor/
+tier state. Details: QUICKSTART.md §"The seam contract".
 
 ---
 
@@ -109,9 +119,29 @@ curl -X POST http://localhost:8000/v1/chat/completions \
 
 ---
 
-## Path B: Via Spark Relay (Recommended for Production)
+## Path C: Spark-Owned Child (Recommended for Local — seam 5, 2026-07-17)
 
-**Use when:** Production deployments, multiple agent harnesses, unified model management, easy switching between backends.
+**Use when:** You want spark to OWN the router's lifecycle — spawn,
+health-wait, bounded restart on crash, graceful shutdown. The relay (Path B)
+can only *watch* an already-running router; this path manages it.
+
+```bash
+spark darkcore-router      # spawns `python -m darkcore.server` supervised
+# ready in seconds if the page cache is warm; Ctrl-C reaps the child
+```
+
+Backed by `spark/config/runtimes/darkcore.toml` (pure TOML, generic
+backend): the mlx-lm tool env's python + `PYTHONPATH` to the darkcore
+checkout. Registry entry: `~/.local/share/spark/models/darkcore-router.toml`.
+NB spark's memory gate cannot see the router's internal tier weights (worst
+case ~8 GB when T2 loads) — run it with the box to itself.
+
+---
+
+## Path B: Via Spark Relay (for Remote/External Routers)
+
+**Use when:** The router runs somewhere spark can't spawn it (another host,
+another owner) and you only need attach + health-watch + URL handoff.
 
 ### Setup (2 minutes)
 
@@ -201,17 +231,19 @@ Agent harness → spark (8080) → relay → router (8000) → answer
 
 ## Choosing Your Path
 
-| Criterion | Path A (Direct) | Path B (Relay) |
-|-----------|---|---|
-| **Single agent** | ✅ Great | ✓ Works |
-| **Multiple agents** | ❌ No | ✅ Ideal |
-| **Easy backend switching** | ❌ No | ✅ Yes |
-| **Production deployment** | ⚠️ Possible | ✅ Recommended |
-| **Minimal setup** | ✅ Fastest | ✓ 2 min |
-| **Debugging** | ✅ Direct logs | ✓ Spark + router logs |
-| **Monitoring** | JSONL only | JSONL + spark telemetry |
+| Criterion | Path A (Direct) | Path B (Relay) | Path C (Spark-owned) |
+|-----------|---|---|---|
+| **Who starts the router** | you | you | spark |
+| **Restart on crash** | ❌ No | ❌ No (watch only) | ✅ Supervisor |
+| **Live gauge board** | ✅ `darkcore serve` | ❌ | ❌ (headless child) |
+| **Remote router** | ✓ | ✅ Ideal | ❌ Local only |
+| **Minimal setup** | ✅ Fastest | ✓ 2 min | ✓ Registered already |
+| **Monitoring** | JSONL + board | JSONL + spark telemetry | JSONL + spark telemetry |
 
-**Default recommendation:** Start with Path A (direct) for testing. Switch to Path B (relay) once you have multiple agents or are moving to production.
+**Default recommendation:** Path A (`darkcore serve`) while iterating — you
+get the live board. Path C (`spark darkcore-router`) when the router should
+just *be up* like any other spark model. Path B only for routers spark
+can't own.
 
 ---
 

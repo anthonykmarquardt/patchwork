@@ -9,9 +9,11 @@ The router is now available as both a library and a standalone OpenAI-compatible
 ```bash
 cd ../patchwork/experiments/router
 
-# Terminal 1: start the router server
+# Terminal 1: start the router server (+ live gauge board on a TTY)
 MLXPY=$HOME/.local/share/uv/tools/mlx-lm/bin/python
-$MLXPY -m darkcore.server --port 8000
+$MLXPY -m darkcore serve
+#   --headless for plain logs; or `spark darkcore-router` for supervision.
+#   (Old form `$MLXPY -m darkcore.server --port 8000` still works, headless.)
 
 # Terminal 2: test it (in another terminal)
 curl -X POST http://localhost:8000/v1/chat/completions \
@@ -22,7 +24,7 @@ curl -X POST http://localhost:8000/v1/chat/completions \
   }' | python3 -m json.tool
 ```
 
-The router will classify the query, route to the appropriate tier (T0/T1/T2), cascade/verify as needed, and return the answer in OpenAI format.
+The router will classify the query, route to the appropriate tier (T0/T1/T2), cascade/verify as needed, and return the answer in OpenAI format — with full conversation context honored, real token `usage`, an `X-Patchwork-Route-Id` header + `patchwork` trace object, SSE streaming via `"stream": true`, and `/health?deep=1` for state (the 2026-07-17 seam contract; see QUICKSTART.md).
 
 ---
 
