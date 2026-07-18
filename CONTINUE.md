@@ -28,9 +28,20 @@ uv run darkcore board --replay --speed 30
 
 ---
 
-## Current Status (2026-07-17)
+## Current Status (2026-07-18)
 
 **dark-core v0.2: built, benched three times, steps 1–3 of the backlog done.**
+
+**New since 2026-07-17 (uncommitted in the working tree):**
+- **Idea-stage plan:** `experiments/router/plans/generalized-router-interfaces.md`
+  — interface boundaries for a generalized router (Enricher / Tier / Verifier
+  protocols, cascade as fixed spine, observability as sink). No implementation
+  scheduled; contains one open design question (uniform vs per-plugin config
+  schema) needing operator sign-off before any interface is written. Ties into
+  backlog item 5: the mlx embedder port is exactly an Enricher swap.
+- **Research artifact:** `research/small-specialist-landscape.md` (agent penny,
+  2026-07-17) — survey of sub-4B specialists for composed architectures;
+  indexed in `research/README.md`.
 
 - **Predictor live in class-prior mode** (`darkcore/predictor.py`): bge-small
   kNN over an immutable exemplar snapshot (n=21), published through the
@@ -67,8 +78,8 @@ eviction structurally impossible), not an S4 gate.
 **Operator CLI** (`uv run darkcore …`): `serve` = server **+ live gauge
 board by default on a TTY** (banner, status bar, ctrl-c; `--headless` for
 logs), `route` (one-shot with climb trace + answer panel), `status`
-(config/predictor/tiers/verifiers/rollup), `board` (TUI modes), `config` /
-`state` (unchanged JSON contracts for the control plane).
+(config, predictor, tiers, verifiers, rollup), `board` (TUI modes), plus
+`config` and `state` (unchanged JSON contracts for the control plane).
 
 **The seam contract** (server, all verified against real tiers):
 1. **Full context** — route/verify on the last user message; the winning

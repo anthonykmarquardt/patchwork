@@ -3,7 +3,7 @@
 > **Purpose:** Durable facts about the project — decisions, known issues, resolved questions, and current state. Not a session handoff (that's `CONTINUE.md`).
 > **Rule:** AUTO-marked sections are refreshable by script. Manual sections are hand-edited and never touched by tooling.
 
-Last updated: 2026-07-16
+Last updated: 2026-07-18
 
 ---
 
@@ -37,13 +37,15 @@ Last updated: 2026-07-16
 - **P-class lexicon brittleness — FIXED in v0.2:** class detection moved to
   the embedder (class-prior, 12/12 incl. E3); rules keep precedence when they
   fire; low confidence abstains.
-- **S4 overhead budget — OPEN OPERATOR DECISION:** 27B residency pages out the
-  embedder; after mitigations (1-thread torch, init warmup, rewarm at the
-  evicting route's tail) worst overhead is 22.36 ms vs the 20 ms budget.
-  Decide: absolute 20 ms (→ pin/port embedder) or restate as <1% of route
-  cost. Don't chase page-cache noise before deciding. CONTINUE.md §decision.
-- **Bonsai-27B CoT leak:** narrates thinking as prose (no `<think>` tags);
-  answer extraction can't strip it → would poison exemplar labels if unfixed.
+- **S4 overhead budget — RESOLVED 2026-07-17 (option b):** S4 gates on
+  overhead < 1% of route cost (worst measured 0.122%); 20 ms absolute kept as
+  aspirational, reported non-gating by `verify.py` every run. Spec 0001
+  flipped to `ready`; all 5 thresholds pass. mlx port of the bge-small
+  embedder is a planned backlog item (not an S4 gate). CONTINUE.md §decision.
+- **Bonsai-27B CoT leak — FIXED 2026-07-17:** answer extraction handles bare
+  `</think>` (`experiments/router/darkcore/models.py`); unit-tested 4/4.
+  Unblocks 0002 label admission. Residual: thinking-tier T2 still narrates
+  CoT as prose upstream — the fix is at extraction, not generation.
 
 <!-- /AUTO:issues -->
 
@@ -52,15 +54,15 @@ Last updated: 2026-07-16
 ## Recent Changes
 
 <!-- AUTO:changes — appended by scripts/agent-tools/update-memory.py --change -->
-
 - 2026-07-14 — Project scaffolded: AGENTS.md, MEMORY.md, CONTINUE.md, plans/index.md
 - 2026-07-14 — Agent interface built: agent-tools scripts (update-continue, update-memory, update-agents, memory-maintenance), agent-guide docs (continue-handoff, memory-maintenance, anti-drift), pre-commit hook
 - 2026-07-16 — Routing pillar architected (specs 0001–0003 + docs/routing-architecture.md): data/control-plane split, cascade spine, certificate-rung verifiers, empirical closure (P1 confirmed). Nothing built yet; all specs draft.
 - 2026-07-16 — Repo hygiene pass: router experiment README + fixture renames; plans/index.md re-scoped to the (paused) latent-bridge thread.
-- 2026-07-17 — **dark-core v0.2 + server + spark relay** (final): predictor live in class-prior mode via control-surface-published exemplar snapshot (config v3); rung-0 inconclusive→judge; judge caps + skip_start; caller-visible escalation stream. Bench ×3: class 12/12, quality 0.900, **1.90× vs T2-only**; S4 fails by 2.36 ms (paging; operator decision pending). Discovered: T2 residency evicts co-resident torch components — rewarm at the evicting route's tail. **Router server** (`darkcore/server.py`): standalone OpenAI-compatible inference endpoint, manages T0/T1/T2 lifecycle, dark-operable. **Spark relay** (`spark/src/runtimes/relay.py`): new backend type that proxies requests to external OpenAI services (tested ✓). Agent harness can call router directly or via spark transparently.
+- 2026-07-17 — **dark-core v0.2 + server + spark relay** (final): predictor live in class-prior mode via control-surface-published exemplar snapshot (config v3); rung-0 inconclusive→judge; judge caps + skip_start; caller-visible escalation stream. Bench ×3: class 12/12, quality 0.900, **1.90× vs T2-only**; S4 fails by 2.36 ms (paging; operator decision pending). Discovered: T2 residency evicts co-resident torch components — rewarm at the evicting route's tail. **Router server** (`experiments/router/darkcore/server.py`): standalone OpenAI-compatible inference endpoint, manages T0/T1/T2 lifecycle, dark-operable. **Spark relay** (`../spark/src/spark/runtimes/relay.py`): new backend type that proxies requests to external OpenAI services (tested ✓). Agent harness can call router directly or via spark transparently.
 - 2026-07-16 — **journal.md added to spec 0001**: the narrative evidence→decision→next-step record (incl. the meta-method: predict failures in writing → falsify first → bench → fix one variable → let surviving failures rank the backlog). Read it to understand WHY the backlog is ordered as it is.
 - 2026-07-16 — **dark-core v0 built + benched** (`experiments/router/darkcore/`): control surface firmed v1 + implemented; Exp 4 swap economics measured (cascade viable, T0+T1 co-resident); bench 1.66× vs T2-only at 83% ≤T1, S2/S3/S4/S5 pass, S1 fails on V-struct; gauge-board TUI (Catppuccin Frappé). Specs 0002/0003 unblocked.
-
+- 2026-07-18 — Idea-stage plan documented: generalized router interface boundaries (experiments/router/plans/generalized-router-interfaces.md) — Enricher/Tier/Verifier protocols, cascade stays the fixed spine; open question: uniform vs per-plugin config schema
+- 2026-07-18 — Doc-drift pass per agent-guide: fixed broken refs in AGENTS.md/MEMORY.md/CONTINUE.md/plans/index.md; MEMORY.md known issues updated (S4 resolved option b, CoT leak fixed)
 <!-- /AUTO:changes -->
 
 ---

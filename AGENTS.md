@@ -6,10 +6,12 @@
 
 > **⇒ Active workstream (2026-07): the routing pillar.** The "Routing" leg below is
 > now a concrete architecture. Start at **`docs/routing-architecture.md`** (planes,
-> taxonomy, certificate rungs, DAG, glossary), then the specs: **`specs/0001`**
-> (router / data plane, draft), **`specs/0002`** (config tuner, scaffold),
-> **`specs/0003`** (supervisory orchestrator, scaffold). Session handoff:
-> **`CONTINUE.md`**.
+> taxonomy, certificate rungs, DAG, glossary), then the specs:
+> **`specs/0001-tiered-cascade-router/`** (router / data plane, **ready** — built,
+> benched, all thresholds pass), **`specs/0002-config-tuner/`** (config tuner,
+> planned — prd+design done, awaiting operator sign-off),
+> **`specs/0003-supervisory-orchestrator/`** (supervisory orchestrator, scaffold).
+> Session handoff: **`CONTINUE.md`**.
 
 ---
 
@@ -77,15 +79,17 @@ patchwork/
 │   ├── routing-architecture.md       # MASTER doc for the active routing workstream
 │   └── references.md                 # External papers, projects, and tools
 ├── specs/
-│   ├── 0001-tiered-cascade-router/   # data plane ("dark-core") — built v0 2026-07-16
-│   ├── 0002-config-tuner/            # control plane (scaffold)
+│   ├── 0001-tiered-cascade-router/   # data plane ("dark-core") — v0.2 ready 2026-07-17
+│   ├── 0002-config-tuner/            # control plane (planned: prd+design done)
 │   └── 0003-supervisory-orchestrator/# control plane (scaffold)
 ├── experiments/
 │   ├── router/                       # spec 0001 harnesses + darkcore/ (the router itself)
-│   │   ├── darkcore/                 # surface/prefilter/models/verifiers/cascade/router/cli/tui
+│   │   ├── darkcore/                 # surface/prefilter/predictor/models/verifiers/cascade/router/server/cli/tui
+│   │   ├── plans/                    # idea-stage plans scoped to the router (e.g. generalized interfaces)
 │   │   ├── battery.jsonl             # labeled battery + probes
 │   │   ├── closure.py, swap_econ.py  # Exp 1–3, Exp 4 harnesses
 │   │   ├── darkcore_bench.py, verify.py, BENCH-REPORT.md
+│   │   ├── tests/                    # model-free suite (uv run pytest)
 │   │   └── fixtures/
 │   └── inference-bench/              # tier perf measurements
 ├── plans/

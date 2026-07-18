@@ -3,8 +3,9 @@
 > **⚠️ Scope / status (2026-07-16).** This document plans the **latent-bridge /
 > composition** thread (Qwen2.5, cross-model bridging, memory tiering) — **paused,
 > not abandoned.** The **active** workstream is the **routing pillar**, which is
-> spec-driven: start at `../docs/routing-architecture.md`, then `../specs/0001–0003`
-> and `../CONTINUE.md`. This file is *not* the current plan of record; it's the
+> spec-driven: start at `docs/routing-architecture.md` (paths repo-root-relative),
+> then the three specs under `specs/`, and `CONTINUE.md`. This file is *not* the
+> current plan of record; it's the
 > design space for a future thread. Host note: the target profile is an M4 Max, but
 > all router measurements were taken on the **dev machine, an Apple Silicon M2 / 16 GB**.
 

@@ -40,12 +40,12 @@ python scripts/agent-tools/update-agents.py --report
 If any backtick-quoted file path in AGENTS.md, MEMORY.md, CONTINUE.md, or
 plans/index.md resolves to nothing, fix it. The script exits 1 if broken.
 
-The pre-commit hook (`scripts/hooks/pre-commit`) does this automatically when
-patchwork files are staged. Install it:
+The pre-commit hook (`scripts/hooks/pre-commit`) does this automatically on
+every commit (the repo root is patchwork, so all staged files count). Install it:
 
 ```bash
-# From the vibes repo root:
-git config core.hooksPath patchwork/scripts/hooks
+# From the patchwork repo root:
+git config core.hooksPath scripts/hooks
 ```
 
 ### After Any Design Decision

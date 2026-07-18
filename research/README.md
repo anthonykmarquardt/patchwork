@@ -6,6 +6,7 @@
 
 | File | Topic | Status |
 |------|-------|--------|
+| `small-specialist-landscape.md` | Survey of sub-4B specialist models for composed architectures (SmolLM3 3B, Phi-4-mini, Qwen3.5-4B, tiny routers/drafters) | Complete |
 | `latent-bridge-survey.md` | Cross-model latent communication techniques | Not started |
 | `routing-literature.md` | Token routing approaches (MoE, MoA, etc.) | Not started |
 | `memory-tiering-analysis.md` | Colibrì-inspired tiering at module level | Not started |
