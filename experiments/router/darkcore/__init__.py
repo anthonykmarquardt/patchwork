@@ -8,4 +8,4 @@ PII-safe JSONL telemetry, actuated only through the control surface
 Intelligence lives in the control plane (0002 tuner, 0003 orchestrator),
 not here. Keep it dumb.
 """
-__version__ = "0.1.0"
+__version__ = "0.2.0"

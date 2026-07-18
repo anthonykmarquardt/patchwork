@@ -11,7 +11,8 @@ from . import telemetry, verifiers
 from .models import TierUnavailable
 
 
-def run(pool, query, qhash, route_id, klass, start_tier, params, on_event=None):
+def run(pool, query, qhash, route_id, klass, start_tier, params, on_event=None,
+        messages=None):
     def notify(name, **fields):
         """Caller-visible status stream (step 3) — never breaks the data path."""
         if on_event is not None:
@@ -49,7 +50,7 @@ def run(pool, query, qhash, route_id, klass, start_tier, params, on_event=None):
                        attempt=len(attempts) + 1, **{"class": klass})
         notify("dispatch", tier=tier, attempt=len(attempts) + 1)
         try:
-            result = pool.generate(tier, query)
+            result = pool.generate(tier, query, messages=messages)
         except TierUnavailable:
             # infra failure != verifier failure: fail over to the next tier
             telemetry.emit("tier_failover", level="warn", route_id=route_id,
@@ -76,6 +77,7 @@ def run(pool, query, qhash, route_id, klass, start_tier, params, on_event=None):
             "tier": tier, "outcome": "pass" if passed else "fail",
             "load_ms": result["load_ms"], "ttft_ms": result["ttft_ms"],
             "gen_ms": result["gen_ms"], "tokens": result["tokens"],
+            "prompt_tokens": result["prompt_tokens"],
             "tps": result["tps"], "verify_ms": detail.get("verify_ms", 0.0),
             "rung": detail.get("rung"),
         })

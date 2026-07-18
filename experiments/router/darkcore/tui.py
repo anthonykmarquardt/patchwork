@@ -320,39 +320,35 @@ def parse_ts(ts):
         return None
 
 
-def main():
-    ap = argparse.ArgumentParser(prog="darkcore.tui")
-    ap.add_argument("--live", action="store_true", help="follow today's log")
-    ap.add_argument("--replay", action="store_true", help="replay history")
-    ap.add_argument("--speed", type=float, default=8.0, help="replay speedup")
-    ap.add_argument("--logs", default=telemetry.LOG_DIR)
-    args = ap.parse_args()
-
+def run(live=False, replay=False, speed=8.0, logs=None):
+    """Drive the board in one of three modes (snapshot / --live / --replay).
+    Callable from the CLI (`darkcore board`) as well as `python -m darkcore.tui`."""
+    logs = logs or telemetry.LOG_DIR
     console = Console()
     board = Board()
-    paths = sorted(glob.glob(os.path.join(args.logs, "*.jsonl")))
+    paths = sorted(glob.glob(os.path.join(logs, "*.jsonl")))
 
-    if args.replay:
+    if replay:
         with Live(board.render(console.width), console=console,
-                  refresh_per_second=20, screen=True) as live:
+                  refresh_per_second=20, screen=True) as live_r:
             prev = None
             for e in events(paths):
                 ts = parse_ts(e.get("ts", ""))
                 if prev is not None and ts is not None:
-                    time.sleep(min(max(ts - prev, 0) / args.speed, 1.5))
+                    time.sleep(min(max(ts - prev, 0) / speed, 1.5))
                 prev = ts if ts is not None else prev
                 board.feed(e)
-                live.update(board.render(console.width))
-            live.update(board.render(console.width))
+                live_r.update(board.render(console.width))
+            live_r.update(board.render(console.width))
             time.sleep(3)
         console.print(board.render(console.width))  # leave the final board visible
-    elif args.live:
-        today = os.path.join(args.logs, time.strftime("%Y-%m-%d") + ".jsonl")
+    elif live:
+        today = os.path.join(logs, time.strftime("%Y-%m-%d") + ".jsonl")
         for e in events([p for p in paths if p != today]):
             board.feed(e)  # history first, silently
         pos = 0
         with Live(board.render(console.width), console=console,
-                  refresh_per_second=4) as live:
+                  refresh_per_second=4) as live_f:
             while True:
                 if os.path.exists(today):
                     with open(today) as f:
@@ -363,12 +359,22 @@ def main():
                             except json.JSONDecodeError:
                                 pass
                         pos = f.tell()
-                live.update(board.render(console.width))
+                live_f.update(board.render(console.width))
                 time.sleep(0.5)
     else:  # snapshot
         for e in events(paths):
             board.feed(e)
         console.print(board.render(console.width))
+
+
+def main():
+    ap = argparse.ArgumentParser(prog="darkcore.tui")
+    ap.add_argument("--live", action="store_true", help="follow today's log")
+    ap.add_argument("--replay", action="store_true", help="replay history")
+    ap.add_argument("--speed", type=float, default=8.0, help="replay speedup")
+    ap.add_argument("--logs", default=telemetry.LOG_DIR)
+    args = ap.parse_args()
+    run(live=args.live, replay=args.replay, speed=args.speed, logs=args.logs)
 
 
 if __name__ == "__main__":

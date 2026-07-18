@@ -57,10 +57,14 @@ class Router:
         if surface.config_mtime() != self._mtime:
             self._reload()
 
-    def route(self, query, expected=None, on_event=None):
+    def route(self, query, expected=None, on_event=None, messages=None):
         """The one public entry. `expected` = optional rung-1 ground truth
         (bench mode / checkable callers). `on_event(name, **fields)` = optional
-        live status callback so callers can see climbs (never blocks routing)."""
+        live status callback so callers can see climbs (never blocks routing).
+        `messages` = optional full conversation [{role, content}, ...] — the
+        router routes/verifies on `query` (the last user message) but the
+        winning tier generates with the whole context (seam-1 contract).
+        Telemetry sees message *counts* only, never content (PII rule)."""
         self._maybe_reload()
         p = self._config["params"]
         route_id = telemetry.new_route_id()
@@ -95,17 +99,20 @@ class Router:
             start = floor
         overhead_ms = round((time.perf_counter() - t0) * 1000, 2)
 
+        context = {"n_messages": len(messages) if messages else 1,
+                   "has_system": bool(messages) and any(
+                       m.get("role") == "system" for m in messages)}
         telemetry.emit("routing_decision", route_id=route_id, qhash=qhash,
                        features=telemetry.derived_features(query),
                        prefilter=pf, predictor=predictor,
-                       start_tier=start, floor=floor,
+                       start_tier=start, floor=floor, context=context,
                        config_version=self._config["config_version"],
                        overhead_ms=overhead_ms, **{"class": klass})
 
         params = dict(p)
         params["_expected"] = expected or []
         out = cascade.run(self._pool, query, qhash, route_id, klass, start, params,
-                          on_event=on_event)
+                          on_event=on_event, messages=messages)
 
         # Causally-honest rewarm: the route that loaded the exclusive tier
         # (and thereby paged out the embedder) pays the re-page cost here, at

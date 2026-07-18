@@ -74,19 +74,25 @@ class ModelPool:
                        load_ms=load_ms)
         return model, tokenizer, load_ms
 
-    def generate(self, tier_id, user_text, max_tokens=None):
+    def generate(self, tier_id, user_text, max_tokens=None, messages=None):
         """Run one generation on a tier. Returns a result dict (content stays
-        in-process; telemetry sees only numbers)."""
+        in-process; telemetry sees only numbers).
+
+        `messages` (optional): full conversation [{role, content}, ...] — the
+        seam-1 contract: the router *routes* on the last user message but
+        *generates* with the whole context (system + history)."""
         from mlx_lm import stream_generate
         model, tokenizer, load_ms = self.acquire(tier_id)
         spec = self.roster[tier_id]
         max_tokens = max_tokens or spec["max_tokens"]
 
-        prompt = user_text
+        convo = messages or [{"role": "user", "content": user_text}]
         if tokenizer.chat_template is not None:
             prompt = tokenizer.apply_chat_template(
-                [{"role": "user", "content": user_text}],
-                tokenize=False, add_generation_prompt=True)
+                convo, tokenize=False, add_generation_prompt=True)
+        else:
+            prompt = ("\n\n".join(f'{m["role"]}: {m["content"]}' for m in convo)
+                      if messages else user_text)
 
         t0 = time.perf_counter()
         ttft_ms, n_tok, chunks, last = None, 0, [], None
@@ -99,7 +105,13 @@ class ModelPool:
         gen_ms = round((time.perf_counter() - t0) * 1000, 1)
 
         raw = "".join(chunks)
-        answer = _THINK.sub("", raw).strip() or raw.strip()  # strip think, keep raw if empty
+        answer = _THINK.sub("", raw)
+        # Bonsai-27B CoT-as-prose leak: narrates reasoning with NO opening
+        # <think>, then closes it — everything before the last bare </think>
+        # is chain-of-thought, not answer (CONTINUE.md residual seam #6).
+        if "</think>" in answer:
+            answer = answer.rsplit("</think>", 1)[1]
+        answer = answer.strip() or raw.strip()  # never emit empty; keep raw as last resort
         return {
             "answer": answer,
             "tier": tier_id,
@@ -107,6 +119,7 @@ class ModelPool:
             "ttft_ms": ttft_ms or 0.0,
             "gen_ms": gen_ms,
             "tokens": n_tok,
+            "prompt_tokens": int(getattr(last, "prompt_tokens", 0) or 0) if last else 0,
             "tps": round(getattr(last, "generation_tps", 0.0), 2) if last else 0.0,
         }
 
