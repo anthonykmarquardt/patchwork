@@ -21,8 +21,9 @@ cat specs/0001-tiered-cascade-router/journal.md
 cat experiments/router/BENCH-REPORT.md
 
 # Watch it happen on the gauge board (~2 min):
-MLXPY=$HOME/.local/share/uv/tools/mlx-lm/bin/python
-cd experiments/router && $MLXPY -m darkcore.tui --replay --speed 30
+cd experiments/router
+uv sync   # first time only — pinned env (.venv) via uv.lock
+uv run darkcore board --replay --speed 30
 ```
 
 ---
@@ -63,7 +64,7 @@ eviction structurally impossible), not an S4 gate.
 
 ## Router Server & Integration — SEAMS 1–6 DONE (2026-07-17, all live-verified)
 
-**Operator CLI** (`$MLXPY -m darkcore …`): `serve` = server **+ live gauge
+**Operator CLI** (`uv run darkcore …`): `serve` = server **+ live gauge
 board by default on a TTY** (banner, status bar, ctrl-c; `--headless` for
 logs), `route` (one-shot with climb trace + answer panel), `status`
 (config/predictor/tiers/verifiers/rollup), `board` (TUI modes), `config` /
@@ -83,8 +84,8 @@ logs), `route` (one-shot with climb trace + answer panel), `status`
    accepts — unverified tokens never leave the process.
 5. **Spark owns the router** — `spark darkcore-router` spawns
    `darkcore.server` supervised (health-wait, restart, SIGINT reaps child).
-   Runtime: `spark/config/runtimes/darkcore.toml` (pure TOML; PYTHONPATH
-   carries the package). Relay backend remains for remote routers only.
+   Runtime: `spark/config/runtimes/darkcore.toml` (pure TOML; binary = the
+   router project's own `.venv` python). Relay remains for remote routers.
 6. **Deep health** — `/health?deep=1`: config version, predictor/store,
    tier residency, busy flag.
 
@@ -127,8 +128,10 @@ seam, unblocks 0002 label admission). Guides updated: QUICKSTART.md
 
 ## Gotchas
 
-- Run darkcore/TUI **from `experiments/router/`** with the mlx-lm uv-tool
-  python (`$MLXPY`). Config is at **v3** (predictor on, skip_start on).
+- **experiments/router is a standalone uv project** (2026-07-17): own
+  `.venv` + `uv.lock`, `darkcore` installed editable, console script
+  `uv run darkcore …`. The `$MLXPY` pattern is dead. Tests: `uv run pytest`
+  (61, model-free, ~0.3 s). Config is at **v3** (predictor on, skip_start on).
 - Re-seeding exemplars: `seed_exemplars.py` bumps the snapshot version — it
   will `conflict` if config moved; read current version first (by design).
 - **The 27B evicts the embedder** (the S4 saga) — any new resident component

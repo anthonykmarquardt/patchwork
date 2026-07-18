@@ -64,8 +64,8 @@ tier state. Details: QUICKSTART.md §"The seam contract".
 cd ../patchwork/experiments/router
 
 # Start the server in a terminal
-MLXPY=$HOME/.local/share/uv/tools/mlx-lm/bin/python
-$MLXPY -m darkcore.server --port 8000 --host 127.0.0.1
+uv sync   # first time only — pinned env (.venv) via uv.lock
+uv run python -m darkcore.server --port 8000 --host 127.0.0.1
 ```
 
 You'll see:
@@ -131,8 +131,9 @@ spark darkcore-router      # spawns `python -m darkcore.server` supervised
 ```
 
 Backed by `spark/config/runtimes/darkcore.toml` (pure TOML, generic
-backend): the mlx-lm tool env's python + `PYTHONPATH` to the darkcore
-checkout. Registry entry: `~/.local/share/spark/models/darkcore-router.toml`.
+backend): the binary is the router project's own `.venv` python
+(experiments/router is a standalone uv project; `uv sync` there first).
+Registry entry: `~/.local/share/spark/models/darkcore-router.toml`.
 NB spark's memory gate cannot see the router's internal tier weights (worst
 case ~8 GB when T2 loads) — run it with the box to itself.
 
@@ -170,8 +171,8 @@ spark list | grep patchwork-router
 
 ```bash
 cd ../patchwork/experiments/router
-MLXPY=$HOME/.local/share/uv/tools/mlx-lm/bin/python
-$MLXPY -m darkcore.server --port 8000
+uv sync   # first time only — pinned env (.venv) via uv.lock
+uv run python -m darkcore.server --port 8000
 ```
 
 **Step 3: Start spark**
@@ -338,8 +339,8 @@ grep "route_id=abc123" experiments/router/logs/router/$(date +%Y-%m-%d).jsonl | 
 The router server isn't running. Start it:
 ```bash
 cd ../patchwork/experiments/router
-MLXPY=$HOME/.local/share/uv/tools/mlx-lm/bin/python
-$MLXPY -m darkcore.server --port 8000
+uv sync   # first time only — pinned env (.venv) via uv.lock
+uv run python -m darkcore.server --port 8000
 ```
 
 ### "Health check failed" (spark relay)

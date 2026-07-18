@@ -154,10 +154,13 @@ def _progress_line(name, f):
     }.get(name, lambda: name)()
 
 
-def create_app():
-    """Assemble the FastAPI app with dark-core router."""
+def create_app(router=None):
+    """Assemble the FastAPI app with dark-core router.
+
+    `router` is injectable (tests pass a stub with the same route()/attrs
+    contract); default builds the real Router — which warms the embedder."""
     app = FastAPI(title="Patchwork Dynamic Router", version=__version__)
-    router_singleton = router_module.Router()
+    router_singleton = router if router is not None else router_module.Router()
     route_lock = threading.Lock()   # one route at a time (Exp 4: honest capacity)
     stats = {"started": time.time(), "routes_served": 0}
 

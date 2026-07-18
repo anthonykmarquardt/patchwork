@@ -4,18 +4,18 @@
 
 ```bash
 cd ../patchwork/experiments/router
-MLXPY=$HOME/.local/share/uv/tools/mlx-lm/bin/python
-$MLXPY -m darkcore serve            # server + live gauge board (default on a TTY)
-# $MLXPY -m darkcore serve --headless   # plain uvicorn logs
+uv sync   # first time only — pinned env (.venv) via uv.lock
+uv run darkcore serve            # server + live gauge board (default on a TTY)
+# uv run darkcore serve --headless   # plain uvicorn logs
 # spark darkcore-router                 # spark-supervised (restart on crash)
 ```
 
 The router is now listening at `http://localhost:8000`. Old form
-`$MLXPY -m darkcore.server --port 8000` still works (always headless).
+`uv run python -m darkcore.server --port 8000` still works (always headless).
 
-Also new: `$MLXPY -m darkcore status` (config/tiers/rollup at a glance),
-`$MLXPY -m darkcore route "query"` (one-shot with climb trace),
-`$MLXPY -m darkcore board --live` (gauge board alone).
+Also new: `uv run darkcore status` (config/tiers/rollup at a glance),
+`uv run darkcore route "query"` (one-shot with climb trace),
+`uv run darkcore board --live` (gauge board alone).
 
 ## One-Line Query
 
@@ -193,7 +193,7 @@ Answer returned from T1
 ## Server Options
 
 ```bash
-$MLXPY -m darkcore serve --port 8000 --host 127.0.0.1 [--headless]
+uv run darkcore serve --port 8000 --host 127.0.0.1 [--headless]
 ```
 
 | Flag | Default | Notes |
@@ -211,9 +211,9 @@ tail -f experiments/router/logs/router/$(date +%Y-%m-%d).jsonl | jq '.event'
 
 Or use the TUI:
 ```bash
-MLXPY=$HOME/.local/share/uv/tools/mlx-lm/bin/python
 cd experiments/router
-$MLXPY -m darkcore.tui --replay --speed 30
+uv sync   # first time only — pinned env (.venv) via uv.lock
+uv run darkcore board --replay --speed 30
 ```
 
 ## Docs

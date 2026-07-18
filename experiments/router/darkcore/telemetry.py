@@ -13,7 +13,10 @@ import uuid
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.abspath(os.path.join(HERE, "..", "..", ".."))
-LOG_DIR = os.path.join(REPO, "logs", "router")
+# DARKCORE_LOG_DIR overrides the in-repo default — required when the package
+# is installed outside the patchwork checkout (graduation/spark ownership),
+# and used by the test suite for isolation.
+LOG_DIR = os.environ.get("DARKCORE_LOG_DIR") or os.path.join(REPO, "logs", "router")
 
 SESSION = uuid.uuid4().hex[:12]
 _FORBIDDEN_KEYS = {"query", "prompt", "answer", "completion", "text", "content"}

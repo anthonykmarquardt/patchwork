@@ -10,10 +10,10 @@ The router is now available as both a library and a standalone OpenAI-compatible
 cd ../patchwork/experiments/router
 
 # Terminal 1: start the router server (+ live gauge board on a TTY)
-MLXPY=$HOME/.local/share/uv/tools/mlx-lm/bin/python
-$MLXPY -m darkcore serve
+uv sync   # first time only — pinned env (.venv) via uv.lock
+uv run darkcore serve
 #   --headless for plain logs; or `spark darkcore-router` for supervision.
-#   (Old form `$MLXPY -m darkcore.server --port 8000` still works, headless.)
+#   (Old form `uv run python -m darkcore.server --port 8000` still works, headless.)
 
 # Terminal 2: test it (in another terminal)
 curl -X POST http://localhost:8000/v1/chat/completions \
@@ -37,8 +37,8 @@ The router will classify the query, route to the appropriate tier (T0/T1/T2), ca
 ```bash
 # Start the server
 cd ../patchwork/experiments/router
-MLXPY=$HOME/.local/share/uv/tools/mlx-lm/bin/python
-$MLXPY -m darkcore.server --port 8000 --host 127.0.0.1
+uv sync   # first time only — pinned env (.venv) via uv.lock
+uv run python -m darkcore.server --port 8000 --host 127.0.0.1
 ```
 
 **Output:**
@@ -165,8 +165,8 @@ spark list | grep router
 **Terminal 1: Start the router server**
 ```bash
 cd ../patchwork/experiments/router
-MLXPY=$HOME/.local/share/uv/tools/mlx-lm/bin/python
-$MLXPY -m darkcore.server --port 8000
+uv sync   # first time only — pinned env (.venv) via uv.lock
+uv run python -m darkcore.server --port 8000
 ```
 
 **Terminal 2: Start spark (pointing to the router)**
@@ -274,7 +274,7 @@ Query: "Why do birds fly south for winter?"
 ### Router Server Options
 
 ```bash
-$MLXPY -m darkcore.server --help
+uv run python -m darkcore.server --help
 ```
 
 ```
@@ -333,7 +333,7 @@ lsof -i :8000
 pkill -f "darkcore.server"
 
 # Try a different port
-$MLXPY -m darkcore.server --port 8001
+uv run python -m darkcore.server --port 8001
 ```
 
 ### Query returns an error
@@ -365,7 +365,7 @@ If a query is taking much longer than expected:
 
 ## Next Steps
 
-- **Experiment:** Run the router with different queries and watch the TUI (`$MLXPY -m darkcore.tui --replay`)
+- **Experiment:** Run the router with different queries and watch the TUI (`uv run darkcore board --replay`)
 - **Integrate:** Wire your agent harness to call the router (direct or via spark relay)
 - **Iterate:** As you get production queries, exemplars grow and the router gets better
 - **Tune:** The tuner (spec 0002) will automate exemplar curation and λ calibration

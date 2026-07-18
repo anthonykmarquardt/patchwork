@@ -16,6 +16,19 @@ CORESIDENT = {"T0", "T1"}  # empirically safe together (Exp 4)
 _THINK = re.compile(r"<think>.*?</think>\s*", re.S)
 
 
+def extract_answer(raw):
+    """Answer text from raw generation output.
+
+    Strips <think>…</think> blocks; a bare closing </think> means the model
+    narrated its reasoning as prose with no opening tag (the Bonsai-27B leak,
+    CONTINUE.md residual seam) — everything before it is chain-of-thought.
+    Never returns empty: falls back to the raw text."""
+    answer = _THINK.sub("", raw)
+    if "</think>" in answer:
+        answer = answer.rsplit("</think>", 1)[1]
+    return answer.strip() or raw.strip()
+
+
 class TierUnavailable(Exception):
     pass
 
@@ -105,13 +118,7 @@ class ModelPool:
         gen_ms = round((time.perf_counter() - t0) * 1000, 1)
 
         raw = "".join(chunks)
-        answer = _THINK.sub("", raw)
-        # Bonsai-27B CoT-as-prose leak: narrates reasoning with NO opening
-        # <think>, then closes it — everything before the last bare </think>
-        # is chain-of-thought, not answer (CONTINUE.md residual seam #6).
-        if "</think>" in answer:
-            answer = answer.rsplit("</think>", 1)[1]
-        answer = answer.strip() or raw.strip()  # never emit empty; keep raw as last resort
+        answer = extract_answer(raw)
         return {
             "answer": answer,
             "tier": tier_id,

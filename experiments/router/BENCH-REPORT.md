@@ -67,10 +67,10 @@ is 0002-tuner territory. Snapshots kept: `report-v0.json`, `report-v0.1.json`,
 > (6 labeled + 6 probes) through the real cascade, plus a T2-only baseline on
 > the labeled 6. **v0** = shipped verifiers (report-v0.json); **v0.1** = v0 +
 > the rung-0 tool-semantics layer (rec #1 below), baselines reused
-> (report.json). **Reproduce:** `$MLXPY experiments/router/darkcore_bench.py
+> (report.json). **Reproduce:** `uv run python darkcore_bench.py
 > [--label ... --skip-baseline report-v0.json]`; thresholds:
 > `python3 experiments/router/verify.py --assert-thresholds`. Telemetry:
-> `logs/router/2026-07-16.jsonl` (view: `$MLXPY -m darkcore.tui --replay`).
+> `logs/router/2026-07-16.jsonl` (view: `uv run darkcore board --replay`).
 
 ## v0.1 re-bench — the S1 fix, verified. ALL THRESHOLDS PASS.
 

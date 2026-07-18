@@ -8,11 +8,12 @@ updated: "2026-07-17"  # S4 restated per operator decision (b); all thresholds p
 
 verifier:
   kind: "harness"
+  # Two gates: the unit suite (logic, model-free, ~0.3s) and the bench
+  # thresholds. Runs in the router's own uv env (experiments/router is a
+  # standalone uv project as of 2026-07-17 — portable for graduation).
   command: >
-    python experiments/router/verify.py
-    --battery experiments/router/battery.jsonl
-    --report experiments/router/report.json
-    --assert-thresholds
+    cd experiments/router && uv run pytest -q && uv run python verify.py
+    --battery battery.jsonl --report report.json --assert-thresholds
   requires_tests: true
 depends_on: []
 blocks:

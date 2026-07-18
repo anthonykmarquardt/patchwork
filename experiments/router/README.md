@@ -10,17 +10,17 @@ Spec 0001's empirical harnesses **and the router itself** (`darkcore/`).
 `logs/router/*.jsonl` (PII rule: hash + features, never content).
 
 ```bash
-MLXPY=$HOME/.local/share/uv/tools/mlx-lm/bin/python   # has mlx_lm + rich
 cd experiments/router
+uv sync   # first time only — pinned env (.venv) via uv.lock
 
-$MLXPY -m darkcore.cli route "your query"        # route one query
-$MLXPY -m darkcore.cli config get                # the control surface
-$MLXPY -m darkcore.cli config patch '{"lambda_by_class":{"agentic":0.45}}' --base 2 --actor operator
-$MLXPY -m darkcore.cli state                     # live_metrics rollup
+uv run darkcore route "your query"        # route one query
+uv run darkcore config get                # the control surface
+uv run darkcore config patch '{"lambda_by_class":{"agentic":0.45}}' --base 2 --actor operator
+uv run darkcore state                     # live_metrics rollup
 
-$MLXPY -m darkcore.tui                           # gauge board: snapshot
-$MLXPY -m darkcore.tui --live                    # follow the router live
-$MLXPY -m darkcore.tui --replay --speed 8        # replay telemetry history
+uv run darkcore board                           # gauge board: snapshot
+uv run darkcore board --live                    # follow the router live
+uv run darkcore board --replay --speed 8        # replay telemetry history
 ```
 
 - `battery.jsonl` — the labeled n=6 battery + 6 unlabeled probes (bench input,
