@@ -7,9 +7,13 @@ NEVER raw text), then publishes it with one set_config patch:
 exemplar_store_ref + predictor_enabled (+ cascade_policy.skip_start for the
 v0.2 bench — journal Episode 6, step 2).
 
-  HF_HUB_OFFLINE=1 $MLXPY experiments/router/seed_exemplars.py
+  uv run python seed_exemplars.py
 
 Sources: battery.jsonl (12) + exemplar-seeds.jsonl (9 authored) = n=21.
+
+v2 (2026-07-18): embeddings from the mlx port (darkcore/embedder_mlx.py),
+parity-gated vs the frozen torch reference. meta gains "runtime" — the
+embedder identity that D4 pins is now (model id, runtime) explicitly.
 """
 import hashlib
 import json
@@ -25,7 +29,7 @@ import numpy as np  # noqa: E402
 
 from darkcore import surface  # noqa: E402
 
-VERSION = 1
+VERSION = 2
 STORE = os.path.join(HERE, "darkcore", "exemplars", f"v{VERSION}")
 
 
@@ -37,21 +41,16 @@ def main():
                 r = json.loads(line)
                 rows.append((r["id"], r["class"], r["query"]))
 
-    from transformers import AutoModel, AutoTokenizer
-    import torch
-    tok = AutoTokenizer.from_pretrained("BAAI/bge-small-en-v1.5")
-    mdl = AutoModel.from_pretrained("BAAI/bge-small-en-v1.5").eval()
-    with torch.no_grad():
-        enc = tok([q for _, _, q in rows], padding=True, truncation=True,
-                  max_length=512, return_tensors="pt")
-        E = mdl(**enc).last_hidden_state[:, 0]
-        E = torch.nn.functional.normalize(E, dim=1).numpy().astype(np.float32)
+    from darkcore.embedder_mlx import MlxEmbedder
+    emb = MlxEmbedder("BAAI/bge-small-en-v1.5").warm()
+    E = np.stack([emb.embed(q) for _, _, q in rows]).astype(np.float32)
 
     os.makedirs(STORE, exist_ok=True)
     np.save(os.path.join(STORE, "embeddings.npy"), E)
     meta = {
         "version": VERSION,
         "embedder": "BAAI/bge-small-en-v1.5",
+        "runtime": "mlx-fp32",  # D4: embedder identity = (model id, runtime)
         "created": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "n": len(rows),
         "ids": [i for i, _, _ in rows],
@@ -73,7 +72,7 @@ def main():
         },
         base_version=cfg["config_version"],
         actor="operator",
-        note="seed exemplar snapshot v1 (class-prior); enable predictor + skip_start for bench v0.2",
+        note="snapshot v2: re-seed with mlx embedder (parity-gated, embedder_parity.py); same 21 texts",
     )
     print("set_config ->", json.dumps(res))
     sys.exit(0 if res["status"] == "ok" else 1)

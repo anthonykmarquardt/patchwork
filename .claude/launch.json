@@ -1,0 +1,18 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "darkcore-router",
+      "runtimeExecutable": "uv",
+      "runtimeArgs": [
+        "run",
+        "--project",
+        "experiments/router",
+        "darkcore",
+        "serve",
+        "--headless"
+      ],
+      "port": 8000
+    }
+  ]
+}

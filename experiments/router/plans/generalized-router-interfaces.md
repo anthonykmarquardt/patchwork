@@ -129,8 +129,11 @@ knows. Needs operator sign-off before any interface is written.
 
 1. `Verifier` protocol — names what the rung design already assumes; smallest
    diff, immediate test-quality payoff.
-2. `Enricher` protocol — unblocks the mlx embedder port as a clean swap
-   (do before the 0002 growth loop ships, per the D4 corpus-reset pressure).
+2. `Enricher` protocol — ~~unblocks the mlx embedder port as a clean swap~~
+   the embedder port shipped first (2026-07-18, `darkcore/embedder_mlx.py`)
+   without the protocol; the boundary held anyway (predictor's `embed()` was
+   the only seam touched). The protocol remains worthwhile for the *next*
+   swap; the D4 corpus-reset pressure is now discharged.
 3. `Tier` protocol + roster-as-manifest.
 4. Cascade constructor-injection; delete concrete imports.
 5. Only then: revisit the config-schema question with the tuner (0002) design

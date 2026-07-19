@@ -40,12 +40,17 @@ Last updated: 2026-07-18
 - **S4 overhead budget — RESOLVED 2026-07-17 (option b):** S4 gates on
   overhead < 1% of route cost (worst measured 0.122%); 20 ms absolute kept as
   aspirational, reported non-gating by `verify.py` every run. Spec 0001
-  flipped to `ready`; all 5 thresholds pass. mlx port of the bge-small
-  embedder is a planned backlog item (not an S4 gate). CONTINUE.md §decision.
+  flipped to `ready`; all 5 thresholds pass. ~~mlx port of the bge-small
+  embedder is a planned backlog item~~ — ported 2026-07-18.
 - **Bonsai-27B CoT leak — FIXED 2026-07-17:** answer extraction handles bare
   `</think>` (`experiments/router/darkcore/models.py`); unit-tested 4/4.
   Unblocks 0002 label admission. Residual: thinking-tier T2 still narrates
   CoT as prose upstream — the fix is at extraction, not generation.
+- **27B evicts co-resident embedder (page cache) — OPEN:** the 2026-07-18
+  mlx port did NOT fix it (mmap is mmap — the 27B's residency reclaims the
+  embedder's pages regardless of runtime; worst overhead 22.31 ms vs torch's
+  22.36). Mitigated by rewarm-at-the-evicting-route's-tail; S4 passes with
+  margin. Journal Episode 9.
 
 <!-- /AUTO:issues -->
 
@@ -63,6 +68,7 @@ Last updated: 2026-07-18
 - 2026-07-16 — **dark-core v0 built + benched** (`experiments/router/darkcore/`): control surface firmed v1 + implemented; Exp 4 swap economics measured (cascade viable, T0+T1 co-resident); bench 1.66× vs T2-only at 83% ≤T1, S2/S3/S4/S5 pass, S1 fails on V-struct; gauge-board TUI (Catppuccin Frappé). Specs 0002/0003 unblocked.
 - 2026-07-18 — Idea-stage plan documented: generalized router interface boundaries (experiments/router/plans/generalized-router-interfaces.md) — Enricher/Tier/Verifier protocols, cascade stays the fixed spine; open question: uniform vs per-plugin config schema
 - 2026-07-18 — Doc-drift pass per agent-guide: fixed broken refs in AGENTS.md/MEMORY.md/CONTINUE.md/plans/index.md; MEMORY.md known issues updated (S4 resolved option b, CoT leak fixed)
+- 2026-07-18 — mlx embedder port shipped (embedder_mlx.py, fp32, zero new deps): parity EXACT vs frozen torch reference, snapshot v2 (runtime: mlx-fp32) as config v4, torch+transformers dropped from pyproject, bench all-5-PASS. Finding: 27B still evicts the mlx embedder (22.31ms worst) — rewarm pattern stays. Journal Episode 9.
 <!-- /AUTO:changes -->
 
 ---

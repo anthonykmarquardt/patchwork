@@ -5,8 +5,10 @@ Exp1 embedder/V2 (bge-small locality + LOO tier prediction)
 Exp2 per-class verifiers vs the real captured T0/T1 outputs (fixtures/)
 Exp3 lambda sweep (utility = quality - lambda*cost), per class
 
-Run with a python that has torch+transformers+numpy (the mlx-lm uv-tool env):
-  $HOME/.local/share/uv/tools/mlx-lm/bin/python experiments/router/closure.py
+HISTORICAL (Exp 1–3 closed 2026-07-16; results in journal.md/decisions.md).
+Predates the mlx embedder port — torch/transformers left this project's env
+on 2026-07-18, so to re-run:  uv run --with torch --with 'transformers<6' \
+    python closure.py
 bge-small-en-v1.5 must be in the HF cache (it is: BAAI/bge-small-en-v1.5).
 
 Caveat: n=6. Exp2 (verifiers vs real failure outputs) closes cleanly. Exp1/Exp3

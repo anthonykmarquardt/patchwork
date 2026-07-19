@@ -195,3 +195,46 @@ runtime), with the relay demoted to remote-router duty.
 seam 1's first climb put the leak on screen in an API response, which is
 what finally got it fixed. The 0002 poison-guard prerequisite (prd T2) is
 half-done: served answers are clean; the admission-side detector remains.
+
+## Episode 9 — The embedder goes native; the eviction myth survives contact (2026-07-18)
+
+**Why now:** D4 made this urgent-while-cheap — production exemplars store
+embeddings, never text, so an embedder migration after 0002's growth loop
+ships means a corpus reset. At n=21 (all seed texts still on disk) the port
+cost one re-seed. The window was open; we used it.
+
+**Method (falsify first):** capture the baseline *before* touching anything —
+`embedder_parity.py capture` froze 26 torch reference vectors (battery +
+seeds + edge probes: empty-ish, unicode, >512-token truncation) and a warm
+microbench (13.62 ms), while torch was still in the env. Then the port:
+~100-line functional BERT over the raw safetensors in fp32 (`embedder_mlx.py`,
+zero new deps — `tokenizers` was already transitive). Acceptance was defined
+as parity, not compilation: min cosine ≥ 0.9999 AND identical kNN neighbor
+ordering AND LOO 12/12.
+
+**Result: exact.** Min cosine 1.000000, ordering identical on all 26 rows,
+LOO 12/12 on the re-seeded store. Snapshot v2 published as config v4; meta
+now pins `runtime: mlx-fp32` (D4's "embedder identity" made explicit —
+a runtime is part of the identity, this episode is the proof). torch and
+transformers left pyproject; ~2 GB of wheels off the query path.
+
+**The prediction that died:** "an mlx-resident embedder ends the 27B
+eviction saga structurally" (CONTINUE.md, two sessions running). Bench says
+no: worst-case overhead 22.31 ms vs torch's 22.36 — statistically the same
+event. The 27B's residency pages out mmap'd mlx safetensors exactly as it
+paged out torch weights; unified memory does not confer immunity, it just
+changes whose mmap gets reclaimed. The warm path IS faster (9.4 vs 13.6 ms
+micro; 17.3 vs 20.7 ms embed-route mean) and S4 passes with margin (worst
+0.059% of route cost) — but the 20 ms aspirational absolute stays unmet
+post-eviction, and rewarm-at-the-evicting-route's-tail stays load-bearing.
+
+**Bench honesty note:** the printed 1.22× (vs 1.90×) speedup is generation
+variance on two labeled T2 climbs (Δ≈190 s of thinking-tier tokens), not
+the embedder (Δ≈ms). Class 12/12, quality 0.900, tier distribution, and all
+five thresholds: unchanged/pass. n=2 embed-involved routes this run — the
+microbench, not the bench, is the latency signal of record for the embedder.
+
+**Backlog effect:** item 5 (mlx port) closes. The A4 residual (rung-0 blind
+to strategy) is unchanged. 0002 remains gated on the four sign-off items;
+its D4 hazard is now discharged — the corpus contract survives the growth
+loop turning on.

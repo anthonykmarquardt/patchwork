@@ -1,0 +1,9 @@
+{
+ "runtime": "torch",
+ "torch_version": "2.13.0",
+ "threads": 1,
+ "warm_ms_mean": 13.616,
+ "reps": 50,
+ "timing_text_id": "R1",
+ "captured": "2026-07-19T02:22:43Z"
+}

@@ -33,69 +33,72 @@ Here's a thinking process:
      - Check `free -m`, `top`, `htop`, `vmstat`
      - Review scheduler logs (cron, Airflow, etc.)
      - Check for duplicate runs or overlapping jobs
-   - *Higher-cost/Advanced:* (Avoid unless necessary, but keep in mind)
-     - Paid APM tools
+   - *Higher-cost/Advanced:*
+     - Paid APM tools (Datadog, New Relic, etc.)
      - Infrastructure scaling
-     - Deep debugging with perf, valgrind, etc.
+     - Code refactoring for memory efficiency
+     - Database query optimization
 
-4.  **Structure the Checklist (Ordered, Cheapest-First):**
-   I'll organize it logically from quick/free checks to slightly more involved but still low-cost steps, ensuring each step is actionable and explains *why* it's relevant to the specific symptoms (3am, production-only, Python OOM).
+4.  **Structure & Order (Cheapest-First, Logical Flow):**
+   I'll organize this into phases: Immediate/Free → Environment/Data → Code/Runtime → Infrastructure/Advanced. Each step should be actionable, ordered by cost/effort, and explain *why* it's relevant to the specific symptoms (3am, production-only, OOM).
 
-   **Phase 1: Zero-Cost / Immediate Checks**
-   1. Verify the exact OOM killer message & process
+   Let's draft the checklist:
+
+   **Phase 1: Zero-Cost, Immediate Checks**
+   1. Verify OOM killer logs (`dmesg | grep -i oom`, `/var/log/syslog`)
    2. Check for duplicate/overlapping job executions
-   3. Compare production vs. dev/staging data volume & config
-   4. Review recent deployments/changes (code, deps, env vars)
-   5. Check system resource limits (cgroups, ulimits, systemd)
-   6. Inspect scheduler logs for anomalies (retry loops, backpressure)
+   3. Compare production vs. dev/staging configurations & Python versions
+   4. Review recent deployments/changes (code, deps, configs)
+   5. Check resource limits (cgroups, systemd, ulimits)
 
-   **Phase 2: Low-Cost / Built-in Diagnostics**
-   7. Run basic memory profiling (tracemalloc, objgraph)
-   8. Check for connection/cache leaks (DB, Redis, file handles)
-   9. Verify Python interpreter & extension differences
-   10. Monitor memory growth pattern (pre-OOM)
+   **Phase 2: Data & Environment Differences**
+   6. Compare data volume/size between environments
+   7. Check external dependency behavior (DB queries, API responses, caches)
+   8. Verify garbage collection & object lifecycle (tracemalloc, objgraph)
+   9. Check for unbounded caches/lists/dicts accumulating over time
 
-   **Phase 3: Targeted Fixes / Validation**
-   11. Implement explicit memory management (del, gc, chunking)
-   12. Add graceful degradation / memory limits
-   13. Validate with production-like data in staging
+   **Phase 3: Runtime & Profiling (Still Free)**
+   10. Run with `python -m tracemalloc` or `objgraph` to find peak memory objects
+   11. Check for memory leaks in third-party libraries (pandas, numpy, requests, etc.)
+   12. Verify Python interpreter flags (`--disable-optimize`, `PYTHONMALLOC`, etc.)
 
-   Wait, the user asked for a *diagnostic checklist*, not a fix checklist. I should focus on diagnosis, but can include validation steps. I'll keep it strictly diagnostic, ordered by cost/effort.
+   **Phase 4: Infrastructure & Advanced (Low-to-Moderate Cost)**
+   13. Monitor memory over time (`free -m`, `vmstat`, `htop`) during execution
+   14. Check for swap thrashing or I/O bottlenecks
+   15. Review scheduler/job queue state (Airflow, Celery, cron, etc.)
+   16. Consider memory-efficient alternatives (chunking, generators, Dask, Polars)
 
-   Let's refine and order properly:
+   Wait, I need to make sure it's strictly ordered cheapest-first, and each item has a clear "how" and "why". Also, I should emphasize the "production-only" and "3am" aspects.
 
-   **1. Confirm the OOM killer & process** (Free: `dmesg | grep -i oom`, `journalctl`)
-   **2. Check for overlapping/duplicate runs** (Free: scheduler logs, `ps aux`, lock files)
-   **3. Compare data volume & schema between environments** (Free: DB stats, file sizes, config diff)
-   **4. Review recent changes (code, deps, env vars, Python version)** (Free: git log, pip freeze diff, env comparison)
-   **5. Check system-level resource limits** (Free: `cat /proc/self/cgroup`, `ulimit -a`, systemd `LimitNOFILE`, `MemoryMax`)
-   **6. Inspect scheduler/job orchestration behavior** (Free: cron/Airflow/Argo logs, retry policies, backoff)
-   **7. Run built-in Python memory profiling** (Free: `tracemalloc`, `objgraph`, `pymem` if available)
-   **8. Check for connection/cache/file handle leaks** (Free: `lsof`, DB pool stats, `gc.get_referrers()`)
-   **9. Verify interpreter & extension differences** (Free: `python --version`, `ldd`, C-extension memory behavior)
-   **10. Capture pre-OOM memory growth pattern** (Free: `ps aux --sort=-%mem`, `vmstat`, periodic `tracemalloc` snapshots)
+   Let's refine and structure it properly:
 
-   This is good, but I need to make it more structured, actionable, and explicitly tie each step to the "3am production-only" context. I'll add brief explanations and commands for each.
-
-   Let's organize it into a clear, ordered checklist with:
-   - Step number
-   - Action
-   - Why it matters (especially for 3am/prod-only)
-   - Commands/Tools (free/cheapest)
-   - Expected outcome
-
-   I'll also add a "stop early" note: if any step reveals the root cause, stop.
-
-   **Refined Structure:**
-   1. **Confirm OOM killer & exact process** → `dmesg | grep -i oom`, `journalctl -k`
-   2. **Check for duplicate/overlapping executions** → Scheduler logs, `ps`, lock files
-   3. **Compare production vs. non-prod data/config** → DB row counts, file sizes, env vars
-   4. **Audit recent changes** → Git diff, pip freeze, Python version, C-extensions
-   5. **Verify system resource limits** → cgroups, ulimits, systemd limits
-   6. **Inspect scheduler/job behavior** → Retry loops, backpressure, queue buildup
-   7. **Run built-in Python memory profiling** → `tracemalloc`, `objgraph`
-   8. **Check for connection/cache/file handle leaks** → `lsof`, DB pool, `gc`
-   9. **Capture memory growth timeline** → `ps`, `vmstat`, periodic snapshots
-   10. **Validate interpreter/extension differences** → `ldd`, Python build flags, numpy/pandas versions
-
-   Wait, some of these
+   **Ordered Diagnostic Checklist (Cheapest-First)**
+   1. **Confirm OOM vs. Other Kill Causes** (Free)
+      - Check `dmesg | grep -i oom` or `journalctl --since "3am"` for `OOMKILL`
+      - Rule out `SIGKILL` from scheduler, `SIGTERM` from timeout, or `Segmentation fault`
+   2. **Check for Duplicate/Overlapping Executions** (Free)
+      - 3am batch jobs often run multiple times due to cron misconfig, queue backlog, or failed retries
+      - Check scheduler logs (cron, Airflow, Celery, systemd timers) for concurrent runs
+   3. **Compare Production vs. Non-Prod Environments** (Free)
+      - Python version, interpreter flags, OS, architecture, installed packages
+      - Dev/staging often use smaller datasets or different DB configs
+   4. **Verify Resource Limits & Cgroups** (Free)
+      - `cat /proc/self/cgroup`, `systemctl show <service>`, `ulimit -v`
+      - Production containers/VMs often have stricter memory limits than dev
+   5. **Analyze Data Volume & Schema Differences** (Free)
+      - Production data is typically 10-100x larger
+      - Check if the script loads entire tables/JSON files into memory
+      - Compare row counts, file sizes, or API response sizes
+   6. **Check for Unbounded Accumulation** (Free)
+      - Look for global lists/dicts/caches that grow per run or across runs
+      - Check for missing `del`, `gc.collect()`, or generator exhaustion
+   7. **Profile Memory Usage (Built-in Tools)** (Free)
+      - `python -m tracemalloc -s cumulative script.py`
+      - `objgraph.show_top` to find largest objects
+      - Run in production (or staging with prod-like data) to capture peak
+   8. **Inspect Third-Party Library Memory Behavior** (Free)
+      - Pandas, NumPy, Requests, SQLAlchemy, etc., often have hidden memory overhead
+      - Check for `copy()` operations, chained operations, or uncommitted transactions
+   9. **Check Swap & I/O Thrashing** (Free)
+      - `free -m`, `vmstat 1`, `iostat -x 1`
+      - OOM can be triggered by swap exhaustion or I/O stalls, not

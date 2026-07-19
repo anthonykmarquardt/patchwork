@@ -1,5 +1,39 @@
 # dark-core v0 / v0.1 / v0.2 — benchmark findings report
 
+## v0.2-mlx (2026-07-18): embedder ported to mlx — parity exact, torch dropped, eviction persists
+
+The bge-small embedder moved from torch/transformers to a hand-rolled MLX
+BERT (`darkcore/embedder_mlx.py`, fp32; ~100 lines, zero new deps). Gates:
+
+- **Parity: exact.** Min cosine 1.000000 vs the frozen torch reference
+  (26 texts: battery + seeds + edge probes incl. >512-token truncation);
+  kNN neighbor ordering identical on every row; LOO 12/12 unchanged.
+  Reference vectors + harness: `fixtures/embedder-parity/`,
+  `embedder_parity.py` (capture ran pre-port; torch.npy is now immutable —
+  regenerating it means reinstalling torch).
+- **Corpus re-seeded under D4:** snapshot v2 (n=21, same texts), meta gains
+  `"runtime": "mlx-fp32"` — embedder identity is now explicitly
+  (model id, runtime). Published as config **v4**.
+- **Deps:** torch + transformers removed from pyproject (transformers
+  survives transitively via mlx-lm; nothing in darkcore imports it).
+  `closure.py` (closed Exp 1–3) is the only torch-needing artifact left,
+  marked historical with a `uv run --with torch` re-run recipe.
+- **Bench (T2 baseline reused from v0.2 final):** behavior identical —
+  class 12/12, quality 0.900, 83.3% ≤T1, same tier distribution, all 5
+  thresholds PASS (S4 worst 0.059% of route cost). Speedup printed 1.22×
+  vs v0.2's 1.90× — that is T2 generation-time variance on the 2 labeled
+  T2 climbs (Δ≈190 s), not the embedder (Δ≈milliseconds); don't read it
+  as a regression.
+- **The finding: eviction is NOT structurally ended.** Warm embed is
+  faster (9.4 ms vs 13.6 ms micro; embed-route mean 20.7→17.3 ms) but the
+  worst case barely moved: **22.31 ms** (torch: 22.36) — the 27B pages out
+  mmap'd mlx safetensors exactly like torch weights. The 20 ms aspirational
+  absolute target remains unmet post-eviction; the existing
+  rewarm-at-the-evicting-route's-tail pattern remains the mitigation. What
+  the port *did* buy: parity-locked corpus contract, ~2 GB of torch out of
+  the env, faster warm path. n=2 embed-routes in this bench — thin data;
+  the microbench is the better latency signal.
+
 ## v0.2 (2026-07-17): steps 1–3 landed — class detection 100%, 1.9×, one honest FAIL
 
 Three changes over v0.1 (journal Episode 6): **(1)** class detection moved to

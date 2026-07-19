@@ -14,7 +14,7 @@ git status && git log --oneline -5      # expect dark-core v0.2 commits at HEAD,
 # THE conceptual entry point:
 cat docs/routing-architecture.md
 
-# The JOURNEY — evidence→decision→next-step chain, episodes 1–6 (read 2nd):
+# The JOURNEY — evidence→decision→next-step chain, episodes 1–9 (read 2nd):
 cat specs/0001-tiered-cascade-router/journal.md
 
 # The bench findings (v0 → v0.1 → v0.2 comparison up top):
@@ -31,6 +31,21 @@ uv run darkcore board --replay --speed 30
 ## Current Status (2026-07-18)
 
 **dark-core v0.2: built, benched three times, steps 1–3 of the backlog done.**
+
+**mlx embedder port — DONE 2026-07-18 (backlog item 5 closed).**
+`darkcore/embedder_mlx.py`: ~100-line fp32 MLX BERT over the raw bge-small
+safetensors, zero new deps; torch + transformers dropped from pyproject.
+Parity EXACT vs frozen torch reference (min cosine 1.000000, kNN ordering
+identical, LOO 12/12) — harness `embedder_parity.py` + immutable
+`fixtures/embedder-parity/torch.npy` (regenerating needs torch back).
+Snapshot **v2** re-seeded (same 21 texts, meta pins `runtime: mlx-fp32`),
+config now **v4**. Bench: all 5 thresholds PASS, behavior identical
+(12/12, 0.900, 83% ≤T1); printed 1.22× speedup is T2 generation variance,
+not a regression (journal Episode 9). **Finding: the 27B still evicts the
+mlx embedder** (worst 22.31 ms vs torch 22.36) — mmap is mmap; rewarm
+pattern stays; 20 ms absolute stays aspirational. D4 corpus-reset hazard
+for 0002 is discharged. Parity pytest: `DARKCORE_PARITY=1 uv run pytest
+tests/test_embedder_parity.py`.
 
 **New since 2026-07-17 (uncommitted in the working tree):**
 - **Idea-stage plan:** `experiments/router/plans/generalized-router-interfaces.md`
@@ -124,15 +139,10 @@ seam, unblocks 0002 label admission). Guides updated: QUICKSTART.md
    does not yet.
 4. **Phase-0 exemplar corpus** (n ≫ 21) → tier prediction posture → recalibrate
    λ (still unused: predictor abstains from tiers at low n).
-5. **mlx port of the bge-small embedder** (planned, per operator: use native
-   hardware where we can). Today it's torch/transformers on CPU
-   (predictor.py); an mlx-resident embedder removes the torch dependency from
-   the query path and ends the 27B-eviction/rewarm saga structurally — and
-   should comfortably beat the 20 ms aspirational absolute target.
-   **Sequencing pressure discovered while planning 0002 (D4):** production
-   exemplars store embeddings, never text (PII) — an embedder migration
-   invalidates them all with no re-embed path. **Port while n is small**
-   (before the growth loop ships), or pay a corpus reset.
+5. ~~mlx port of the bge-small embedder~~ — DONE 2026-07-18 (see Current
+   Status above / journal Episode 9). Note the surviving myth-correction:
+   the port did NOT end the 27B-eviction saga (mmap'd mlx weights page out
+   too); rewarm-at-the-evicting-route's-tail remains load-bearing.
 6. Residual seams (attack via tuner, not more rules): rung-0 blind to strategy
    (A4). ~~Bonsai-27B CoT-as-prose leak~~ — FIXED 2026-07-17 at answer
    extraction (models.py bare-`</think>` handling; unit-tested 4/4).
@@ -142,7 +152,8 @@ seam, unblocks 0002 label admission). Guides updated: QUICKSTART.md
 - **experiments/router is a standalone uv project** (2026-07-17): own
   `.venv` + `uv.lock`, `darkcore` installed editable, console script
   `uv run darkcore …`. The `$MLXPY` pattern is dead. Tests: `uv run pytest`
-  (61, model-free, ~0.3 s). Config is at **v3** (predictor on, skip_start on).
+  (61 model-free ~0.4 s + 3 opt-in parity tests via `DARKCORE_PARITY=1`).
+  Config is at **v4** (predictor on, skip_start on, snapshot v2 mlx-fp32).
 - Re-seeding exemplars: `seed_exemplars.py` bumps the snapshot version — it
   will `conflict` if config moved; read current version first (by design).
 - **The 27B evicts the embedder** (the S4 saga) — any new resident component
