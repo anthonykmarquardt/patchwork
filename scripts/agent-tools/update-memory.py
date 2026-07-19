@@ -76,13 +76,78 @@ def add_change(text: str, desc: str) -> str:
     return _bump_timestamp(_replace_section(text, "changes", "\n".join(existing)))
 
 
+def _issue_entries(body: str) -> list[list[str]]:
+    """Split the issues body into atomic entries: a top-level '- ' bullet plus
+    its indented continuation lines. Blank/placeholder lines between entries
+    are dropped; continuation lines are never separated from their bullet
+    (the 2026-07-18 regression: line-level handling + sorted() shredded every
+    multi-line entry)."""
+    entries: list[list[str]] = []
+    cur: list[str] = []
+    for ln in body.splitlines():
+        if ln.startswith("- "):
+            if cur:
+                entries.append(cur)
+            cur = [ln]
+        elif cur and ln.strip() and not ln.strip().startswith("_"):
+            cur.append(ln)
+    if cur:
+        entries.append(cur)
+    return entries
+
+
+def _norm(s: str) -> str:
+    return re.sub(r"[*_`]", "", s).lower().strip()
+
+
 def add_issue(text: str, desc: str, status: str) -> str:
-    body = _section_body(text, "issues").strip()
-    lines = [ln for ln in body.splitlines() if ln.strip() and not ln.strip().startswith("_")]
-    prefix = f"- {desc} — "
-    lines = [ln for ln in lines if not ln.startswith(prefix)]
-    lines.append(f"{prefix}**{status}**")
-    return _bump_timestamp(_replace_section(text, "issues", "\n".join(sorted(lines))))
+    """Add `- desc — **status**`, or replace the whole entry whose bullet
+    starts with desc (markdown emphasis ignored). Entry order is preserved;
+    entries this call doesn't match are untouched."""
+    entries = _issue_entries(_section_body(text, "issues"))
+    new_entry = [f"- {desc} — **{status}**"]
+    key = _norm(f"- {desc}")
+    replaced = False
+    out: list[list[str]] = []
+    for e in entries:
+        if not replaced and _norm(e[0]).startswith(key):
+            out.append(new_entry)
+            replaced = True
+        else:
+            out.append(e)
+    if not replaced:
+        out.append(new_entry)
+    new_body = "\n".join("\n".join(e) for e in out)
+    return _bump_timestamp(_replace_section(text, "issues", new_body))
+
+
+_SELFTEST_DOC = """Last updated: 2000-01-01
+
+<!-- AUTO:issues — refreshable -->
+
+- **B-issue (multi-line) — OPEN:** first line of prose
+  continuation line one (indented)
+  continuation line two. `path/to/file.py`.
+- **A-issue — FIXED:** alphabetically earlier; must stay SECOND.
+  its continuation line.
+
+<!-- /AUTO:issues -->
+"""
+
+
+def selftest() -> None:
+    out = add_issue(_SELFTEST_DOC, "C-issue", "Open")
+    entries = _issue_entries(_section_body(out, "issues"))
+    assert [e[0].split(" ")[1] for e in entries] == ["**B-issue", "**A-issue", "C-issue"], \
+        "order not preserved (sorted regression?)"
+    assert len(entries[0]) == 3 and len(entries[1]) == 2, "continuation lines lost"
+    out2 = add_issue(out, "C-issue", "Open")
+    assert _section_body(out2, "issues") == _section_body(out, "issues"), "not idempotent"
+    out3 = add_issue(out, "B-issue (multi-line)", "Closed")
+    entries3 = _issue_entries(_section_body(out3, "issues"))
+    assert entries3[0] == ["- B-issue (multi-line) — **Closed**"], "in-place update failed"
+    assert entries3[1][0].startswith("- **A-issue"), "neighbor entry disturbed"
+    print("✅ selftest passed.")
 
 
 def main() -> None:
@@ -90,7 +155,13 @@ def main() -> None:
     ap.add_argument("--change", metavar="DESC", help="append a dated Recent Changes line")
     ap.add_argument("--issue", nargs=2, metavar=("DESC", "STATUS"), help="add/update a known issue")
     ap.add_argument("--state", action="store_true", help="bump the Last updated line")
+    ap.add_argument("--selftest", action="store_true",
+                    help="run the multi-line-entry regression checks and exit")
     args = ap.parse_args()
+
+    if args.selftest:
+        selftest()
+        sys.exit(0)
 
     if not (args.change or args.issue or args.state):
         ap.print_help()
