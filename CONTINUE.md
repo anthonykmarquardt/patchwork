@@ -65,11 +65,12 @@ tests/test_embedder_parity.py`.
   per `experiments/router/plans/generalized-router-interfaces.md`; in-process
   paths stay the dark-operable default. Six spikes gate design.md — S2
   (cross-process residency economics) is the kill-or-confirm gate.
-- **GitHub remote renamed:** origin now `anthony-mqdt-labs/patchwork`
-  (username change 2026-07-18); repo-local commit email switched to the
-  GitHub noreply address. History rewrite to backfill the contribution graph
-  is prepared but operator-executed (filter-repo blocked in agent auto mode);
-  backup bundle + mailmap in the session scratchpad.
+- **GitHub identity migrated:** origin now `anthony-mqdt-labs/patchwork`
+  (username change 2026-07-18); repo-local commit email is the GitHub
+  noreply address, and the operator-executed filter-repo rewrite is DONE —
+  verified 2026-07-19: every author/committer email in history is the
+  noreply; `main@Lounge.local` scrubbed from public history. All SHAs
+  changed at the rewrite; the hashes in older doc/journal prose predate it.
 
 - **Predictor live in class-prior mode** (`darkcore/predictor.py`): bge-small
   kNN over an immutable exemplar snapshot (n=21), published through the
