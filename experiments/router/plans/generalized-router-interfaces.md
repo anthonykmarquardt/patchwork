@@ -2,6 +2,10 @@
 
 > **Status:** idea stage — no implementation scheduled. Documented 2026-07-18
 > from an operator thought experiment.
+> **First concrete customer (2026-07-18):** `spark/specs/0001-model-fleet-api/`
+> (wip-research). Its S3/S6 spikes need an HTTP `Tier` backend and a served
+> `Enricher` (embedder) behind fallback switches — when that spec exits
+> research, §2's `Tier` and `Enricher` protocols are the patchwork-side work.
 > **Scope:** LLM inference routing only. (The original discussion touched
 > DDoS-guard / load-balancer generalization; those were illustrative of how
 > common the routing pattern is, and are explicitly out of scope.)

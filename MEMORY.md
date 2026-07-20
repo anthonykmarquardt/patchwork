@@ -3,7 +3,7 @@
 > **Purpose:** Durable facts about the project — decisions, known issues, resolved questions, and current state. Not a session handoff (that's `CONTINUE.md`).
 > **Rule:** AUTO-marked sections are refreshable by script. Manual sections are hand-edited and never touched by tooling.
 
-Last updated: 2026-07-18
+Last updated: 2026-07-19
 
 ---
 
@@ -69,6 +69,7 @@ Last updated: 2026-07-18
 - 2026-07-18 — Idea-stage plan documented: generalized router interface boundaries (experiments/router/plans/generalized-router-interfaces.md) — Enricher/Tier/Verifier protocols, cascade stays the fixed spine; open question: uniform vs per-plugin config schema
 - 2026-07-18 — Doc-drift pass per agent-guide: fixed broken refs in AGENTS.md/MEMORY.md/CONTINUE.md/plans/index.md; MEMORY.md known issues updated (S4 resolved option b, CoT leak fixed)
 - 2026-07-18 — mlx embedder port shipped (embedder_mlx.py, fp32, zero new deps): parity EXACT vs frozen torch reference, snapshot v2 (runtime: mlx-fp32) as config v4, torch+transformers dropped from pyproject, bench all-5-PASS. Finding: 27B still evicts the mlx embedder (22.31ms worst) — rewarm pattern stays. Journal Episode 9.
+- 2026-07-19 — Cross-repo: spark spec 0001 model-fleet-api opened (wip-research, 6 spikes; embedder promoted to first fleet tenant S6); patchwork side tracked in generalized-router-interfaces plan (Tier/Enricher = first customer). GitHub remote renamed to anthony-mqdt-labs; commit email switched to noreply.
 <!-- /AUTO:changes -->
 
 ---

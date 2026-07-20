@@ -57,6 +57,19 @@ tests/test_embedder_parity.py`.
 - **Research artifact:** `research/small-specialist-landscape.md` (agent penny,
   2026-07-17) — survey of sub-4B specialists for composed architectures;
   indexed in `research/README.md`.
+- **Cross-repo: spark fleet spec opened** — `spark/specs/0001-model-fleet-api/`
+  (wip-research; committed in spark 09d6162 + 527aec9). sparkd as model-fleet
+  authority; tiers become HTTP endpoints handed over via the tier-roster knob;
+  **the mlx embedder is the first fleet tenant (spike S6)**. Patchwork-side
+  future work when it exits research: HTTP `Tier` backend + served `Enricher`
+  per `experiments/router/plans/generalized-router-interfaces.md`; in-process
+  paths stay the dark-operable default. Six spikes gate design.md — S2
+  (cross-process residency economics) is the kill-or-confirm gate.
+- **GitHub remote renamed:** origin now `anthony-mqdt-labs/patchwork`
+  (username change 2026-07-18); repo-local commit email switched to the
+  GitHub noreply address. History rewrite to backfill the contribution graph
+  is prepared but operator-executed (filter-repo blocked in agent auto mode);
+  backup bundle + mailmap in the session scratchpad.
 
 - **Predictor live in class-prior mode** (`darkcore/predictor.py`): bge-small
   kNN over an immutable exemplar snapshot (n=21), published through the
