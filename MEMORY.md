@@ -21,6 +21,7 @@ Last updated: 2026-07-19
 | D006 | Cascade (verify-and-escalate) is the routing spine; verifiers indexed by certificate cost (rungs 0–5); organize classes by verifiability, not topic | Adopted | 2026-07-16 | The confidently-wrong small tier needs a safety net; cascade is efficient only where a cheap certificate exists |
 | D007 | Governance is firm-based/hierarchical (quorum is a separate project) | Adopted | 2026-07-16 | Orchestrator supervises subordinate workers |
 | D008 | Router models = Bonsai ternary 1.7B/8B/27B on stock mlx_lm (M2 dev); supersedes the Qwen2.5/IQ4_XS candidacy for the routing thread | Adopted | 2026-07-16 | Established by the spark eval work (MODEL-EVAL, bake-offs) |
+| D009 | Require a project-entry GitHub authentication preflight for `anthony-mqdt-labs`; keep commit identity repository-local | Adopted | 2026-07-20 | Prevents the shared GitHub CLI session and Git author identity from leaking across sibling projects |
 
 <!-- /AUTO:decisions -->
 
@@ -70,6 +71,7 @@ Last updated: 2026-07-19
 - 2026-07-18 — Doc-drift pass per agent-guide: fixed broken refs in AGENTS.md/MEMORY.md/CONTINUE.md/plans/index.md; MEMORY.md known issues updated (S4 resolved option b, CoT leak fixed)
 - 2026-07-18 — mlx embedder port shipped (embedder_mlx.py, fp32, zero new deps): parity EXACT vs frozen torch reference, snapshot v2 (runtime: mlx-fp32) as config v4, torch+transformers dropped from pyproject, bench all-5-PASS. Finding: 27B still evicts the mlx embedder (22.31ms worst) — rewarm pattern stays. Journal Episode 9.
 - 2026-07-19 — Cross-repo: spark spec 0001 model-fleet-api opened (wip-research, 6 spikes; embedder promoted to first fleet tenant S6); patchwork side tracked in generalized-router-interfaces plan (Tier/Enricher = first customer). GitHub remote renamed to anthony-mqdt-labs; commit email switched to noreply.
+- 2026-07-20 — Added mandatory project-entry GitHub account preflight: verify `gh api user` is `anthony-mqdt-labs` before work; stop and direct the user to switch/login when it is not. Git identity remains repository-local.
 <!-- /AUTO:changes -->
 
 ---

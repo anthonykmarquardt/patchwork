@@ -4,6 +4,51 @@
 > **Workspace:** `../patchwork/`
 > **Theme:** Modular model composition — routing, latent bridging, and runtime composition of small dense models into a coherent inference ensemble.
 
+## GitHub account preflight (required before project work)
+
+This repository uses the GitHub account `anthony-mqdt-labs` (account ID
+`81272454`), which also owns the repository remote.
+
+Before doing any project work, first run this read-only check:
+
+```bash
+gh api user --jq .login
+```
+
+The required result is exactly:
+
+```text
+anthony-mqdt-labs
+```
+
+If GitHub CLI is unauthenticated, its credential is invalid, or another account
+is active, stop before doing project work and direct the user to authenticate or
+switch accounts. Do not log out, switch accounts, or start an interactive login
+without the user's approval because GitHub authentication is shared across
+repositories.
+
+Preferred commands for the user:
+
+```bash
+# If the account is already stored by gh:
+gh auth switch -h github.com -u anthony-mqdt-labs
+
+# If the account has not been added yet:
+gh auth login -h github.com -p https -w
+```
+
+After a switch or login, rerun `gh api user --jq .login` and begin work only
+after it returns `anthony-mqdt-labs`.
+
+Use this repository-local commit identity:
+
+```text
+user.name  = Anthony
+user.email = 81272454+anthony-mqdt-labs@users.noreply.github.com
+```
+
+Do not change global Git identity settings for this project.
+
 > **⇒ Active workstream (2026-07): the routing pillar.** The "Routing" leg below is
 > now a concrete architecture. Start at **`docs/routing-architecture.md`** (planes,
 > taxonomy, certificate rungs, DAG, glossary), then the specs:
