@@ -143,4 +143,4 @@ raises the priority of the difficulty-aware predictor rethink noted in
 decide predictor posture (difficulty-feature vs prefilter/cascade-dominant) and
 firm the λ values on a larger battery.
 
-Reproduce: `$HOME/.local/share/uv/tools/mlx-lm/bin/python experiments/router/closure.py`
+Reproduce: `uv run python experiments/router/closure.py`

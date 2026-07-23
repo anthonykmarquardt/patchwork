@@ -8,7 +8,7 @@
 ## Bootstrap Sequence (Do This First, In Order)
 
 ```bash
-cd ../patchwork
+cd .
 git status && git log --oneline -5      # expect dark-core v0.2 commits at HEAD, clean tree
 
 # THE conceptual entry point:

@@ -1,7 +1,7 @@
 # Memory Maintenance Procedure
 
 > **Purpose:** How to update MEMORY.md after changes.
-> **Location:** `../patchwork/MEMORY.md`
+> **Location:** `./MEMORY.md`
 > **Rule:** The AUTO-marked sections are refreshable by script. Manual sections are
 > hand-edited and never touched by tooling.
 

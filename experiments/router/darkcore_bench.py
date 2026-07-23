@@ -2,7 +2,7 @@
 """dark-core v0 benchmark — the whole battery through the real cascade,
 plus a T2-only baseline on the labeled subset for the cost-saved number.
 
-  $HOME/.local/share/uv/tools/mlx-lm/bin/python experiments/router/darkcore_bench.py
+  python experiments/router/darkcore_bench.py
 
 Outputs:
   experiments/router/report.json        (aggregate, spec 0001 verify substrate)

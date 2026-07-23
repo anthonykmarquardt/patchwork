@@ -3,7 +3,7 @@
 ## 30-Second Setup
 
 ```bash
-cd ../patchwork/experiments/router
+cd experiments/router
 uv sync   # first time only — pinned env (.venv) via uv.lock
 uv run darkcore serve            # server + live gauge board (default on a TTY)
 # uv run darkcore serve --headless   # plain uvicorn logs

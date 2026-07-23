@@ -1,7 +1,7 @@
 # CONTINUE.md Handoff Procedure
 
 > **Purpose:** How operators and agents use CONTINUE.md as a handoff mechanism.
-> **Location:** `../patchwork/CONTINUE.md`
+> **Location:** `./CONTINUE.md`
 > **Rule:** OVERWRITE at end of session. Never append. Snapshot, not history.
 
 ---

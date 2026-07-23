@@ -61,7 +61,7 @@ tier state. Details: QUICKSTART.md §"The seam contract".
 ### Setup (30 seconds)
 
 ```bash
-cd ../patchwork/experiments/router
+cd experiments/router
 
 # Start the server in a terminal
 uv sync   # first time only — pinned env (.venv) via uv.lock
@@ -170,7 +170,7 @@ spark list | grep patchwork-router
 **Step 2: Start the router server**
 
 ```bash
-cd ../patchwork/experiments/router
+cd experiments/router
 uv sync   # first time only — pinned env (.venv) via uv.lock
 uv run python -m darkcore.server --port 8000
 ```
@@ -338,7 +338,7 @@ grep "route_id=abc123" experiments/router/logs/router/$(date +%Y-%m-%d).jsonl | 
 
 The router server isn't running. Start it:
 ```bash
-cd ../patchwork/experiments/router
+cd experiments/router
 uv sync   # first time only — pinned env (.venv) via uv.lock
 uv run python -m darkcore.server --port 8000
 ```

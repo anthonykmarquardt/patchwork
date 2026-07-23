@@ -7,7 +7,7 @@ The router is now available as both a library and a standalone OpenAI-compatible
 ## Quick Start (30 seconds)
 
 ```bash
-cd ../patchwork/experiments/router
+cd experiments/router
 
 # Terminal 1: start the router server (+ live gauge board on a TTY)
 uv sync   # first time only — pinned env (.venv) via uv.lock
@@ -36,7 +36,7 @@ The router will classify the query, route to the appropriate tier (T0/T1/T2), ca
 
 ```bash
 # Start the server
-cd ../patchwork/experiments/router
+cd experiments/router
 uv sync   # first time only — pinned env (.venv) via uv.lock
 uv run python -m darkcore.server --port 8000 --host 127.0.0.1
 ```
@@ -164,7 +164,7 @@ spark list | grep router
 
 **Terminal 1: Start the router server**
 ```bash
-cd ../patchwork/experiments/router
+cd experiments/router
 uv sync   # first time only — pinned env (.venv) via uv.lock
 uv run python -m darkcore.server --port 8000
 ```

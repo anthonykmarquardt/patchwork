@@ -9,7 +9,7 @@ python experiments/router/verify.py \
   --assert-thresholds
 ```
 
-Run from `../patchwork/`. Deterministic (fixed seeds, temp 0 for any
+Run from `./`. Deterministic (fixed seeds, temp 0 for any
 model call). Exits non-zero if any threshold in §Acceptance fails.
 
 ## Minimum expected verifiers

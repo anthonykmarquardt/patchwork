@@ -1,7 +1,7 @@
 # Anti-Drift Procedure
 
 > **Purpose:** Keep patchwork's docs and code from silently diverging.
-> **Location:** `../patchwork/`
+> **Location:** `./`
 > **Principle:** Every design decision should be findable, and every findable
 > decision should still be true.
 

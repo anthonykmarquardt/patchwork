@@ -83,7 +83,7 @@ Last updated: 2026-07-19
   `docs/routing-architecture.md`), decisions D005–D008 adopted; (2) the
   **latent-bridge** thread — *paused*, planned in `plans/index.md`, decisions
   D001–D004 tentative. Don't read D001–D004 as current for the routing work.
-- **Parent workspace:** `../` — inherits vibes-level AGENTS.md conventions.
+- **Parent workspace:** `..` — inherits vibes-level AGENTS.md conventions.
 - **Cross-reference:** quorum (`../quorum/`) is a sibling project with a very similar agent-interface implementation. Consult its DESIGN_LOG.md and anti-drift patterns.
 - **Three-layer model for composition:** Routing (what dispatches), Bridge (how state flows between models), Tiering (which modules are loaded).
 

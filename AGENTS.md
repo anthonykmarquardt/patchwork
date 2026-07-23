@@ -1,7 +1,7 @@
 # Patchwork Agent Bootstrap
 
 > **Purpose:** Every agent entering this workspace reads this file first. It describes the vision, open questions, ongoing investigations, and standard operating procedures for the patchwork project.
-> **Workspace:** `../patchwork/`
+> **Workspace:** `./`
 > **Theme:** Modular model composition — routing, latent bridging, and runtime composition of small dense models into a coherent inference ensemble.
 
 ## GitHub account preflight (required before project work)

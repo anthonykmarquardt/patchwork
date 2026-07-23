@@ -14,7 +14,7 @@ Emits incremental JSONL (survives an OOM-killed T2) to:
   logs/swap-econ/<date>.jsonl                    (runtime log, repo standard)
 
 Run with the mlx-lm uv-tool python:
-  $HOME/.local/share/uv/tools/mlx-lm/bin/python experiments/router/swap_econ.py
+  python experiments/router/swap_econ.py
 
 Caveats recorded in-band: page-cache warmth is uncontrolled (no sudo purge);
 round 1 after a reboot would be the true cold number. n=1 per cell unless
