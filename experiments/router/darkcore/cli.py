@@ -43,7 +43,8 @@ def _status(name, **f):
 
 def _store_meta(params):
     """Exemplar-store meta.json for display, or None."""
-    uri = (params.get("exemplar_store_ref") or {}).get("uri")
+    ref = params.get("exemplar_store_ref") or {}
+    uri = surface.resolve_exemplar_path(ref)
     if not uri:
         return None
     try:

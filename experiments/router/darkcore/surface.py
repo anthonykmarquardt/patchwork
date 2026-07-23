@@ -22,6 +22,22 @@ SIGNAL_REGISTRY = {
 }
 ACTORS = {"tuner", "orchestrator", "operator", "default"}
 
+def resolve_exemplar_path(ref):
+    """Resolve exemplar_store_ref.uri — relative paths resolve against HERE.
+
+    Call before any filesystem operation on the URI. The config stores
+    relative paths so no absolute machine-local path leaks into the repo.
+    """
+    if ref is None:
+        return None
+    uri = ref.get("uri") if isinstance(ref, dict) else ref
+    if uri is None:
+        return None
+    if os.path.isabs(uri):
+        return uri
+    return os.path.normpath(os.path.join(HERE, uri))
+
+
 DEFAULTS = {
     "surface_version": SURFACE_VERSION,
     "config_version": 0,
@@ -120,10 +136,11 @@ def validate(config):
             v.append(f"I7: rule {r.get('id')} sets illegal fields")
 
     ref = p.get("exemplar_store_ref", {})
-    if p.get("predictor_enabled") and not ref.get("uri"):
+    resolved = resolve_exemplar_path(ref)
+    if p.get("predictor_enabled") and not resolved:
         v.append("I8: predictor_enabled requires exemplar_store_ref.uri")
-    if ref.get("uri") and not os.path.exists(str(ref["uri"])):
-        v.append(f"I8: exemplar_store_ref.uri not resolvable: {ref['uri']}")
+    if resolved and not os.path.exists(resolved):
+        v.append(f"I8: exemplar_store_ref.uri not resolvable ({resolved})")
 
     cp = p.get("cascade_policy", {})
     if not (1 <= cp.get("max_tiers_per_query", 0) <= max(len(roster), 1)):

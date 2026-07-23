@@ -44,7 +44,9 @@ class Router:
             return prev  # unchanged snapshot — keep the warm embedder
         try:
             from .predictor import ClassPrior
-            prior = ClassPrior(ref["uri"]).warm()
+            from .surface import resolve_exemplar_path
+            uri = resolve_exemplar_path(ref)
+            prior = ClassPrior(uri).warm()
             telemetry.emit("exemplar_store_loaded", uri=ref["uri"],
                            index_version=prior.index_version, n=len(prior.ids))
             return prior

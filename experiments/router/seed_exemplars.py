@@ -30,7 +30,7 @@ import numpy as np  # noqa: E402
 from darkcore import surface  # noqa: E402
 
 VERSION = 2
-STORE = os.path.join(HERE, "darkcore", "exemplars", f"v{VERSION}")
+STORE = os.path.join("darkcore", "exemplars", f"v{VERSION}")
 
 
 def main():

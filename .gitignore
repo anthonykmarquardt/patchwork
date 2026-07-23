@@ -1,0 +1,9 @@
+# Telemetry logs — never committed (machine-local paths, no historical value)
+logs/router/*.jsonl
+logs/swap-econ/*.jsonl
+
+# Python bytecode cache
+__pycache__/
+
+# Agent state
+.claude/
