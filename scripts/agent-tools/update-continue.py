@@ -25,7 +25,9 @@ from typing import Any
 # PROJECT-SPECIFIC CONFIGURATION — CUSTOMIZE THESE
 # ═══════════════════════════════════════════════════════════════
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent  # derived
+# Derive project root from this script's location (scripts/agent-tools/)
+_SCRIPT_DIR = Path(__file__).resolve().parent
+PROJECT_ROOT = _SCRIPT_DIR.parent.parent
 CONTINUE_PATH = PROJECT_ROOT / "CONTINUE.md"
 PROJECT_NAME = "patchwork"
 
@@ -205,7 +207,7 @@ TEMPLATE = """# CONTINUE.md — {project_name}
 ## Bootstrap Sequence (Do This First, In Order)
 
 ```bash
-cd {project_root}
+cd .
 git status                              # expected: {git_status}
 git log --oneline -5                    # recent work: {git_commits}
 ```
@@ -291,7 +293,7 @@ _(Fill in at session end)_
 
 ```bash
 # Common operations
-cd {project_root}
+cd .
 python scripts/agent-tools/update-continue.py --verify    # Validate handoff
 python scripts/agent-tools/update-agents.py --report      # Validate doc refs
 python scripts/agent-tools/update-memory.py --state       # Bump freshness
@@ -402,7 +404,7 @@ def _build_bootstrap_section(sections: dict[str, str]) -> str:
     lines = ["## Bootstrap Sequence (Do This First, In Order)"]
     lines.append("")
     lines.append("```bash")
-    lines.append(f"cd {sections['project_root']}")
+    lines.append("cd .")
     lines.append(f"git status                              # expected: {sections['git_status']}")
     lines.append(f"git log --oneline -5                    # recent work: {sections['git_commits']}")
     lines.append("```")
