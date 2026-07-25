@@ -1,0 +1,70 @@
+# A4 | class agentic | tokens 1024 | wall 22.68s
+--- QUERY ---
+You are an ops agent with tools run_shell/read_file/http_get/send_slack. After a rolling deploy, OAuth token refresh intermittently returns 401 for ~2% of users, only on one AZ. Give the ordered tool calls to isolate the cause before rollback.
+--- ANSWER ---
+We are given: "You are an ops agent with tools run_shell/read_file/http_get/send_slack. After a rolling deploy, OAuth token refresh intermittently returns 401 for ~2% of users, only on one AZ. Give the ordered tool calls to isolate the cause before rollback."
+
+Interpretation: We have an ops agent with tools: run_shell, read_file, http_get, send_slack. We need to isolate the cause of the intermittent 401 OAuth token refresh for ~2% of users, only on one AZ. We must give ordered tool calls to isolate the cause before rollback.
+
+We don't have the actual environment details, but we can assume we need to use the available tools to gather information. The tools: run_shell, read_file, http_get, send_slack. Possibly we can use them to query the system, get logs, etc.
+
+We need to "isolate the cause" before rollback. That means we need to identify what is causing the 401 for ~2% of users, only on one AZ. Possibly we need to check the OAuth token refresh mechanism, the AZ, the users, etc.
+
+Given the tools, we can:
+- run_shell: run commands in the system shell.
+- read_file: read files.
+- http_get: make HTTP GET requests.
+- send_slack: send messages to Slack.
+
+We might need to use these to:
+1. Check the OAuth token refresh process.
+2. Check the Azure AZ and its users.
+3. Check the 401 error messages.
+4. Possibly check the rate of 401 errors.
+
+But we don't have the actual data. We need to think of a sequence of tool calls that would help us diagnose the issue.
+
+Since we are an ops agent, we might have access to the Azure portal or system logs. But the tools listed are run_shell/read_file/http_get/send_slack. So we can use them to interact with the system.
+
+We need to "isolate the cause" before rollback. That implies we need to gather information to understand why the refresh is failing for ~2% of users, only on one AZ.
+
+Possible steps:
+- Use run_shell to check the Azure portal (if we have access) or check the Azure API.
+- Use read_file to read the Azure portal's configuration or logs.
+- Use http_get to check the OAuth token refresh endpoint.
+- Use send_slack to send alerts or gather information from Slack.
+
+But we don't know the exact environment. We need to propose a sequence of tool calls that would help us identify the cause.
+
+Given the tools, we can:
+1. Run a command to check the Azure portal (if we have admin access) or check the Azure API.
+2. Run a command to check the OAuth token refresh endpoint.
+3. Run a command to check the rate of 401 errors.
+4. Run a command to check the AZ and its users.
+
+But we need to be careful: we are an ops agent, so we might have already logged the issue. The problem says "After a rolling deploy, OAuth token refresh intermittently returns 401 for ~2% of users, only on one AZ." So we need to isolate the cause before rolling back.
+
+We should think: what could cause intermittent 401 for ~2% of users? Possibly the refresh token is not valid, or the refresh token is expired, or the refresh token is not associated with the correct AZ, or the refresh token is not in the correct scope, or the refresh token is not in the correct user's profile, etc.
+
+We need to gather information to pinpoint the cause.
+
+Given the tools, we can:
+- Use run_shell to execute commands that check the Azure portal's OAuth token refresh.
+- Use read_file to read the Azure portal's configuration or logs.
+- Use http_get to check the OAuth token refresh endpoint.
+- Use send_slack to send a message to the Slack team to report the issue.
+
+But we need to be specific. Since we don't have the actual data, we can propose a plan:
+
+Step 1: Check the Azure portal's OAuth token refresh mechanism.
+Step 2: Check the Azure AZ and its users.
+Step 3: Check the rate of 401 errors.
+Step 4: Check the Slack alerts.
+
+We can write tool calls in order.
+
+But the problem says "Give the ordered tool calls". So we need to list the tool calls in sequence.
+
+We might need to use the tools in a specific order. For example, we might first run a command to get the Azure portal's configuration, then run a command to check the refresh token, then run a command to check the error rate, then run a command to check the Slack.
+
+Alternatively, we might need to use the tools to query the Azure portal's

@@ -1,0 +1,140 @@
+{
+  "model": "mlx-community/MiniCPM5-1B-8bit",
+  "load_s": 3.8,
+  "throughput": {
+    "prompt": "List the first 40 prime numbers, then briefly explain why 1 is not considered prime.",
+    "runs": 3,
+    "decode_tps_median": 60.8,
+    "decode_tps_min": 53.2,
+    "decode_tps_max": 82.5,
+    "ttft_s_median": 0.216,
+    "passes": [
+      {
+        "text": "We are asked: \"List the first 40 prime numbers, then briefly explain why 1 is not considered prime.\" So we need to list the first 40 prime numbers. Then explain why 1 is not prime.\n\nFirst, recall definition: A prime number is a natural number greater than 1 that has no positive divisors other than 1 and itself. So 1 is not prime because it has only one divisor (1) and is not greater than 1. So we need to list the first 40 primes.\n\nWe can generate primes by checking numbers starting from 2. The first few primes: 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191,",
+        "tokens": 256,
+        "ttft_s": 0.1345,
+        "wall_s": 3.23,
+        "decode_s": 3.09,
+        "decode_tps": 82.5
+      },
+      {
+        "text": "We are asked: \"List the first 40 prime numbers, then briefly explain why 1 is not considered prime.\" So we need to list the first 40 prime numbers. Then explain why 1 is not prime.\n\nFirst, recall definition: A prime number is a natural number greater than 1 that has no positive divisors other than 1 and itself. So 1 is not prime because it has only one divisor (1) and is not greater than 1. So we need to list the first 40 primes.\n\nWe can generate primes by checking numbers starting from 2. The first few primes: 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191,",
+        "tokens": 256,
+        "ttft_s": 0.2159,
+        "wall_s": 5.01,
+        "decode_s": 4.8,
+        "decode_tps": 53.2
+      },
+      {
+        "text": "We are asked: \"List the first 40 prime numbers, then briefly explain why 1 is not considered prime.\" So we need to list the first 40 prime numbers. Then explain why 1 is not prime.\n\nFirst, recall definition: A prime number is a natural number greater than 1 that has no positive divisors other than 1 and itself. So 1 is not prime because it has only one divisor (1) and is not greater than 1. So we need to list the first 40 primes.\n\nWe can generate primes by checking numbers starting from 2. The first few primes: 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191,",
+        "tokens": 256,
+        "ttft_s": 0.6133,
+        "wall_s": 4.8,
+        "decode_s": 4.19,
+        "decode_tps": 60.8
+      }
+    ]
+  },
+  "battery": {
+    "n_queries": 12,
+    "n_labeled": 6,
+    "total_tokens": 10632,
+    "total_wall_s": 236.0,
+    "mean_tokens_per_query": 886.0,
+    "mean_wall_s_per_query": 19.7
+  },
+  "comparison": [
+    {
+      "id": "R1",
+      "class": "reasoning",
+      "minicpm5_tokens": 1024,
+      "minicpm5_wall_s": 22.09,
+      "minicpm5_tps": 47.8,
+      "existing_labels": {
+        "T0": 0.1,
+        "T1": 0.85,
+        "T2": 1.0
+      },
+      "existing_smallest_satisfying": "T1"
+    },
+    {
+      "id": "R2",
+      "class": "reasoning",
+      "minicpm5_tokens": 1024,
+      "minicpm5_wall_s": 24.12,
+      "minicpm5_tps": 43.8,
+      "existing_labels": {
+        "T0": 1.0,
+        "T1": 1.0,
+        "T2": 1.0
+      },
+      "existing_smallest_satisfying": "T0"
+    },
+    {
+      "id": "A1",
+      "class": "agentic",
+      "minicpm5_tokens": 1024,
+      "minicpm5_wall_s": 22.9,
+      "minicpm5_tps": 46.0,
+      "existing_labels": {
+        "T0": 0.2,
+        "T1": 0.85,
+        "T2": 1.0
+      },
+      "existing_smallest_satisfying": "T1"
+    },
+    {
+      "id": "A2",
+      "class": "agentic",
+      "minicpm5_tokens": 1024,
+      "minicpm5_wall_s": 22.39,
+      "minicpm5_tps": 47.3,
+      "existing_labels": {
+        "T0": 0.35,
+        "T1": 0.6,
+        "T2": 1.0
+      },
+      "existing_smallest_satisfying": "T2"
+    },
+    {
+      "id": "E1",
+      "class": "emotional",
+      "minicpm5_tokens": 742,
+      "minicpm5_wall_s": 16.5,
+      "minicpm5_tps": 46.7,
+      "existing_labels": {
+        "T0": 0.35,
+        "T1": 0.8,
+        "T2": 1.0
+      },
+      "existing_smallest_satisfying": "T1"
+    },
+    {
+      "id": "E2",
+      "class": "emotional",
+      "minicpm5_tokens": 1024,
+      "minicpm5_wall_s": 23.61,
+      "minicpm5_tps": 44.7,
+      "existing_labels": {
+        "T0": 0.3,
+        "T1": 0.75,
+        "T2": 0.95
+      },
+      "existing_smallest_satisfying": "T1"
+    }
+  ],
+  "existing_v02_bench": {
+    "note": "dark-core v0.2 results for reference",
+    "mean_quality_cascade": 0.9,
+    "mean_quality_t2_only": 0.992,
+    "speedup_vs_t2_only": 1.9,
+    "pct_at_or_below_t1": 83.3,
+    "class_detection": "12/12"
+  },
+  "notes": [
+    "MiniCPM5 answers saved in bench-answers-minicpm5/",
+    "Quality labels are subjective (n=1) from the original closure.py battery",
+    "MiniCPM5 at 8-bit (1.07 GB) vs Bonsai 1.7B ternary (0.46 GB) \u2014 2.3x the disk",
+    "The bench did NOT run through the cascade \u2014 these are standalone generations"
+  ]
+}

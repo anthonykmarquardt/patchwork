@@ -1,0 +1,59 @@
+# A2 | class agentic | tokens 1024 | wall 22.39s
+--- QUERY ---
+A Python batch script suddenly gets OOM-killed at 3am nightly, only in production. Give an ordered diagnostic checklist cheapest-first.
+--- ANSWER ---
+We are given: "A Python batch script suddenly gets OOM-killed at 3am nightly, only in production. Give an ordered diagnostic checklist cheapest-first."
+
+Interpretation: We need to provide a diagnostic checklist for a Python batch script that crashes at 3am nightly in production. The checklist should be ordered from cheapest to most expensive (i.e., start with the simplest checks, then more complex ones).
+
+We are to assume that the script is a batch script (likely using Python, but could be any Python script). The OOM-killed at 3am nightly in production suggests that the script is running for a long time (maybe hours) and consuming a lot of memory or CPU, causing OOM.
+
+We need to provide a diagnostic checklist. The checklist should be ordered from cheapest to most expensive. Cheapest first means we should start with the simplest checks (like checking if the script is running, checking for errors, etc.) and then move to more complex ones (like memory usage, process count, etc.).
+
+Let's think about what could be the most common causes of OOM in a batch script:
+
+1. The script is running for a very long time (hours) and is doing a lot of work.
+2. The script is using a lot of memory (e.g., creating many large objects, using a lot of lists, etc.).
+3. The script is running in a long-running process (like a background job) and is consuming a lot of resources.
+4. The script is using a lot of system resources (CPU, memory, disk).
+5. The script is running in a context that is not optimized (e.g., using a lot of global variables, etc.).
+
+We should order the checklist from cheapest to most expensive. Cheapest first: check if the script is running, check for errors, check if the script is using too much memory, check if the script is running for too long, check if the script is using too much CPU, check if the script is using too much disk space, check if the script is using too much network resources, etc.
+
+But we need to be specific to a Python batch script. So we can list:
+
+1. Check if the script is running (maybe by checking the process ID or using a simple check like `ps aux` or `top`).
+2. Check for errors (using `pytest` or `unittest` if applicable, but the problem says Python batch script, so maybe it's just a script that crashes).
+3. Check memory usage (using `psutil` or `pympler`).
+4. Check process count (using `psutil`).
+5. Check CPU usage (using `psutil`).
+6. Check disk usage (using `df` or `du`).
+7. Check network usage (using `netstat` or `ss`).
+8. Check if the script is using too much time (maybe by checking the duration of the script).
+9. Check if the script is using too much memory (maybe by checking the size of objects created).
+10. Check if the script is using too much CPU (maybe by checking the CPU time).
+
+But we need to order them cheapest first. So we should start with the simplest checks. For example:
+
+- Check if the script is running: `ps aux | grep python` or `ps aux | grep -e python`.
+- Check for errors: `python -c "import sys; print(sys.version)"` or `python -c "import pytest; print(pytest.__version__)"` if pytest is used.
+- Check memory: `ps aux | grep python` or `pympler memory`.
+- Check process count: `ps aux | grep python`.
+- Check CPU: `ps aux | grep python`.
+- Check disk: `df -h`.
+- Check network: `netstat -an | grep :80`.
+- Check time: `time` command.
+- Check if the script is using too much time: maybe by checking the duration of the script.
+
+But we need to be careful: the script is a batch script, so it might be using `python` directly. So we can use `ps aux` to see the process.
+
+Let's structure the checklist as a list of steps, ordered from cheapest to most expensive.
+
+We can write:
+
+1. Check if the script is running: Use `ps aux | grep python` to see if a Python process is running.
+2. Check for errors: Use `python -c "import sys; print(sys.version)"` to see if the script is running correctly.
+3. Check memory usage: Use `ps aux | grep python` to see the memory usage of the Python process.
+4. Check process count: Use `ps aux | grep python` to see how many processes are running.
+5. Check CPU usage: Use `ps aux | grep python` to see CPU usage.
+6. Check disk usage

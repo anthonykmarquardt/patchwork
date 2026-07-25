@@ -1,0 +1,24 @@
+# R3 | class reasoning | tokens 277 | wall 6.06s
+--- QUERY ---
+What is 17 * 23? Show the arithmetic.
+--- ANSWER ---
+We are asked: "What is 17 * 23? Show the arithmetic." So we need to compute the product of 17 and 23. We can do it by standard multiplication, possibly using the distributive property or just multiplying step by step. Let's do it step by step.
+
+17 * 23 = 17 * (20 + 3) = 17*20 + 17*3 = 340 + 51 = 391. Alternatively, we can compute directly: 17 * 23 = 17 * (23) = 391. So the answer is 391.
+
+We should show the arithmetic. So we can write:
+
+17 * 23 = 17 * (20 + 3) = 17*20 + 17*3 = 340 + 51 = 391.
+
+Or we can do: 17 * 23 = 17 * 23 = 391.
+
+Thus, the final answer is 391.
+</think>
+
+The product of 17 and 23 is calculated as follows:
+
+\[
+17 \times 23 = 17 \times (20 + 3) = 17 \times 20 + 17 \times 3 = 340 + 51 = 391.
+\]
+
+Thus, \(17 \times 23 = 391\).

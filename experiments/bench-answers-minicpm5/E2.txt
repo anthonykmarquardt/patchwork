@@ -1,0 +1,72 @@
+# E2 | class emotional | tokens 1024 | wall 23.61s
+--- QUERY ---
+My best friend got the promotion I was passed over for and wants to celebrate tonight. I'm happy for her and I kind of hate her and I hate that I feel that way. What do I do?
+--- ANSWER ---
+Here's a thinking process that leads to the suggested response:
+
+1.  **Analyze the User's Situation:**
+    *   **Emotional State:** The user is a best friend. They are happy for the promotion (which is good) but feel "hate" and "hatred" towards the person who got it. They feel "that way" (likely a specific negative emotion, maybe jealousy, resentment, or a mix of feelings).
+    *   **Goal:** The user wants to celebrate the promotion (which is positive) but is struggling with the underlying feelings of resentment and hatred.
+    *   **Need:** Practical advice on how to handle the conflict, validate their feelings, and move towards reconciliation or at least a healthy resolution.
+
+2.  **Identify Key Emotions:**
+    *   *Resentment:* Feeling the person didn't deserve the promotion.
+    *   *Hatred:* Feeling the person is evil or untrustworthy.
+    *   *Jealousy:* Feeling the promotion is a threat to their own career.
+    *   *Need for Connection:* They need to feel loved and valued, not just "good for me."
+
+3.  **Determine the Best Approach:**
+    *   **Validate:** Acknowledge that their feelings are completely valid. It's not their fault they feel this way.
+    *   **Empathy:** Try to understand *why* they feel this way (maybe they're insecure, or they're jealous).
+    *   **Actionable Advice:** Give concrete steps on how to handle the situation (communication, boundaries, self-care).
+    *   **Support:** Reassure them that they are not alone.
+
+4.  **Drafting the Response (Iterative Process):**
+
+    *   *Opening:* Acknowledge the complexity. It's a tough situation. Validate their feelings.
+    *   *Addressing the "Hate":* Why do they feel hate? Maybe jealousy. Maybe they think she's a threat. Don't judge them.
+    *   *The "Celebrate" part:* Acknowledge the good (the promotion). But also acknowledge the pain.
+    *   *Suggestions:*
+        *   Have an honest conversation (not to "win," but to understand).
+        *   Set boundaries (don't let her influence your life).
+        *   Focus on the future (what *you* want).
+        *   Self-care (don't let the situation drain you).
+    *   *Closing:* Reassure them that they are in this together.
+
+5.  **Refining the Tone:**
+    *   Avoid being too clinical. Keep it warm and supportive.
+    *   Use "I" statements to own the experience (e.g., "I feel," not "You make me feel").
+    *   Ensure the advice is practical.
+
+6.  **Self-Correction/Edge Case Consideration:**
+    *   *What if they are actually being toxic?* I should gently suggest that if the feelings are extreme, they might need to distance themselves, but first, validate their feelings.
+    *   *What if she's a friend?* I should mention that if she's a friend, they need to set boundaries.
+    *   *What if it's a work situation?* I should keep it general enough to apply to both, but acknowledge the work aspect.
+
+7.  **Final Polish (incorporating into the final output):**
+    *   Start with empathy.
+    *   Break down the emotions.
+    *   Offer specific strategies.
+    *   End with encouragement.
+
+    *(Self-Correction during drafting)*: I need to make sure I don't sound like I'm telling them to "get over" her. That's not healthy. The goal is resolution, not erasure.
+
+8.  **Final Output Structure:**
+    *   Validation (It's okay to feel this way).
+    *   Understanding the "Why" (Jealousy, insecurity).
+    *   Action Plan (Communication, Boundaries).
+    *   Self-Care.
+    *   Closing thought.
+
+    *(Drafting the response based on these points...)* -> *See final output.*
+</think>
+
+It's completely understandable to feel this way. It's a tough situation, and it's okay to feel jealous, insecure, or resentful when you see someone you care about get a promotion you didn't deserve.
+
+Here is some advice to help you navigate this, but remember: **Your feelings are valid, but you don't have to let them define your life.**
+
+### 1. Acknowledge the Feelings
+First, take a moment to validate what you're feeling. It's not your fault that you feel this way.
+*   **It's okay to feel jealous.** You might be jealous of your own career or the promotion.
+*   **It's okay to feel insecure.** You might be wondering if she is a threat to your future.
+*   **It's okay

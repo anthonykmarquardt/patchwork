@@ -1,0 +1,33 @@
+# E3 | class emotional | tokens 663 | wall 14.44s
+--- QUERY ---
+I just found out I didn't get into the grad program I spent two years preparing for. Everyone keeps saying it happens for a reason and honestly that makes me furious.
+--- ANSWER ---
+Hmm, this is a deeply personal and emotionally charged situation. The user is clearly devastated by a career setback after two years of preparation, and they're feeling furious about the lack of support or understanding from others. 
+
+The core issue seems to be about validation and acknowledgment of their pain. They need both emotional support and practical steps to move forward. I should validate their feelings first, then offer concrete ways to address the frustration. 
+
+I'll structure the response to acknowledge their frustration, provide immediate emotional support, and then guide them toward actionable steps. The tone should be compassionate but not overly sentimental, focusing on practical solutions. 
+
+The key is to help them process their grief while also rebuilding their confidence. I'll avoid clichés and instead offer specific, actionable advice that addresses both the emotional and professional aspects of their situation.
+</think>
+
+I'm so sorry to hear about your two years of preparation and the career setback. It's completely understandable to feel furious and hurt when you've invested so much time and effort into something you thought you could master.
+
+First, please know that your feelings are valid. It's a significant loss, and it's okay to feel angry and hurt. The fact that others are saying it's "for a reason" only adds to the frustration—it suggests they don't fully understand your pain or that they're not offering the support you need.
+
+Here's what I want to say to you:
+
+1.  **Acknowledge the pain:** I hear you. The two years of preparation, the frustration, the uncertainty, and the feeling of being "lost" are real. You've done everything right, and you deserve to feel that way.
+
+2.  **Validate the feeling:** It's not your fault that you didn't get into the program. It was a result of the program's design, the industry's demands, or perhaps a lack of support. That's a valid reason for your disappointment.
+
+3.  **Seek support:** This is a huge step. You don't have to do this alone. I encourage you to:
+    *   **Talk to someone you trust:** A mentor, a career coach, or a supportive friend/family member. They can offer perspective and validation.
+    *   **Consider a professional:** A career coach or therapist can help you process the grief and develop a plan for moving forward.
+    *   **Explore alternatives:** If the program was a major part of your life, you might be open to other paths. This isn't about giving up, but about finding a new way to build your career.
+
+4.  **Focus on the future:** Your two years of preparation are a testament to your dedication. You are capable and resilient. The feeling of being "lost" is a temporary state. You can rebuild your confidence and skills.
+
+5.  **Be patient with yourself:** Moving from a career path of two years of preparation to a new one is a significant shift. It takes time to relearn, to build new skills, and to find your footing.
+
+You have already done the hard work. Now, it's about processing the grief and moving forward with a new, stronger foundation. I'm here to support you through this. You are not alone in this.
