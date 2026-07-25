@@ -3,6 +3,9 @@
 > **Handoff snapshot.** Read this first when resuming work in a new session.
 > **Rule:** Overwrite at end of session. Never append. This is a snapshot, not a history.
 
+> **Session 2026-07-24:** MiniCPM5-1B-8bit standalone benchmark, concierge→specialist
+> mode documented as idea-stage plan, banter repo context surveyed.
+
 ---
 
 ## Bootstrap Sequence (Do This First, In Order)
